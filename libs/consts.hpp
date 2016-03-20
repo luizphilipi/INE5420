@@ -1,0 +1,9 @@
+#define APP_WIDTH 1024
+#define APP_HEIGHT 768
+
+#define MARGIN_LEFT 10
+#define MARGIN_TOP 10
+#define DEFAULT_SPACING 10
+
+#define CANVAS_WIDTH 815
+#define CANVAS_HEIGHT 748
