@@ -3,10 +3,12 @@
 #include "consts.hpp"
 #include "elements/include/geometria.hpp"
 #include "elements/include/linha.hpp"
+#include "elements/include/point.hpp"
+#include "elements/include/poligono.hpp"
 #include <iostream>
 
 cairo_surface_t *CanvasController::surface = NULL;
-
+cairo_t *CanvasController::cr = NULL;
 //Constructor
 CanvasController::CanvasController() {
 }
@@ -37,7 +39,7 @@ gboolean CanvasController::draw(GtkWidget *widget, cairo_t *cr, gpointer data) {
 
 //
 void CanvasController::clearSurface(void) {
-	cairo_t *cr = cairo_create(surface);
+	cr = cairo_create(surface);
 
 	// fundo branco
 	cairo_set_source_rgb(cr, 1, 1, 1);
@@ -64,20 +66,54 @@ void CanvasController::clearSurface(void) {
 	cairo_set_source_rgb(cr, 0, 0, 0);
 	cairo_set_line_width(cr, 2);
 
-	Geometria *geo = new Linha("Teste", 50, 50, 100, 100);
-	drawGeometria(cr, geo);
+	Geometria *geo = new Linha("Linha", 50, 50, 100, 100);
+	drawGeometria(geo);
+	geo = new Point("Ponto", 200, 200);
+	drawGeometria(geo);
 
+	ListaEnc<BasePoint> *lista = new ListaEnc<BasePoint>();
+	lista->adiciona(BasePoint(300, 300));
+	lista->adicionaNoInicio(BasePoint(400, 350));
+	lista->adicionaNoInicio(BasePoint(800, 200));
+
+	geo = new Poligono("Poligono", lista);
+	drawGeometria(geo);
 }
 
-void CanvasController::drawGeometria(cairo_t *cr, Geometria *geometria) {
+void CanvasController::drawLine(BasePoint p1, BasePoint p2) {
+	cairo_move_to(cr, p1.getX(), p1.getY());
+	cairo_line_to(cr, p2.getX(), p2.getY());
+	cairo_stroke(cr);
+}
+
+void CanvasController::drawPoint(BasePoint p1) {
+	cairo_move_to(cr, p1.getX(), p1.getY());
+	cairo_arc(cr, p1.getX(), p1.getY(), 1.0, 0.0, 2.0 * 3.14);
+	cairo_fill_preserve(cr);
+	cairo_stroke(cr);
+}
+
+void CanvasController::drawPolygon(ListaEnc<BasePoint> *points) {
+	cairo_move_to(cr, points->recuperaDaPosicao(0).getX(),
+			points->recuperaDaPosicao(0).getY());
+	for (int i = 1; i < points->getSize(); ++i) {
+		cairo_line_to(cr, points->recuperaDaPosicao(i).getX(),
+				points->recuperaDaPosicao(i).getY());
+	}
+	cairo_close_path(cr);
+	cairo_stroke(cr);
+}
+
+void CanvasController::drawGeometria(Geometria *geometria) {
 	switch (geometria->getTipo()) {
 	case LINHA:
-		cout << "Linha";
+		drawLine(geometria->getPonto(0), geometria->getPonto(1));
+		break;
+	case PONTO:
+		drawPoint(geometria->getPonto(0));
+		break;
+	case POLIGONO:
+		drawPolygon(geometria->getPontos());
+		break;
 	}
-	BasePoint ponto1 = geometria->getPonto(0);
-	BasePoint ponto2 = geometria->getPonto(1);
-
-	cairo_move_to(cr, ponto1.getX(), ponto1.getY());
-	cairo_line_to(cr, ponto2.getX(), ponto2.getY());
-	cairo_stroke(cr);
 }

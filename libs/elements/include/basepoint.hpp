@@ -18,11 +18,11 @@ public:
 public:
 	BasePoint() :
 			x(0), y(0) {
-
 	}
 
 private:
 	int x;
 	int y;
 };
+
 #endif

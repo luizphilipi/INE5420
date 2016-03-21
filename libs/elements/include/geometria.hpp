@@ -14,16 +14,16 @@ class Geometria {
 protected:
 	Geometria(char const* nome, tipoGeometria tipo) :
 			nome(nome), tipo(tipo) {
-		pontos = ListaEnc<BasePoint>();
+		pontos = new ListaEnc<BasePoint>();
 	}
 
-	Geometria(char* nome, tipoGeometria tipo, ListaEnc<BasePoint> pontos) :
-	nome(nome), tipo(tipo), pontos(pontos) {
+	Geometria(char const* nome, tipoGeometria tipo, ListaEnc<BasePoint> *pontos) :
+			nome(nome), tipo(tipo), pontos(pontos) {
 	}
 
 	char const *nome;
 	tipoGeometria tipo;
-	ListaEnc<BasePoint> pontos;
+	ListaEnc<BasePoint> *pontos;
 
 public:
 	char const* getNome() {
@@ -35,15 +35,15 @@ public:
 	}
 
 	int getQuantidadePontos() {
-		return pontos.getSize();
+		return pontos->getSize();
 	}
 
-	ListaEnc<BasePoint> getPontos() {
+	ListaEnc<BasePoint> * getPontos() {
 		return pontos;
 	}
 
 	BasePoint getPonto(int i) {
-		return pontos.recuperaDaPosicao(i);
+		return pontos->recuperaDaPosicao(i);
 	}
 };
 

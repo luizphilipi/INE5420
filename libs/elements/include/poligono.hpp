@@ -5,7 +5,7 @@
 
 class Poligono: public Geometria {
 public:
-	Poligono(char const* nome, ListaEnc<BasePoint> pontos) :
+	Poligono(char const* nome, ListaEnc<BasePoint>* pontos) :
 			Geometria(nome, POLIGONO, pontos) {
 	}
 };
