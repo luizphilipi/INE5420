@@ -11,6 +11,7 @@ public:
 	static gboolean configureViewport(GtkWidget *widget,
 			GdkEventConfigure *event, gpointer data);
 	static gboolean draw(GtkWidget *widget, cairo_t *cr, gpointer data);
+	static void drawGeometria(Geometria *geometria);
 
 	static void upButton(GtkWidget *widget, GdkEventButton *event);
 	static void downButton(GtkWidget *widget, GdkEventButton *event);
@@ -23,10 +24,12 @@ public:
 
 private:
 	static void clearSurface(void);
-	static cairo_surface_t *surface;
 	static cairo_t *cr;
-	static void drawGeometria(cairo_t *cr, Geometria *geometria);
+	static cairo_surface_t *surface;
+
+	static void drawLine(BasePoint p1, BasePoint p2);
+	static void drawPoint(BasePoint p1);
+	static void drawPolygon(ListaEnc<BasePoint> *points);
 
 };
-
 #endif
