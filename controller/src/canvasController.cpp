@@ -125,8 +125,8 @@ void CanvasController::drawGeometria(Geometria *geometria) {
 void CanvasController::zoomIn(GtkWidget *widget, GdkEventButton *event){
 	cout << "\nzoomIn";
 
-	Geometria *geo = new Linha("ss", 50, 50, 500, 100);
-		drawGeometria(cr, geo);
+	Geometria *geo = new Linha("Linha", 200, 400, 500, 200);
+	drawGeometria(geo);
 
 
 }

@@ -62,6 +62,9 @@ public:
 		g_signal_connect(zoomInButton, "button_press_event", G_CALLBACK(CanvasController::zoomIn), NULL);
 		g_signal_connect(zoomOutButton, "button_press_event", G_CALLBACK(CanvasController::zoomOut), NULL);
 
+
+		 gtk_widget_set_events (window,  GDK_BUTTON_PRESS_MASK);
+
 		return window;
 	}
 
