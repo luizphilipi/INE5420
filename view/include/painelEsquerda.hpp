@@ -53,8 +53,18 @@ public:
 		gtk_widget_show_all(vbox);
 		gtk_widget_show_all(hbox);
 
+		//signals
+		g_signal_connect(upButton, "button_press_event", G_CALLBACK(CanvasController::upButton), NULL);
+		g_signal_connect(downButton, "button_press_event", G_CALLBACK(CanvasController::downButton), NULL);
+		g_signal_connect(leftButton, "button_press_event", G_CALLBACK(CanvasController::leftButton), NULL);
+		g_signal_connect(rightButton, "button_press_event", G_CALLBACK(CanvasController::rightButton), NULL);
+
+		g_signal_connect(zoomInButton, "button_press_event", G_CALLBACK(CanvasController::zoomIn), NULL);
+		g_signal_connect(zoomOutButton, "button_press_event", G_CALLBACK(CanvasController::zoomOut), NULL);
+
 		return window;
 	}
+
 };
 
 #endif

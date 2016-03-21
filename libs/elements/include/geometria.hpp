@@ -25,6 +25,7 @@ protected:
 	tipoGeometria tipo;
 	ListaEnc<BasePoint> pontos;
 
+
 public:
 	char const* getNome() {
 		return nome;

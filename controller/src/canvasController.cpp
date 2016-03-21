@@ -6,6 +6,7 @@
 #include <iostream>
 
 cairo_surface_t *CanvasController::surface = NULL;
+cairo_t *CanvasController::cr = NULL;
 
 //Constructor
 CanvasController::CanvasController() {
@@ -37,7 +38,8 @@ gboolean CanvasController::draw(GtkWidget *widget, cairo_t *cr, gpointer data) {
 
 //
 void CanvasController::clearSurface(void) {
-	cairo_t *cr = cairo_create(surface);
+
+	cr = cairo_create(surface);
 
 	// fundo branco
 	cairo_set_source_rgb(cr, 1, 1, 1);
@@ -64,9 +66,11 @@ void CanvasController::clearSurface(void) {
 	cairo_set_source_rgb(cr, 0, 0, 0);
 	cairo_set_line_width(cr, 2);
 
-	Geometria *geo = new Linha("Teste", 50, 50, 100, 100);
-	drawGeometria(cr, geo);
 
+
+
+	Geometria *geo = new Linha("Teste", 50-50, 50-50, 500+50, 100+50);
+	drawGeometria(cr, geo);
 }
 
 void CanvasController::drawGeometria(cairo_t *cr, Geometria *geometria) {
@@ -80,4 +84,33 @@ void CanvasController::drawGeometria(cairo_t *cr, Geometria *geometria) {
 	cairo_move_to(cr, ponto1.getX(), ponto1.getY());
 	cairo_line_to(cr, ponto2.getX(), ponto2.getY());
 	cairo_stroke(cr);
+}
+
+void CanvasController::zoomIn(GtkWidget *widget, GdkEventButton *event){
+	cout << "\nzoomIn";
+
+	Geometria *geo = new Linha("ss", 50, 50, 500, 100);
+		drawGeometria(cr, geo);
+
+
+}
+
+void CanvasController::zoomOut(GtkWidget *widget, GdkEventButton *event){
+	cout << "\nzoomOut";
+}
+
+void CanvasController::upButton(GtkWidget *widget, GdkEventButton *event){
+	cout << "\nupButton";
+}
+
+void CanvasController::downButton(GtkWidget *widget, GdkEventButton *event){
+	cout << "\ndownButton";
+}
+
+void CanvasController::leftButton(GtkWidget *widget, GdkEventButton *event){
+	cout << "\nleftButton";
+}
+
+void CanvasController::rightButton(GtkWidget *widget, GdkEventButton *event){
+	cout << "\nrightButton";
 }
