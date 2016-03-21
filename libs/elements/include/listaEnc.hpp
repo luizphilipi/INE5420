@@ -63,7 +63,7 @@ public:
 					"Posição inválida: impossível adicionar elemento em posição específica.");
 		}
 		if (pos == 0) {
-			return adicionaNoInicio(dado);
+			adicionaNoInicio(dado);
 		}
 		Elemento<T> *anterior = head;
 		for (int i = 1; i < pos; i++) {

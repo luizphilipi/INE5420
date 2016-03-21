@@ -5,10 +5,14 @@
 #include "elements/include/linha.hpp"
 #include "elements/include/point.hpp"
 #include "elements/include/poligono.hpp"
+#include "elements/include/window.hpp"
 #include <iostream>
 
 cairo_surface_t *CanvasController::surface = NULL;
 cairo_t *CanvasController::cr = NULL;
+ListaEnc<Geometria> *CanvasController::figuras = new ListaEnc<Geometria>();
+Window CanvasController::window = Window(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+GtkWidget *parent;
 
 //Constructor
 CanvasController::CanvasController() {
@@ -17,6 +21,7 @@ CanvasController::CanvasController() {
 //
 gboolean CanvasController::configureViewport(GtkWidget *widget,
 		GdkEventConfigure *event, gpointer data) {
+	parent = widget;
 	if (surface) {
 		cairo_surface_destroy(surface);
 	}
@@ -26,6 +31,22 @@ gboolean CanvasController::configureViewport(GtkWidget *widget,
 			gtk_widget_get_allocated_height(widget));
 
 	clearSurface();
+
+	Geometria geo = Linha("Linha", 50, 50, 100, 100);
+	drawGeometria(geo);
+
+	geo = Point("Ponto", 200, 200);
+	drawGeometria(geo);
+	figuras->adiciona(geo);
+
+	ListaEnc<BasePoint> *lista = new ListaEnc<BasePoint>();
+	lista->adiciona(BasePoint(300, 300));
+	lista->adicionaNoInicio(BasePoint(400, 350));
+	lista->adicionaNoInicio(BasePoint(500, 200));
+
+	geo = Poligono("Poligono", lista);
+	drawGeometria(geo);
+	figuras->adiciona(geo);
 
 	return true;
 }
@@ -39,10 +60,8 @@ gboolean CanvasController::draw(GtkWidget *widget, cairo_t *cr, gpointer data) {
 }
 
 //
-void CanvasController::clearSurface(void) {
-
+void CanvasController::clearSurface() {
 	cr = cairo_create(surface);
-
 	// fundo branco
 	cairo_set_source_rgb(cr, 1, 1, 1);
 	cairo_paint(cr);
@@ -67,86 +86,83 @@ void CanvasController::clearSurface(void) {
 	cairo_stroke(cr);
 	cairo_set_source_rgb(cr, 0, 0, 0);
 	cairo_set_line_width(cr, 2);
-
-
-	Geometria *geo = new Linha("Linha", 50, 50, 100, 100);
-	drawGeometria(geo);
-	geo = new Point("Ponto", 200, 200);
-	drawGeometria(geo);
-
-	ListaEnc<BasePoint> *lista = new ListaEnc<BasePoint>();
-	lista->adiciona(BasePoint(300, 300));
-	lista->adicionaNoInicio(BasePoint(400, 350));
-	lista->adicionaNoInicio(BasePoint(800, 200));
-
-	geo = new Poligono("Poligono", lista);
-	drawGeometria(geo);
 }
 
 void CanvasController::drawLine(BasePoint p1, BasePoint p2) {
-	cairo_move_to(cr, p1.getX(), p1.getY());
-	cairo_line_to(cr, p2.getX(), p2.getY());
+	cairo_move_to(cr, p1.getX() + window.getX(), p1.getY() + window.getY());
+	cairo_line_to(cr, p2.getX() + window.getX(), p2.getY() + window.getY());
 	cairo_stroke(cr);
 }
 
 void CanvasController::drawPoint(BasePoint p1) {
-	cairo_move_to(cr, p1.getX(), p1.getY());
-	cairo_arc(cr, p1.getX(), p1.getY(), 1.0, 0.0, 2.0 * 3.14);
+	cairo_move_to(cr, p1.getX() + window.getX(), p1.getY() + window.getY());
+	cairo_arc(cr, p1.getX() + window.getX(), p1.getY() + window.getY(), 1.0,
+			0.0, 2.0 * 3.14);
 	cairo_fill_preserve(cr);
 	cairo_stroke(cr);
 }
 
 void CanvasController::drawPolygon(ListaEnc<BasePoint> *points) {
-	cairo_move_to(cr, points->recuperaDaPosicao(0).getX(),
-			points->recuperaDaPosicao(0).getY());
+	cairo_move_to(cr, points->recuperaDaPosicao(0).getX() + window.getX(),
+			points->recuperaDaPosicao(0).getY() + window.getY());
 	for (int i = 1; i < points->getSize(); ++i) {
-		cairo_line_to(cr, points->recuperaDaPosicao(i).getX(),
-				points->recuperaDaPosicao(i).getY());
+		cairo_line_to(cr, points->recuperaDaPosicao(i).getX() + window.getX(),
+				points->recuperaDaPosicao(i).getY() + window.getY());
 	}
 	cairo_close_path(cr);
 	cairo_stroke(cr);
-
 }
 
-void CanvasController::drawGeometria(Geometria *geometria) {
-	switch (geometria->getTipo()) {
+void CanvasController::drawGeometria(Geometria geometria) {
+	switch (geometria.getTipo()) {
 	case LINHA:
-		drawLine(geometria->getPonto(0), geometria->getPonto(1));
+		drawLine(geometria.getPonto(0), geometria.getPonto(1));
 		break;
 	case PONTO:
-		drawPoint(geometria->getPonto(0));
+		drawPoint(geometria.getPonto(0));
 		break;
 	case POLIGONO:
-		drawPolygon(geometria->getPontos());
+		drawPolygon(geometria.getPontos());
 		break;
 	}
 }
 
-void CanvasController::zoomIn(GtkWidget *widget, GdkEventButton *event){
-	cout << "\nzoomIn";
-
-	Geometria *geo = new Linha("ss", 50, 50, 500, 100);
-		drawGeometria(cr, geo);
-
-
+void CanvasController::redrawAll() {
+	for (int i = 0; i < figuras->getSize(); ++i) {
+		drawGeometria(figuras->recuperaDaPosicao(i));
+	}
 }
 
-void CanvasController::zoomOut(GtkWidget *widget, GdkEventButton *event){
+void CanvasController::zoomIn(GtkWidget *widget, GdkEventButton *event) {
+	cout << "\nzoomIn";
+	Geometria geo = Linha("ss", 50, 50, 500, 100);
+	drawGeometria(geo);
+}
+
+void CanvasController::zoomOut(GtkWidget *widget, GdkEventButton *event) {
 	cout << "\nzoomOut";
 }
 
-void CanvasController::upButton(GtkWidget *widget, GdkEventButton *event){
-	cout << "\nupButton";
+void CanvasController::upButton(GtkWidget *widget, GdkEventButton *event) {
+	changeWindowPosition(0, -5);
 }
 
-void CanvasController::downButton(GtkWidget *widget, GdkEventButton *event){
-	cout << "\ndownButton";
+void CanvasController::downButton(GtkWidget *widget, GdkEventButton *event) {
+	changeWindowPosition(0, 5);
 }
 
-void CanvasController::leftButton(GtkWidget *widget, GdkEventButton *event){
-	cout << "\nleftButton";
+void CanvasController::leftButton(GtkWidget *widget, GdkEventButton *event) {
+	changeWindowPosition(-5, 0);
 }
 
-void CanvasController::rightButton(GtkWidget *widget, GdkEventButton *event){
-	cout << "\nrightButton";
+void CanvasController::rightButton(GtkWidget *widget, GdkEventButton *event) {
+	changeWindowPosition(5, 0);
+}
+
+void CanvasController::changeWindowPosition(int x, int y) {
+	gtk_widget_queue_draw(parent);
+	window.move(x, y);
+	cout << window.getY();
+	clearSurface();
+	redrawAll();
 }
