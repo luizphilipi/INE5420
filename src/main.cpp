@@ -3,6 +3,6 @@
 
 int main(int argc, char *argv[]) {
 	gtk_init(&argc, &argv);
-	TelaPrincipal *tela = new TelaPrincipal();
+	new TelaPrincipal();
 	return 0;
 }

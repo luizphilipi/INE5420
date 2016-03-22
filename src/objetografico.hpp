@@ -7,26 +7,26 @@ const int MAX_OBJECTS = 100;
 
 struct Coordenada {
 
-	Coordenada(int x, int y) :
+	Coordenada(double x, double y) :
 			x(x), y(y) {
 	}
 
-	int getX() {
+	double getX() {
 		return x;
 	}
 
-	int getY() {
+	double getY() {
 		return y;
 	}
 
-	void add(int x, int y) {
+	void add(double x, double y) {
 		this->x += x;
 		this->y += y;
 	}
 
 private:
-	int x;
-	int y;
+	double x;
+	double y;
 };
 
 enum tipoGeometria {

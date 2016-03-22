@@ -21,7 +21,7 @@ public:
 
 	void adicionarObjeto();
 
-	void desenhar(cairo_t *cr, ListaEnc<Coordenada> * coords);
+	void desenhar(cairo_t *cr, ListaEnc<Coordenada> coords);
 
 	void desenharTudo(cairo_t *cr);
 
@@ -40,6 +40,8 @@ public:
 	void zoomIn();
 
 	void zoomOut();
+
+	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico obj);
 };
 
 #endif

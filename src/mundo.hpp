@@ -9,31 +9,31 @@
 
 class Mundo {
 private:
-	ListaEnc<ObjetoGrafico> displayFile;
+	ListaEnc<ObjetoGrafico> *displayFile;
 	Window window;
 
 public:
 	Mundo() :
 			window(Coordenada(0, 0), Coordenada(550, 550)) {
-		displayFile = ListaEnc<ObjetoGrafico>();
+		displayFile = new ListaEnc<ObjetoGrafico>();
 	}
 
 	virtual ~Mundo() {
 	}
 
 	void adicionaPonto(const char* nome, Coordenada coord) {
-		displayFile.adiciona(Ponto(nome, coord));
+		displayFile->adiciona(Ponto(nome, coord));
 	}
 
 	void adicionaLinha(const char* nome, Coordenada p1, Coordenada p2) {
-		displayFile.adiciona(Linha(nome, p1, p2));
+		displayFile->adiciona(Linha(nome, p1, p2));
 	}
 
 	void adicionaPoligono(const char* nome, ListaEnc<Coordenada> *coords) {
-		displayFile.adiciona(Poligono(nome, coords));
+		displayFile->adiciona(Poligono(nome, coords));
 	}
 
-	ListaEnc<ObjetoGrafico> getObjetos() {
+	ListaEnc<ObjetoGrafico> *getObjetos() {
 		return displayFile;
 	}
 

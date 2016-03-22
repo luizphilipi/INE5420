@@ -3,13 +3,28 @@
 extern "C" {
 gboolean callback_desenhar_tudo(GtkWidget *widget, cairo_t *cr,
 		TelaPrincipal *window) {
-	std::cout << "draw";
 	window->desenharTudo(cr);
 	return false;
 }
 
 void mover_cima(GtkWidget *widget, TelaPrincipal *window) {
 	window->moverCima();
+}
+
+void mover_baixo(GtkWidget *widget, TelaPrincipal *window) {
+	window->moverBaixo();
+}
+
+void mover_esquerda(GtkWidget *widget, TelaPrincipal *window) {
+	window->moverEsquerda();
+}
+
+void mover_direita(GtkWidget *widget, TelaPrincipal *window) {
+	window->moverDireita();
+}
+
+void adicionar_objeto(GtkWidget *widget, TelaPrincipal *window) {
+	window->adicionarObjeto();
 }
 }
 
@@ -33,12 +48,33 @@ TelaPrincipal::TelaPrincipal() {
 
 	GtkWidget *moveUpButton = GTK_WIDGET(
 			gtk_builder_get_object (builder, MOVE_UP_BTN));
-	g_signal_connect(G_OBJECT(moveUpButton), "button_press_event", G_CALLBACK(mover_cima),
+	g_signal_connect(G_OBJECT(moveUpButton), "clicked", G_CALLBACK(mover_cima),
 			this);
+
+	GtkWidget *moveDownButton = GTK_WIDGET(
+			gtk_builder_get_object (builder, MOVE_DOWN_BTN));
+	g_signal_connect(G_OBJECT(moveDownButton), "clicked",
+			G_CALLBACK(mover_baixo), this);
+
+	GtkWidget *moveLeftButton = GTK_WIDGET(
+			gtk_builder_get_object (builder, MOVE_LEFT_BTN));
+	g_signal_connect(G_OBJECT(moveLeftButton), "clicked",
+			G_CALLBACK(mover_esquerda), this);
+
+	GtkWidget *moveRightButton = GTK_WIDGET(
+			gtk_builder_get_object (builder, MOVE_RIGHT_BTN));
+	g_signal_connect(G_OBJECT(moveRightButton), "clicked",
+			G_CALLBACK(mover_direita), this);
+
+	GtkWidget *addButton = GTK_WIDGET(
+			gtk_builder_get_object(builder, "addObj"));
+	g_signal_connect(G_OBJECT(addButton), "clicked",
+			G_CALLBACK(adicionar_objeto), this);
 	// signals
 
 	GtkWidget *window = GTK_WIDGET(
 			gtk_builder_get_object(builder, TELA_PRINCIPAL));
+
 	gtk_widget_show_all(window);
 	gtk_main();
 }
@@ -49,27 +85,34 @@ TelaPrincipal::~TelaPrincipal() {
 
 void TelaPrincipal::adicionarObjeto() {
 	// TODO adicionar objeto
-	std::cout << "objeto adicionado :D";
+	mundo->adicionaPonto("Teste 2", Coordenada(300, 300));
+	mundo->adicionaLinha("teste", Coordenada(50, 50), Coordenada(100, 100));
+	ListaEnc<Coordenada>* coords = new ListaEnc<Coordenada>();
+	coords->adiciona(Coordenada(150, 150));
+	coords->adiciona(Coordenada(200, 330));
+	coords->adiciona(Coordenada(150, 500));
+	mundo->adicionaPoligono("poligono", coords);
+	atualizarTela();
 }
 
-void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> * coords) {
-	cairo_move_to(cr, coords->recuperaDaPosicao(0).getX(),
-			coords->recuperaDaPosicao(0).getY());
-	cairo_line_to(cr, coords->recuperaDaPosicao(0).getX(),
-			coords->recuperaDaPosicao(0).getY());
+void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
+	cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
+			coords.recuperaDaPosicao(0).getY());
+	cairo_line_to(cr, coords.recuperaDaPosicao(0).getX(),
+			coords.recuperaDaPosicao(0).getY());
 
-	for (int i = 1; i < coords->getSize(); i++) {
-		cairo_line_to(cr, coords->recuperaDaPosicao(i).getX(),
-				coords->recuperaDaPosicao(i).getY());
+	for (int i = 1; i < coords.getSize(); i++) {
+		cairo_line_to(cr, coords.recuperaDaPosicao(i).getX(),
+				coords.recuperaDaPosicao(i).getY());
 	}
 
-	if (coords->getSize() == 1) {
+	if (coords.getSize() == 1) {
 		// um pixel, se não, não aparece :v
-		cairo_line_to(cr, coords->recuperaDaPosicao(0).getX() + 1,
-				coords->recuperaDaPosicao(0).getY() + 1);
+		cairo_line_to(cr, coords.recuperaDaPosicao(0).getX() + 3,
+				coords.recuperaDaPosicao(0).getY() + 3);
 	} else {
-		cairo_line_to(cr, coords->recuperaDaPosicao(0).getX(),
-				coords->recuperaDaPosicao(0).getY());
+		cairo_line_to(cr, coords.recuperaDaPosicao(0).getX(),
+				coords.recuperaDaPosicao(0).getY());
 	}
 	cairo_stroke(cr);
 }
@@ -81,8 +124,8 @@ void TelaPrincipal::desenharTudo(cairo_t *cr) {
 	cairo_set_source_rgb(cr, 0, 0, 0);
 	cairo_set_line_width(cr, 1);
 
-	for (int i = 0; i < mundo->getObjetos().getSize(); ++i) {
-		desenhar(cr, mundo->getObjetos().recuperaDaPosicao(i).getPontos());
+	for (int i = 0; i < mundo->getObjetos()->getSize(); ++i) {
+		desenhar(cr, mapearNoMundo(mundo->getObjetos()->recuperaDaPosicao(i)));
 	}
 }
 
@@ -99,7 +142,6 @@ void TelaPrincipal::fecharPopupAdicionar() {
 }
 
 void TelaPrincipal::moverCima() {
-	std::cout << builder;
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->moverCima(gtk_spin_button_get_value(inputPasso));
@@ -145,4 +187,35 @@ void TelaPrincipal::zoomOut() {
 	mundo->zoomOut(gtk_spin_button_get_value(inputPasso));
 
 	atualizarTela();
+}
+
+ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
+	GtkWidget *drawingArea = GTK_WIDGET(
+			gtk_builder_get_object( builder, AREA_DESENHO ));
+	Window window = mundo->getWindow();
+
+	double Xvmax = gtk_widget_get_allocated_width(drawingArea);
+	double Yvmax = gtk_widget_get_allocated_height(drawingArea);
+
+	int x, y;
+
+	std::cout << "Tela: x(" << window.Xmin() << ", " << window.Xmax() << "), y(" << window.Ymin() << ", " << window.Ymax() << ")" << std::endl;
+	std::cout << "Área de desenho: (" << Xvmax << ", " << Yvmax << ")" << std::endl;
+
+	ListaEnc<Coordenada> newcoords = ListaEnc<Coordenada>();
+
+	for (int j = 0; j < obj.getPontos()->getSize(); ++j) {
+		Coordenada coord = obj.getPontos()->recuperaDaPosicao(j);
+		x = ((coord.getX() - window.Xmin()) / (window.Xmax() - window.Xmin()))
+				* (Xvmax - 0);
+		y = (1
+				- (coord.getY() - window.Ymin())
+						/ (window.Ymax() - window.Ymin())) * (Yvmax - 0);
+
+		newcoords.adiciona(Coordenada(x, y));
+		std::cout << obj.getNome() << " -> (" << coord.getX() << ", "
+				<< coord.getY() << ") -> (" << x << ", " << y << ")" << std::endl;
+	}
+
+	return newcoords;
 }

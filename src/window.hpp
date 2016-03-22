@@ -21,9 +21,9 @@ public:
 	}
 
 	void zoom(int step) {
-		int halfWidth = (this->cantoSuperiorDireito.getX()
+		double halfWidth = (this->cantoSuperiorDireito.getX()
 				- this->cantoInferiorEsquerdo.getX()) / 2;
-		int halfHeight = (this->cantoSuperiorDireito.getY()
+		double halfHeight = (this->cantoSuperiorDireito.getY()
 				- cantoInferiorEsquerdo.getY()) / 2;
 
 		double xFactor = 0.0;
@@ -44,19 +44,19 @@ public:
 		this->cantoSuperiorDireito.add(xFactor, yFactor);
 	}
 
-	int Xmin() {
+	double Xmin() {
 		return this->cantoInferiorEsquerdo.getX();
 	}
 
-	int Ymin() {
+	double Ymin() {
 		return this->cantoInferiorEsquerdo.getY();
 	}
 
-	int Xmax() {
+	double Xmax() {
 		return this->cantoSuperiorDireito.getX();
 	}
 
-	int Ymax() {
+	double Ymax() {
 		return this->cantoSuperiorDireito.getY();
 	}
 
