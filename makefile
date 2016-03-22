@@ -9,4 +9,4 @@ libs/elements/include/listaEnc.hpp
 
 
 all:
-	g++ $(INCLUDE_PATH) `pkg-config --cflags gtk+-3.0` -o CG $(SRC_FILES) `pkg-config --libs gtk+-3.0`
+	g++ ./src/* `pkg-config --cflags gtk+-3.0` -o CG `pkg-config --libs gtk+-3.0`

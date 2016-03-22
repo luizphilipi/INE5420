@@ -24,7 +24,7 @@ public:
 	void adicionaNoInicio(const T& dado) {
 		Elemento<T> *novo = new Elemento<T>(dado);
 		if (novo == 0) {
-			throw runtime_error("Não adicionado novo elemento.");
+			throw std::runtime_error("Não adicionado novo elemento.");
 		}
 		size++;
 		if (head != 0) {
@@ -36,14 +36,16 @@ public:
 
 	T recuperaDoInicio() {
 		if (listaVazia()) {
-			throw runtime_error("Lista vazia, impossível recuperar do início.");
+			throw std::runtime_error(
+					"Lista vazia, impossível recuperar do início.");
 		}
 		return head->getInfo();
 	}
 
 	T eliminaDoInicio() {
 		if (listaVazia()) {
-			throw runtime_error("Lista vazia, impossível eliminar do início.");
+			throw std::runtime_error(
+					"Lista vazia, impossível eliminar do início.");
 		}
 		Elemento<T> *aux = head;
 		T dado = aux->getInfo();
@@ -59,7 +61,7 @@ public:
 
 	void adicionaNaPosicao(T dado, int pos) {
 		if (pos > size || pos < 0) {
-			throw runtime_error(
+			throw std::runtime_error(
 					"Posição inválida: impossível adicionar elemento em posição específica.");
 		}
 		if (pos == 0) {
@@ -71,7 +73,7 @@ public:
 		}
 		Elemento<T> *novo = new Elemento<T>(dado, anterior->getProximo());
 		if (novo == 0) {
-			throw runtime_error(
+			throw std::runtime_error(
 					"Não foi possível alocar memória p/ novo elemento");
 		}
 		anterior->setProximo(novo);
@@ -80,7 +82,7 @@ public:
 
 	int posicao(T dado) {
 		if (listaVazia()) {
-			throw runtime_error(
+			throw std::runtime_error(
 					"Não foi possível encontrar posição: lista vazia.");
 		}
 		Elemento<T> *atual = head;
@@ -90,7 +92,7 @@ public:
 			}
 			atual = atual->getProximo();
 		}
-		throw runtime_error(
+		throw std::runtime_error(
 				"Não foi possível encontrar posição: dado não está na lista.");
 	}
 
@@ -113,7 +115,7 @@ public:
 
 	bool contem(const T& dado) {
 		if (listaVazia()) {
-			throw runtime_error("Dado não está na lista: lista vazia.");
+			throw std::runtime_error("Dado não está na lista: lista vazia.");
 		}
 		Elemento<T> *atual = head;
 		for (int i = 0; i < size; i++) {
@@ -127,7 +129,7 @@ public:
 
 	T eliminaDaPosicao(int pos) {
 		if (pos >= size || pos < 0) { //pq pos começa em 0
-			throw runtime_error(
+			throw std::runtime_error(
 					"Impossível retirar elemento: posição inválida.");
 		}
 		if (pos == 0) {
@@ -151,7 +153,7 @@ public:
 
 	T recuperaDaPosicao(int pos) {
 		if (pos >= size || pos < 0) { //pq pos começa em 0
-			throw runtime_error(
+			throw std::runtime_error(
 					"Impossível recuperar elemento: posição inválida.");
 		}
 		if (pos == 0) {
