@@ -24,7 +24,7 @@ void mover_direita(GtkWidget *widget, TelaPrincipal *window) {
 }
 
 void adicionar_objeto(GtkWidget *widget, TelaPrincipal *window) {
-	window->adicionarObjeto();
+	window->adicionarObjetoTeste();
 }
 
 void zoom_in(GtkWidget *widget, TelaPrincipal *window) {
@@ -104,16 +104,36 @@ TelaPrincipal::~TelaPrincipal() {
 
 }
 
-void TelaPrincipal::adicionarObjeto() {
-	// TODO adicionar objeto
-	mundo->adicionaPonto("Teste 2", Coordenada(300, 300));
-	mundo->adicionaLinha("teste", Coordenada(50, 50), Coordenada(100, 100));
-	ListaEnc<Coordenada>* coords = new ListaEnc<Coordenada>();
-	coords->adiciona(Coordenada(150, 150));
-	coords->adiciona(Coordenada(200, 330));
-	coords->adiciona(Coordenada(150, 500));
-	mundo->adicionaPoligono("poligono", coords);
+void TelaPrincipal::adicionarObjetoTeste() {
+
+	Ponto *p1 = new Ponto ("pt", Coordenada(300, 300));
+
+	Linha *l1 = new Linha ("linha", Coordenada(50, 50), Coordenada(100, 100));
+
+	ListaEnc<Coordenada>* coordsPol = new ListaEnc<Coordenada>();
+	coordsPol->adiciona(Coordenada(150, 150));
+	coordsPol->adiciona(Coordenada(200, 330));
+	coordsPol->adiciona(Coordenada(150, 500));
+	Poligono *pol1 = new Poligono("poligono", coordsPol);
+
+	adicionarObjeto(p1);
+	adicionarObjeto(l1);
+	adicionarObjeto(pol1);
+
 	atualizarTela();
+}
+
+
+//
+void TelaPrincipal::adicionarObjeto(ObjetoGrafico *obj) {
+	switch(obj->getTipo() ){
+		case PONTO		: mundo->adicionaPonto(obj->getNome(), obj->getCoord(0));
+			break;
+		case LINHA		: mundo->adicionaLinha(obj->getNome(), obj->getCoord(0), obj->getCoord(1));
+			break;
+		case POLIGONO	: mundo->adicionaPoligono(obj->getNome(), obj->getListaCoord());
+			break;
+	}
 }
 
 void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
@@ -129,8 +149,8 @@ void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
 
 	if (coords.getSize() == 1) {
 		// um pixel, se não, não aparece :v
-		cairo_line_to(cr, coords.recuperaDaPosicao(0).getX() + 3,
-				coords.recuperaDaPosicao(0).getY() + 3);
+		cairo_line_to(cr, coords.recuperaDaPosicao(0).getX() + 2,
+				coords.recuperaDaPosicao(0).getY() + 2);
 	} else {
 		cairo_line_to(cr, coords.recuperaDaPosicao(0).getX(),
 				coords.recuperaDaPosicao(0).getY());
