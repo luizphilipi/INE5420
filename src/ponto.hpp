@@ -7,15 +7,15 @@ class Ponto: public ObjetoGrafico {
 public:
 	Ponto(char const* nome, Coordenada coord) :
 			ObjetoGrafico(nome, PONTO) {
-		pontos->adiciona(coord);
+		listaCoords->adiciona(coord);
 	}
 
 	int getX() {
-		return pontos->recuperaDaPosicao(0).getX();
+		return listaCoords->recuperaDaPosicao(0).getX();
 	}
 
 	int getY() {
-		return pontos->recuperaDaPosicao(0).getY();
+		return listaCoords->recuperaDaPosicao(0).getY();
 	}
 };
 #endif

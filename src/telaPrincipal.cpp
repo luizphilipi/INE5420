@@ -75,6 +75,9 @@ TelaPrincipal::TelaPrincipal() {
 	GtkWidget *window = GTK_WIDGET(
 			gtk_builder_get_object(builder, TELA_PRINCIPAL));
 
+	//para de rodar ao clicar no X
+	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
+
 	gtk_widget_show_all(window);
 	gtk_main();
 }
@@ -204,8 +207,8 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
 
 	ListaEnc<Coordenada> newcoords = ListaEnc<Coordenada>();
 
-	for (int j = 0; j < obj.getPontos()->getSize(); ++j) {
-		Coordenada coord = obj.getPontos()->recuperaDaPosicao(j);
+	for (int j = 0; j < obj.getListaCoord()->getSize(); ++j) {
+		Coordenada coord = obj.getListaCoord()->recuperaDaPosicao(j);
 		x = ((coord.getX() - window.Xmin()) / (window.Xmax() - window.Xmin()))
 				* (Xvmax - 0);
 		y = (1
