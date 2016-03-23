@@ -26,6 +26,14 @@ void mover_direita(GtkWidget *widget, TelaPrincipal *window) {
 void adicionar_objeto(GtkWidget *widget, TelaPrincipal *window) {
 	window->adicionarObjeto();
 }
+
+void zoom_in(GtkWidget *widget, TelaPrincipal *window) {
+	window->zoomIn();
+}
+
+void zoom_out(GtkWidget *widget, TelaPrincipal *window) {
+	window->zoomOut();
+}
 }
 
 void TelaPrincipal::atualizarTela() {
@@ -65,6 +73,16 @@ TelaPrincipal::TelaPrincipal() {
 			gtk_builder_get_object (builder, MOVE_RIGHT_BTN));
 	g_signal_connect(G_OBJECT(moveRightButton), "clicked",
 			G_CALLBACK(mover_direita), this);
+
+	GtkWidget *zoomInBtn = GTK_WIDGET(
+			gtk_builder_get_object (builder, ZOOM_IN_BTN));
+	g_signal_connect(G_OBJECT(zoomInBtn), "clicked",
+			G_CALLBACK(zoom_in), this);
+
+	GtkWidget *zoomOutBtn = GTK_WIDGET(
+			gtk_builder_get_object (builder, ZOOM_OUT_BTN));
+	g_signal_connect(G_OBJECT(zoomOutBtn), "clicked",
+			G_CALLBACK(zoom_out), this);
 
 	GtkWidget *addButton = GTK_WIDGET(
 			gtk_builder_get_object(builder, "addObj"));
@@ -199,22 +217,18 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
 
 	int x, y;
 
-	std::cout << "Tela: x(" << window.Xmin() << ", " << window.Xmax() << "), y(" << window.Ymin() << ", " << window.Ymax() << ")" << std::endl;
-	std::cout << "Área de desenho: (" << Xvmax << ", " << Yvmax << ")" << std::endl;
-
 	ListaEnc<Coordenada> newcoords = ListaEnc<Coordenada>();
 
-	for (int j = 0; j < obj.getPontos()->getSize(); ++j) {
-		Coordenada coord = obj.getPontos()->recuperaDaPosicao(j);
+	for (int i = 0; i < obj.getPontos()->getSize(); ++i) {
+		Coordenada coord = obj.getPontos()->recuperaDaPosicao(i);
+
 		x = ((coord.getX() - window.Xmin()) / (window.Xmax() - window.Xmin()))
-				* (Xvmax - 0);
+				* Xvmax;
 		y = (1
 				- (coord.getY() - window.Ymin())
-						/ (window.Ymax() - window.Ymin())) * (Yvmax - 0);
+						/ (window.Ymax() - window.Ymin())) * Yvmax;
 
 		newcoords.adiciona(Coordenada(x, y));
-		std::cout << obj.getNome() << " -> (" << coord.getX() << ", "
-				<< coord.getY() << ") -> (" << x << ", " << y << ")" << std::endl;
 	}
 
 	return newcoords;

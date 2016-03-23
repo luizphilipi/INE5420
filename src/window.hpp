@@ -20,28 +20,36 @@ public:
 		this->cantoSuperiorDireito.add(xFactor, yFactor);
 	}
 
-	void zoom(int step) {
+	void zoom(double step) {
 		double halfWidth = (this->cantoSuperiorDireito.getX()
 				- this->cantoInferiorEsquerdo.getX()) / 2;
 		double halfHeight = (this->cantoSuperiorDireito.getY()
 				- cantoInferiorEsquerdo.getY()) / 2;
 
 		double xFactor = 0.0;
-		if (halfWidth - 1 > halfWidth * step / 100.0) {
+		if ((halfWidth - 1) > (halfWidth * step / 100.0)) {
 			xFactor = halfWidth * step / 100.0;
 		} else {
 			xFactor = halfWidth - 1;
 		}
 
 		double yFactor = 0.0;
-		if (halfHeight - 1 > halfHeight * step / 100.0) {
+		if ((halfHeight - 1) > (halfHeight * step / 100.0)) {
 			yFactor = halfHeight * step / 100.0;
 		} else {
 			yFactor = halfHeight - 1;
 		}
 
+		std::cout << "Zoom anterior:" << std::endl;
+		std::cout << "inferior(" << this->cantoInferiorEsquerdo.getX() << ", " << this->cantoInferiorEsquerdo.getY() << ")" << std::endl;
+		std::cout << "superior(" << this->cantoSuperiorDireito.getX() << ", " << this->cantoSuperiorDireito.getY() << ")" << std::endl;
+
 		this->cantoInferiorEsquerdo.add(xFactor, yFactor);
 		this->cantoSuperiorDireito.add(xFactor, yFactor);
+
+		std::cout << "Zoom posterior:" << std::endl;
+		std::cout << "inferior(" << this->cantoInferiorEsquerdo.getX() << ", " << this->cantoInferiorEsquerdo.getY() << ")" << std::endl;
+		std::cout << "superior(" << this->cantoSuperiorDireito.getX() << ", " << this->cantoSuperiorDireito.getY() << ")" << std::endl;
 	}
 
 	double Xmin() {
