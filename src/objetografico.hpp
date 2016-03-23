@@ -37,17 +37,17 @@ class ObjetoGrafico {
 protected:
 	ObjetoGrafico(char const* nome, tipoGeometria tipo) :
 			nome(nome), tipo(tipo) {
-		pontos = new ListaEnc<Coordenada>();
+		listaCoords = new ListaEnc<Coordenada>();
 	}
 
 	ObjetoGrafico(char const* nome, tipoGeometria tipo,
-			ListaEnc<Coordenada> *pontos) :
-			nome(nome), tipo(tipo), pontos(pontos) {
+			ListaEnc<Coordenada> *coords) :
+			nome(nome), tipo(tipo), listaCoords(coords) {
 	}
 
 	char const *nome;
 	tipoGeometria tipo;
-	ListaEnc<Coordenada> *pontos;
+	ListaEnc<Coordenada> *listaCoords;
 
 public:
 	char const* getNome() {
@@ -58,16 +58,16 @@ public:
 		return tipo;
 	}
 
-	int getQuantidadePontos() {
-		return pontos->getSize();
+	int getQuantidadeCoords() {
+		return listaCoords->getSize();
 	}
 
-	ListaEnc<Coordenada> * getPontos() {
-		return pontos;
+	ListaEnc<Coordenada> * getListaCoord() {
+		return listaCoords;
 	}
 
-	Coordenada getPonto(int i) {
-		return pontos->recuperaDaPosicao(i);
+	Coordenada getCoord(int i) {
+		return listaCoords->recuperaDaPosicao(i);
 	}
 };
 

@@ -5,18 +5,18 @@
 
 class Linha: public ObjetoGrafico {
 public:
-	Linha(const char* nome, Coordenada p1, Coordenada p2) :
+	Linha(const char* nome, Coordenada coord1, Coordenada coord2) :
 			ObjetoGrafico(nome, LINHA) {
-		pontos->adiciona(p1);
-		pontos->adiciona(p2);
+		listaCoords->adiciona(coord1);
+		listaCoords->adiciona(coord2);
 	}
 
 	Coordenada getPonto1() {
-		return pontos->recuperaDaPosicao(0);
+		return listaCoords->recuperaDaPosicao(0);
 	}
 
 	Coordenada getPonto2() {
-		return pontos->recuperaDaPosicao(1);
+		return listaCoords->recuperaDaPosicao(1);
 	}
 };
 #endif
