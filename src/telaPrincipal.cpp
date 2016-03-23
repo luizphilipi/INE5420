@@ -2,47 +2,47 @@
 
 extern "C" {
 gboolean callback_desenhar_tudo(GtkWidget *widget, cairo_t *cr,
-		TelaPrincipal *window) {
-	window->desenharTudo(cr);
+		TelaPrincipal *telaPrincipal) {
+	telaPrincipal->desenharTudo(cr);
 	return false;
 }
 
-void abrir_popup_adicionar(GtkWidget *widget, TelaPrincipal *window) {
-	window->abrirPopupAdicionar();
+void abrir_popup_adicionar(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->abrirPopupAdicionar();
 }
 
 void TelaPrincipal::fecharPopupAdicionar() {
 	GtkWindow *modal = GTK_WINDOW(
 			gtk_builder_get_object(builder, MODAL_ADICIONAR_COORDENADAS));
-	gtk_window_close(modal);
+	gtk_telaPrincipal_close(modal);
 }
 
-void mover_cima(GtkWidget *widget, TelaPrincipal *window) {
-	window->moverCima();
+void mover_cima(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->moverCima();
 }
 
-void mover_baixo(GtkWidget *widget, TelaPrincipal *window) {
-	window->moverBaixo();
+void mover_baixo(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->moverBaixo();
 }
 
-void mover_esquerda(GtkWidget *widget, TelaPrincipal *window) {
-	window->moverEsquerda();
+void mover_esquerda(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->moverEsquerda();
 }
 
-void mover_direita(GtkWidget *widget, TelaPrincipal *window) {
-	window->moverDireita();
+void mover_direita(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->moverDireita();
 }
 
-void adicionar_objeto(GtkWidget *widget, TelaPrincipal *window) {
-	window->adicionarObjeto();
+void adicionar_objeto(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->adicionarObjeto();
 }
 
-void zoom_in(GtkWidget *widget, TelaPrincipal *window) {
-	window->zoomIn();
+void zoom_in(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->zoomIn();
 }
 
-void zoom_out(GtkWidget *widget, TelaPrincipal *window) {
-	window->zoomOut();
+void zoom_out(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->zoomOut();
 }
 }
 
@@ -104,13 +104,13 @@ TelaPrincipal::TelaPrincipal() {
 			G_CALLBACK(adicionar_objeto), this);
 	// signals
 
-	GtkWidget *window = GTK_WIDGET(
+	GtkWidget *telaPrincipal = GTK_WIDGET(
 			gtk_builder_get_object(builder, TELA_PRINCIPAL));
 
 	//para de rodar ao clicar no X
-	g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+	g_signal_connect(telaPrincipal, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
-	gtk_widget_show_all(window);
+	gtk_widget_show_all(telaPrincipal);
 	gtk_main();
 }
 
@@ -119,16 +119,6 @@ TelaPrincipal::~TelaPrincipal() {
 }
 
 void TelaPrincipal::adicionarObjeto() {
-	// TODO adicionar objeto
-//	mundo->adicionaPonto("Teste 2", Coordenada(300, 300));
-//	mundo->adicionaLinha("teste", Coordenada(50, 50), Coordenada(100, 100));
-//	ListaEnc<Coordenada>* coords = new ListaEnc<Coordenada>();
-//	coords->adiciona(Coordenada(150, 150));
-//	coords->adiciona(Coordenada(200, 330));
-//	coords->adiciona(Coordenada(150, 500));
-//	mundo->adicionaPoligono("poligono", coords);
-//	atualizarTela();
-
 	GtkWidget *drawingArea = GTK_WIDGET(
 			gtk_builder_get_object(builder, AREA_DESENHO));
 
@@ -176,10 +166,28 @@ void TelaPrincipal::adicionarObjeto() {
 	}
 		break;
 	case 2: {
-		ListaEnc<Coordenada> coordenadas = ListaEnc<Coordenada>();
+		//TODO generalizar, ia ser muito bom...
+		ListaEnc<Coordenada> *coordenadas = new ListaEnc<Coordenada>();
 
-		GtkBox *boxPoligono = GTK_BOX(gtk_builder_get_object( builder, BOX_POLIGONO ));
+		GtkBox *boxPoligono = GTK_BOX(
+				gtk_builder_get_object( builder, BOX_POLIGONO ));
+		GList* children = gtk_container_get_children(
+				GTK_CONTAINER(boxPoligono));
+		GList *l;
+		int i = 0;
+		GtkSpinButton *input;
+		for (l = children; i < g_list_length(children) - 1; l = l->next, ++i) {
+			GtkGrid *coordGrid = GTK_GRID(l->data);
 
+			input = GTK_SPIN_BUTTON(gtk_grid_get_child_at(coordGrid, 1, 0));
+			int x = gtk_spin_button_get_value(input);
+
+			input = GTK_SPIN_BUTTON(gtk_grid_get_child_at(coordGrid, 3, 0));
+			int y = gtk_spin_button_get_value(input);
+
+			coordenadas->adiciona(Coordenada(x, y));
+		}
+		mundo->adicionaPoligono(nomeObjeto, coordenadas);
 	}
 		break;
 	}
@@ -225,9 +233,6 @@ void TelaPrincipal::desenharTudo(cairo_t *cr) {
 	cairo_set_line_width(cr, 1);
 
 	for (int i = 0; i < mundo->getObjetos()->getSize(); ++i) {
-		std::cout << "Desenhando o objeto "
-				<< mundo->getObjetos()->recuperaDaPosicao(i).getNome()
-				<< std::endl;
 		desenhar(cr, mapearNoMundo(mundo->getObjetos()->recuperaDaPosicao(i)));
 	}
 }
@@ -289,28 +294,25 @@ void TelaPrincipal::zoomOut() {
 ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
 	GtkWidget *drawingArea = GTK_WIDGET(
 			gtk_builder_get_object( builder, AREA_DESENHO ));
-	Window window = mundo->getWindow();
+	Canvas canvas = mundo->getCanvas();
 
 	double Xvmax = gtk_widget_get_allocated_width(drawingArea);
 	double Yvmax = gtk_widget_get_allocated_height(drawingArea);
 
 	int x, y;
 
-	ListaEnc<Coordenada> newcoords = ListaEnc<Coordenada>();
-
-	std::cout << "Mapeando o objeto " << obj.getNome() << " que possui "
-			<< obj.getListaCoord()->getSize() << " pontos" << std::endl;
+	ListaEnc<Coordenada> coordenadas = ListaEnc<Coordenada>();
 
 	for (int i = 0; i < obj.getListaCoord()->getSize(); ++i) {
 		Coordenada coord = obj.getListaCoord()->recuperaDaPosicao(i);
-		x = ((coord.getX() - window.Xmin()) / (window.Xmax() - window.Xmin()))
+		x = ((coord.getX() - canvas.Xmin()) / (canvas.Xmax() - canvas.Xmin()))
 				* Xvmax;
 		y = (1
-				- (coord.getY() - window.Ymin())
-						/ (window.Ymax() - window.Ymin())) * Yvmax;
+				- (coord.getY() - canvas.Ymin())
+						/ (canvas.Ymax() - canvas.Ymin())) * Yvmax;
 
-		newcoords.adiciona(Coordenada(x, y));
+		coordenadas.adiciona(Coordenada(x, y));
 	}
 
-	return newcoords;
+	return coordenadas;
 }

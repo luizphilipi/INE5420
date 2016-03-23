@@ -1,8 +1,8 @@
 #ifndef MUNDO_HPP_
 #define MUNDO_HPP_
 
+#include "canvas.hpp"
 #include "objetografico.hpp"
-#include "window.hpp"
 #include "ponto.hpp"
 #include "linha.hpp"
 #include "poligono.hpp"
@@ -10,11 +10,11 @@
 class Mundo {
 private:
 	ListaEnc<ObjetoGrafico> *displayFile;
-	Window window;
+	Canvas canvas;
 
 public:
 	Mundo() :
-			window(Coordenada(0, 0), Coordenada(550, 550)) {
+			canvas(Coordenada(0, 0), Coordenada(550, 550)) {
 		displayFile = new ListaEnc<ObjetoGrafico>();
 	}
 
@@ -37,32 +37,32 @@ public:
 		return displayFile;
 	}
 
-	Window getWindow() {
-		return window;
+	Canvas getCanvas() {
+		return canvas;
 	}
 
 	void moverCima(int passo) {
-		window.move(Coordenada(0, passo));
+		canvas.move(Coordenada(0, passo));
 	}
 
 	void moverBaixo(int passo) {
-		window.move(Coordenada(0, -passo));
+		canvas.move(Coordenada(0, -passo));
 	}
 
 	void moverEsquerda(int passo) {
-		window.move(Coordenada(-passo, 0));
+		canvas.move(Coordenada(-passo, 0));
 	}
 
 	void moverDireita(int passo) {
-		window.move(Coordenada(passo, 0));
+		canvas.move(Coordenada(passo, 0));
 	}
 
 	void zoomIn(double passo) {
-		window.zoom(passo);
+		canvas.zoom(passo);
 	}
 
 	void zoomOut(double passo) {
-		window.zoom(-passo);
+		canvas.zoom(-passo);
 	}
 };
 

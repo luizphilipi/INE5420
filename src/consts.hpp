@@ -2,8 +2,6 @@
 #define TELA_PRINCIPAL "mainWindow"
 #define LIST_STORE_OBJETOS "listStoreObjetos"
 #define AREA_DESENHO "drawingArea"
-#define POLYGON_GRID "polygonGrid"
-#define BUTTONS_GRID "buttonsGrid"
 #define INPUT_PASSO "spinPasso"
 
 // popup de adicionar
