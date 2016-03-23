@@ -193,9 +193,7 @@ void TelaPrincipal::adicionarObjeto() {
 }
 
 void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
-	std::cout << "desenhando " << coords.getSize() << std::endl;
 	if (coords.getSize() == 1) {
-		std::cout << "desenhando um ponto" << std::endl;
 		cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
 				coords.recuperaDaPosicao(0).getY());
 		cairo_arc(cr, coords.recuperaDaPosicao(0).getX(),
@@ -213,14 +211,8 @@ void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
 					coords.recuperaDaPosicao(i).getY());
 		}
 
-		if (coords.getSize() == 1) {
-			// um pixel, se não, não aparece :v
-			cairo_line_to(cr, coords.recuperaDaPosicao(0).getX() + 3,
-					coords.recuperaDaPosicao(0).getY() + 3);
-		} else {
-			cairo_line_to(cr, coords.recuperaDaPosicao(0).getX(),
-					coords.recuperaDaPosicao(0).getY());
-		}
+		cairo_close_path(cr);
+
 		cairo_stroke(cr);
 	}
 }

@@ -17,5 +17,6 @@ public:
 	int getY() {
 		return listaCoords->recuperaDaPosicao(0).getY();
 	}
+
 };
 #endif

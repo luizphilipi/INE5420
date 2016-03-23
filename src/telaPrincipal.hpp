@@ -19,6 +19,8 @@ public:
 
 	virtual ~TelaPrincipal();
 
+	void adicionarObjetoTeste();
+
 	void adicionarObjeto();
 
 	void desenhar(cairo_t *cr, ListaEnc<Coordenada> coords);
