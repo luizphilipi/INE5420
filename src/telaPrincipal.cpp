@@ -11,12 +11,6 @@ void abrir_popup_adicionar(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->abrirPopupAdicionar();
 }
 
-void TelaPrincipal::fecharPopupAdicionar() {
-	GtkWindow *modal = GTK_WINDOW(
-			gtk_builder_get_object(builder, MODAL_ADICIONAR_COORDENADAS));
-	gtk_window_close(modal);
-}
-
 void mover_cima(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->moverCima();
 }
@@ -102,6 +96,12 @@ TelaPrincipal::TelaPrincipal() {
 			gtk_builder_get_object(builder, BOTAO_ADICIONAR_OBJETO));
 	g_signal_connect(G_OBJECT(botaoAdicionarObjeto), "clicked",
 			G_CALLBACK(adicionar_objeto), this);
+
+
+	// FAZ COM QUE NÃO DELETE A POP-UP, SÓ ESCONDA
+	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET (gtk_builder_get_object (builder, MODAL_ADICIONAR_COORDENADAS));
+	g_signal_connect (G_OBJECT(modalAdicionarCoordenadas), "delete_event",
+							G_CALLBACK(gtk_widget_hide_on_delete), NULL);
 	// signals
 
 	GtkWidget *telaPrincipal = GTK_WIDGET(
@@ -241,6 +241,12 @@ void TelaPrincipal::abrirPopupAdicionar() {
 	GtkWindow *modal = GTK_WINDOW(
 			gtk_builder_get_object( builder, MODAL_ADICIONAR_COORDENADAS ));
 	gtk_window_present(modal);
+}
+
+void TelaPrincipal::fecharPopupAdicionar() {
+	GtkWindow *modal = GTK_WINDOW(
+			gtk_builder_get_object(builder, MODAL_ADICIONAR_COORDENADAS));
+	gtk_window_close(modal);
 }
 
 void TelaPrincipal::moverCima() {
