@@ -66,6 +66,7 @@ public:
 		}
 		if (pos == 0) {
 			adicionaNoInicio(dado);
+			return;
 		}
 		Elemento<T> *anterior = head;
 		for (int i = 1; i < pos; i++) {

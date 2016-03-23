@@ -27,18 +27,18 @@ public:
 				- cantoInferiorEsquerdo.getY()) / 2;
 
 		double xFactor = 0.0;
-		if ((halfWidth - 1) > (halfWidth * step / 100.0)) {
+//		if ((halfWidth - 1) > (halfWidth * step / 100.0)) {
 			xFactor = halfWidth * step / 100.0;
-		} else {
-			xFactor = halfWidth - 1;
-		}
+//		} else {
+//			xFactor = halfWidth - 1;
+//		}
 
 		double yFactor = 0.0;
-		if ((halfHeight - 1) > (halfHeight * step / 100.0)) {
+//		if ((halfHeight - 1) > (halfHeight * step / 100.0)) {
 			yFactor = halfHeight * step / 100.0;
-		} else {
-			yFactor = halfHeight - 1;
-		}
+//		} else {
+//			yFactor = halfHeight - 1;
+//		}
 
 		std::cout << "Zoom anterior:" << std::endl;
 		std::cout << "inferior(" << this->cantoInferiorEsquerdo.getX() << ", " << this->cantoInferiorEsquerdo.getY() << ")" << std::endl;
