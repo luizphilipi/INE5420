@@ -57,11 +57,11 @@ public:
 		window.move(Coordenada(passo, 0));
 	}
 
-	void zoomIn(int passo) {
+	void zoomIn(double passo) {
 		window.zoom(passo);
 	}
 
-	void zoomOut(int passo) {
+	void zoomOut(double passo) {
 		window.zoom(-passo);
 	}
 };

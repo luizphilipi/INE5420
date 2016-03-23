@@ -24,6 +24,11 @@ struct Coordenada {
 		this->y += y;
 	}
 
+	void sub(double x, double y) {
+		this->x -= x;
+		this->y -= y;
+	}
+
 private:
 	double x;
 	double y;

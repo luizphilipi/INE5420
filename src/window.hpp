@@ -45,7 +45,7 @@ public:
 		std::cout << "superior(" << this->cantoSuperiorDireito.getX() << ", " << this->cantoSuperiorDireito.getY() << ")" << std::endl;
 
 		this->cantoInferiorEsquerdo.add(xFactor, yFactor);
-		this->cantoSuperiorDireito.add(xFactor, yFactor);
+		this->cantoSuperiorDireito.sub(xFactor, yFactor);
 
 		std::cout << "Zoom posterior:" << std::endl;
 		std::cout << "inferior(" << this->cantoInferiorEsquerdo.getX() << ", " << this->cantoInferiorEsquerdo.getY() << ")" << std::endl;

@@ -222,8 +222,8 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
 
 	ListaEnc<Coordenada> newcoords = ListaEnc<Coordenada>();
 
-	for (int i = 0; i < obj.getPontos()->getSize(); ++i) {
-		Coordenada coord = obj.getPontos()->recuperaDaPosicao(i);
+	for (int i = 0; i < obj.getListaCoord()->getSize(); ++i) {
+		Coordenada coord = obj.getListaCoord()->recuperaDaPosicao(i);
 		x = ((coord.getX() - window.Xmin()) / (window.Xmax() - window.Xmin()))
 				* Xvmax;
 		y = (1
