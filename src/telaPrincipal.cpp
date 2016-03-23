@@ -14,7 +14,7 @@ void abrir_popup_adicionar(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 void TelaPrincipal::fecharPopupAdicionar() {
 	GtkWindow *modal = GTK_WINDOW(
 			gtk_builder_get_object(builder, MODAL_ADICIONAR_COORDENADAS));
-	gtk_telaPrincipal_close(modal);
+	gtk_window_close(modal);
 }
 
 void mover_cima(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
