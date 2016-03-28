@@ -176,7 +176,7 @@ void TelaPrincipal::adicionarObjeto() {
 		GList *l;
 		int i = 0;
 		GtkSpinButton *input;
-		for (l = children; i < g_list_length(children) - 1; l = l->next, ++i) {
+		for (l = children; i < g_list_length(children); l = l->next, ++i) {
 			GtkGrid *coordGrid = GTK_GRID(l->data);
 
 			input = GTK_SPIN_BUTTON(gtk_grid_get_child_at(coordGrid, 1, 0));
