@@ -1,11 +1,11 @@
 #ifndef MUNDO_HPP_
 #define MUNDO_HPP_
 
-#include "canvas.hpp"
-#include "objetografico.hpp"
-#include "ponto.hpp"
-#include "linha.hpp"
-#include "poligono.hpp"
+#include "Canvas.hpp"
+#include "Linha.hpp"
+#include "ObjetoGrafico.hpp"
+#include "Poligono.hpp"
+#include "Ponto.hpp"
 
 class Mundo {
 private:

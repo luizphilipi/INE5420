@@ -2,9 +2,9 @@
 #define TELA_PRINCIPAL_HPP
 
 #include <gtk/gtk.h>
-#include "mundo.hpp"
-#include "consts.hpp"
 #include <iostream>
+#include "Consts.hpp"
+#include "Mundo.hpp"
 
 class TelaPrincipal {
 public:

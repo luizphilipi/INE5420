@@ -1,7 +1,7 @@
 #ifndef GEOMETRIA
 #define GEOMETRIA
 
-#include "listaEnc.hpp"
+#include "ListaEnc.hpp"
 
 const int MAX_OBJECTS = 100;
 

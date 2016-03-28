@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
-#include "telaPrincipal.hpp"
+
+#include "TelaPrincipal.hpp"
 
 int main(int argc, char *argv[]) {
 	gtk_init(&argc, &argv);

@@ -1,7 +1,7 @@
 #ifndef POLYGON
 #define POLYGON
 
-#include "objetografico.hpp"
+#include "ObjetoGrafico.hpp"
 
 class Poligono: public ObjetoGrafico {
 public:

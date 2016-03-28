@@ -1,7 +1,7 @@
 #ifndef LINE
 #define LINE
 
-#include "objetografico.hpp"
+#include "ObjetoGrafico.hpp"
 
 class Linha: public ObjetoGrafico {
 public:

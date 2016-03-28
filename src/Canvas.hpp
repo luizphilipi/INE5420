@@ -1,7 +1,7 @@
 #ifndef CANVAS
 #define CANVAS
 
-#include "objetografico.hpp"
+#include "ObjetoGrafico.hpp"
 
 class Canvas {
 public:

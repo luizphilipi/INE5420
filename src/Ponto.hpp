@@ -1,7 +1,7 @@
 #ifndef PONTO_HPP
 #define PONTO_HPP
 
-#include "objetografico.hpp"
+#include "ObjetoGrafico.hpp"
 
 class Ponto: public ObjetoGrafico {
 public:
