@@ -1,8 +1,7 @@
 #include <stdexcept>
-
 #include <iostream>
-
 #include "Elemento.hpp"
+
 using namespace std;
 
 template<typename T>
@@ -35,7 +34,7 @@ public:
 		return;
 	}
 
-	T recuperaDoInicio() {
+	const T recuperaDoInicio() const {
 		if (listaVazia()) {
 			throw std::runtime_error(
 					"Lista vazia, impossível recuperar do início.");
@@ -153,7 +152,7 @@ public:
 		return retorno;
 	}
 
-	T recuperaDaPosicao(int pos) {
+	const T recuperaDaPosicao(int pos) const {
 		if (pos >= size || pos < 0) { //pq pos começa em 0
 			throw std::runtime_error(
 					"Impossível recuperar elemento: posição inválida.");

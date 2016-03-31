@@ -2,37 +2,7 @@
 #define GEOMETRIA
 
 #include "ListaEnc.hpp"
-
-const int MAX_OBJECTS = 100;
-
-struct Coordenada {
-
-	Coordenada(double x, double y) :
-			x(x), y(y) {
-	}
-
-	double getX() {
-		return x;
-	}
-
-	double getY() {
-		return y;
-	}
-
-	void add(double x, double y) {
-		this->x += x;
-		this->y += y;
-	}
-
-	void sub(double x, double y) {
-		this->x -= x;
-		this->y -= y;
-	}
-
-private:
-	double x;
-	double y;
-};
+#include "Coordenada.hpp"
 
 enum tipoGeometria {
 	PONTO, LINHA, POLIGONO
@@ -73,6 +43,21 @@ public:
 
 	Coordenada getCoord(int i) {
 		return listaCoords->recuperaDaPosicao(i);
+	}
+
+	Coordenada centro() {
+		int x = 0;
+		int y = 0;
+		int tamanho = listaCoords->getSize();
+		for (int i = 0; i < tamanho; ++i) {
+			x += listaCoords->recuperaDaPosicao(i).getX();
+			y += listaCoords->recuperaDaPosicao(i).getY();
+		}
+
+		x = x / tamanho;
+		y = y / tamanho;
+
+		return Coordenada(x,y);
 	}
 };
 
