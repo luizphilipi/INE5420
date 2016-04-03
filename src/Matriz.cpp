@@ -2,6 +2,7 @@
 #define __QS_MAdoubleRIX_CPP
 
 #include "Matriz.h"
+#include <iostream>
 
 // Parameter Constructor
 
@@ -20,6 +21,18 @@ Matriz::Matriz(const Matriz& matrizB) {
 	mat = matrizB.mat;
 	linhas = matrizB.get_linhas();
 	colunas = matrizB.get_colunas();
+}
+
+Matriz::Matriz(Coordenada coord) {
+	mat.resize(1);
+	mat[0].resize(3);
+
+	mat[0][0] = coord.getX();
+	mat[0][1] = coord.getY();
+	mat[0][2] = coord.getZ();
+
+	linhas = 1;
+	colunas = 3;
 }
 
 // (Virtual) Destructor
@@ -113,20 +126,16 @@ Matriz& Matriz::operator-=(const Matriz& matrizB) {
 }
 
 // Left multiplication of this matrix and another
-
 Matriz Matriz::operator*(const Matriz& matrizB) {
-	int linhas = matrizB.get_linhas();
-	int colunas = matrizB.get_colunas();
 	Matriz result(linhas, colunas);
 
-	for (int i = 0; i < linhas; i++) {
-		for (int j = 0; j < colunas; j++) {
-			for (int k = 0; k < linhas; k++) {
-				result(i, j) += this->mat[i][k] * matrizB(k, j);
+	for (int i = 0; i < linhas; ++i) {
+		for (int j = 0; j < matrizB.get_colunas(); ++j) {
+			for (int k = 0; k < colunas; ++k) {
+				result(i, j) = result(i, j) + (this->mat[i][k] * matrizB(k, j));
 			}
 		}
 	}
-
 	return result;
 }
 
@@ -208,32 +217,17 @@ Matriz Matriz::operator/(const double& matrizB) {
 	return result;
 }
 
-// Multiply a matrix with a vector
-
-ListaEnc<double> Matriz::operator*(const ListaEnc<double>& matrizB) {
-	ListaEnc<double> result = ListaEnc<double>();
-
+std::ostream& operator<<(std::ostream& os, const Matriz& obj) {
+	int linhas = obj.get_linhas();
+	int colunas = obj.get_colunas();
 	for (int i = 0; i < linhas; i++) {
-		double valor = 0.0;
 		for (int j = 0; j < colunas; j++) {
-			valor += this->mat[i][j] * matrizB.recuperaDaPosicao(j);
+			os << obj(i, j) << " ";
 		}
-		result.adiciona(valor);
+		os << std::endl;
 	}
 
-	return result;
-}
-
-// Obtain a vector of the diagonal elements
-
-ListaEnc<double> Matriz::get_diagonal_principal() {
-	ListaEnc<double> result = ListaEnc<double>();
-
-	for (int i = 0; i < linhas; i++) {
-		result.adiciona(this->mat[i][i]);
-	}
-
-	return result;
+	return os;
 }
 
 double& Matriz::operator()(const int& row, const int& col) {
@@ -252,7 +246,7 @@ int Matriz::get_colunas() const {
 	return this->colunas;
 }
 
-static Matriz Matriz::matrizIdentidade(int tamanho) {
+Matriz Matriz::matrizIdentidade(int tamanho) {
 	Matriz matriz = Matriz(tamanho, tamanho);
 	for (int i = 0; i < tamanho; ++i) {
 		matriz.mat[i][i] = 1.0;

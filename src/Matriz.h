@@ -1,8 +1,9 @@
-#ifndef __MAdoubleRIZ_H
-#define __MAdoubleRIZ_H
+#ifndef __MATRIZ_H
+#define __MATRIZ_H
 
 #include <vector>
-#include "ListaEnc.hpp"
+#include <ostream>
+#include "Coordenada.hpp"
 
 class Matriz {
 private:
@@ -13,6 +14,7 @@ private:
 public:
 	Matriz(int _linhas, int _colunas);
 	Matriz(const Matriz& matrizB);
+	Matriz(Coordenada coord);
 	virtual ~Matriz();
 
 	Matriz& operator=(const Matriz& matrizB);
@@ -32,10 +34,6 @@ public:
 	Matriz operator*(const double& matrizB);
 	Matriz operator/(const double& matrizB);
 
-	// Matrix/vector operations
-	ListaEnc<double> operator*(const ListaEnc<double>& matrizB);
-	ListaEnc<double> get_diagonal_principal();
-
 	// Access the individual elements
 	double& operator()(const int& row, const int& col);
 	const double& operator()(const int& row, const int& col) const;
@@ -48,6 +46,6 @@ public:
 
 };
 
-#include "Matriz.cpp"
+std::ostream& operator<<(std::ostream& os, const Matriz& obj);
 
 #endif

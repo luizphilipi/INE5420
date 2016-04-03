@@ -44,6 +44,8 @@ public:
 	void zoomOut();
 
 	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico obj);
+
+	int radioTelaSelecionado();
 };
 
 #endif

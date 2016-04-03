@@ -32,3 +32,6 @@
 // botões de zoom
 #define ZOOM_IN_BTN "btnZoomIn"
 #define ZOOM_OUT_BTN "btnZoomOut"
+
+#define RADIO_TELA "radioTela"
+#define RADIO_OBJETO "radioObjeto"

@@ -13,6 +13,7 @@ void abrir_popup_adicionar(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 
 void mover_cima(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->moverCima();
+	std::cout << telaPrincipal->radioTelaSelecionado() << std::endl;
 }
 
 void mover_baixo(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
@@ -97,11 +98,11 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(G_OBJECT(botaoAdicionarObjeto), "clicked",
 			G_CALLBACK(adicionar_objeto), this);
 
-
 	// FAZ COM QUE NÃO DELETE A POP-UP, SÓ ESCONDA
-	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET (gtk_builder_get_object (builder, MODAL_ADICIONAR_COORDENADAS));
-	g_signal_connect (G_OBJECT(modalAdicionarCoordenadas), "delete_event",
-							G_CALLBACK(gtk_widget_hide_on_delete), NULL);
+	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET(
+			gtk_builder_get_object (builder, MODAL_ADICIONAR_COORDENADAS));
+	g_signal_connect(G_OBJECT(modalAdicionarCoordenadas), "delete_event",
+			G_CALLBACK(gtk_widget_hide_on_delete), NULL);
 	// signals
 
 	GtkWidget *telaPrincipal = GTK_WIDGET(
@@ -258,9 +259,11 @@ void TelaPrincipal::moverCima() {
 }
 
 void TelaPrincipal::moverBaixo() {
-	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
-			gtk_builder_get_object( builder, INPUT_PASSO ));
-	mundo->moverBaixo(gtk_spin_button_get_value(inputPasso));
+//	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
+//			gtk_builder_get_object( builder, INPUT_PASSO ));
+//	mundo->moverBaixo(gtk_spin_button_get_value(inputPasso));
+
+	mundo->escalonar();
 
 	atualizarTela();
 }
@@ -321,4 +324,18 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
 	}
 
 	return coordenadas;
+}
+
+int TelaPrincipal::radioTelaSelecionado() {
+	GtkRadioButton *radioTela = GTK_RADIO_BUTTON(
+			gtk_builder_get_object (builder, RADIO_TELA));
+	GtkRadioButton *radioObjeto = GTK_RADIO_BUTTON(
+			gtk_builder_get_object (builder, RADIO_OBJETO));
+
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioTela))) {
+		return 1;
+	} else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioObjeto))) {
+		return 2;
+	}
+	return -1;
 }

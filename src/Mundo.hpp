@@ -64,6 +64,16 @@ public:
 	void zoomOut(double passo) {
 		canvas.zoom(-passo);
 	}
+
+	void transladar() {
+		std::cout << "transladar" << std::endl;
+		displayFile->recuperaDaPosicao(0).transladar(Coordenada(25, 25));
+	}
+
+	void escalonar() {
+		std::cout << "escalonar" << std::endl;
+		displayFile->recuperaDaPosicao(0).escalonar(Coordenada(2, 2));
+	}
 };
 
 #endif

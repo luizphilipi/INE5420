@@ -56,7 +56,7 @@ public:
 		}
 		head = aux->getProximo();
 		delete aux;
-		return head->getInfo();
+		return dado;
 	}
 
 	void adicionaNaPosicao(T dado, int pos) {
@@ -137,14 +137,13 @@ public:
 			return eliminaDoInicio();
 		}
 
-		T retorno;
 		Elemento<T> *anterior = head;
 		for (int i = 0; i < pos - 1; i++) {
 			anterior = anterior->getProximo();
 		}
 
 		Elemento<T> *eliminar = anterior->getProximo();
-		retorno = eliminar->getInfo();
+		T retorno = eliminar->getInfo();
 		anterior->setProximo(eliminar->getProximo());
 
 		size--;

@@ -16,8 +16,8 @@ public:
 		double yFactor = (this->cantoSuperiorDireito.getY()
 				- this->cantoInferiorEsquerdo.getY()) * passo.getY() / 100.0;
 
-		this->cantoInferiorEsquerdo.add(xFactor, yFactor);
-		this->cantoSuperiorDireito.add(xFactor, yFactor);
+		this->cantoInferiorEsquerdo += Coordenada(xFactor, yFactor);
+		this->cantoSuperiorDireito += Coordenada(xFactor, yFactor);
 	}
 
 	void zoom(double passo) {
@@ -30,8 +30,8 @@ public:
 
 		double yFactor = altura * passo / 100.0;
 
-		this->cantoInferiorEsquerdo.add(xFactor, yFactor);
-		this->cantoSuperiorDireito.sub(xFactor, yFactor);
+		this->cantoInferiorEsquerdo += Coordenada(xFactor, yFactor);
+		this->cantoSuperiorDireito -= Coordenada(xFactor, yFactor);
 	}
 
 	double Xmin() {
