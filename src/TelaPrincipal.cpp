@@ -263,7 +263,7 @@ void TelaPrincipal::moverBaixo() {
 //			gtk_builder_get_object( builder, INPUT_PASSO ));
 //	mundo->moverBaixo(gtk_spin_button_get_value(inputPasso));
 
-	mundo->escalonar();
+	mundo->rotacionar();
 
 	atualizarTela();
 }

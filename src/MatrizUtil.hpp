@@ -2,11 +2,13 @@
 #define __MATRIZ_UTIL_H
 
 #include "Matriz.h"
+#include <cmath>
+#define PI 3.14159265359
 
 class MatrizUtil {
 
 public:
-	static Matriz matrizTransformacao(int m, int n, Coordenada deslocamento) {
+	static Matriz matrizTranslacao(int m, int n, Coordenada deslocamento) {
 		Matriz matrizTransformacao = matrizIdentidade(m, n);
 
 		matrizTransformacao(2, 0) = deslocamento.getX();
@@ -22,6 +24,22 @@ public:
 		matrizEscalonamento(1, 1) = fator.getY();
 
 		return matrizEscalonamento;
+	}
+
+	static Matriz matrizRotacao(int m, int n, double anguloGraus) {
+		Matriz matrizRotacao = matrizIdentidade(m, n);
+		double radianos = grausParaRadianos(anguloGraus);
+
+		matrizRotacao(0, 0) = cos(radianos);
+		matrizRotacao(0, 1) = -sin(radianos);
+		matrizRotacao(1, 0) = sin(radianos);
+		matrizRotacao(1, 1) = cos(radianos);
+
+		return matrizRotacao;
+	}
+
+	static double grausParaRadianos(double anguloGraus) {
+		return anguloGraus * PI / 180;
 	}
 
 	static Matriz matrizIdentidade(int m, int n) {

@@ -74,6 +74,11 @@ public:
 		std::cout << "escalonar" << std::endl;
 		displayFile->recuperaDaPosicao(0).escalonar(Coordenada(2, 2));
 	}
+
+	void rotacionar() {
+		std::cout << "rotacionar" << std::endl;
+		displayFile->recuperaDaPosicao(0).rotacionar(-25);
+	}
 };
 
 #endif

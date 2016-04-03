@@ -62,7 +62,7 @@ public:
 	}
 
 	const void transladar(Coordenada vetorDeslocamento) const {
-		Matriz matrizTransformacao = MatrizUtil::matrizTransformacao(3, 3,
+		Matriz matrizTransformacao = MatrizUtil::matrizTranslacao(3, 3,
 				vetorDeslocamento);
 		aplicarTransformacao(matrizTransformacao);
 	}
@@ -70,7 +70,17 @@ public:
 	const void escalonar(Coordenada fator) const {
 		Matriz matrizEscalonamento = MatrizUtil::matrizEscalonamento(3, 3,
 				fator);
-		aplicarTransformacaoCentro(matrizEscalonamento);
+		aplicarTransformacao(matrizEscalonamento, this->centro());
+	}
+
+	const void rotacionar(double anguloEmGraus) const {
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, anguloEmGraus);
+		aplicarTransformacao(matrizRotacao, this->centro());
+	}
+
+	const void rotacionar(Coordenada emTornoDe, double anguloEmGraus) const {
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, anguloEmGraus);
+		aplicarTransformacao(matrizRotacao, emTornoDe);
 	}
 
 private:
@@ -85,19 +95,11 @@ private:
 		}
 	}
 
-	const void aplicarTransformacaoCentro(Matriz matrizTransformacao) const {
-		Coordenada coordCentro = this->centro();
-
-		std::cout
-				<< MatrizUtil::matrizTransformacao(3, 3, coordCentro.negativa())
-				<< std::endl << std::endl;
-		std::cout << matrizTransformacao << std::endl << std::endl;
-		std::cout << MatrizUtil::matrizTransformacao(3, 3, coordCentro)
-				<< std::endl << std::endl;
-
-		Matriz resultado = MatrizUtil::matrizTransformacao(3, 3,
-				coordCentro.negativa()) * matrizTransformacao
-				* MatrizUtil::matrizTransformacao(3, 3, coordCentro);
+	const void aplicarTransformacao(Matriz matrizTransformacao,
+			Coordenada posicao) const {
+		Matriz resultado = MatrizUtil::matrizTranslacao(3, 3,
+				posicao.negativa()) * matrizTransformacao
+				* MatrizUtil::matrizTranslacao(3, 3, posicao);
 
 		aplicarTransformacao(resultado);
 	}
