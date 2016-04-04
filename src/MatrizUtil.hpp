@@ -8,6 +8,12 @@
 class MatrizUtil {
 
 public:
+
+	/* Matriz de Translação
+	 * | 1	0	0 |
+	 * | 0	1	0 |
+	 * | Dx	Dy	1 |
+	*/
 	static Matriz matrizTranslacao(int m, int n, Coordenada deslocamento) {
 		Matriz matrizTransformacao = matrizIdentidade(m, n);
 
@@ -17,6 +23,11 @@ public:
 		return matrizTransformacao;
 	}
 
+	/* Matriz de Escalonamento
+	 * | Sx	0	0 |
+	 * | 0	Sy	0 |
+	 * | 0	0	1 |
+	*/
 	static Matriz matrizEscalonamento(int m, int n, Coordenada fator) {
 		Matriz matrizEscalonamento = matrizIdentidade(m, n);
 
@@ -26,6 +37,11 @@ public:
 		return matrizEscalonamento;
 	}
 
+	/* Matriz de Rotacao
+	 * | cos(Θ)	-sin(Θ)	0 |
+	 * | sin(Θ)	 cos(Θ)	0 |
+	 * | 0		 0		1 |
+	*/
 	static Matriz matrizRotacao(int m, int n, double anguloGraus) {
 		Matriz matrizRotacao = matrizIdentidade(m, n);
 		double radianos = grausParaRadianos(anguloGraus);
