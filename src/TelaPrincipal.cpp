@@ -13,7 +13,6 @@ void abrir_popup_adicionar(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 
 void mover_cima(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->moverCima();
-	std::cout << telaPrincipal->radioTelaSelecionado() << std::endl;
 }
 
 void mover_baixo(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
@@ -38,6 +37,18 @@ void zoom_in(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 
 void zoom_out(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->zoomOut();
+}
+
+void aplicar_translacao(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->aplicarTranslacao();
+}
+
+void aplicar_escalonamento(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->aplicarEscalonamento();
+}
+
+void aplicar_rotacao(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->aplicarRotacao();
 }
 }
 
@@ -107,6 +118,25 @@ TelaPrincipal::TelaPrincipal() {
 
 	GtkWidget *telaPrincipal = GTK_WIDGET(
 			gtk_builder_get_object(builder, TELA_PRINCIPAL));
+
+	// signals de transformações
+
+	GtkWidget *botaoAplicarTranslacao = GTK_WIDGET(
+			gtk_builder_get_object(builder, BOTAO_APLICAR_TRANSLACAO));
+	g_signal_connect(G_OBJECT(botaoAplicarTranslacao), "clicked",
+			G_CALLBACK(aplicar_translacao), this);
+
+	GtkWidget *botaoAplicarEscalonamento = GTK_WIDGET(
+			gtk_builder_get_object(builder, BOTAO_APLICAR_ESCALONAMENTO));
+	g_signal_connect(G_OBJECT(botaoAplicarEscalonamento), "clicked",
+			G_CALLBACK(aplicar_escalonamento), this);
+
+	GtkWidget *botaoAplicarRotacao = GTK_WIDGET(
+			gtk_builder_get_object(builder, BOTAO_APLICAR_ROTACAO));
+	g_signal_connect(G_OBJECT(botaoAplicarRotacao), "clicked",
+			G_CALLBACK(aplicar_rotacao), this);
+
+	// fim signals de transformações
 
 	//para de rodar ao clicar no X
 	g_signal_connect(telaPrincipal, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -259,11 +289,9 @@ void TelaPrincipal::moverCima() {
 }
 
 void TelaPrincipal::moverBaixo() {
-//	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
-//			gtk_builder_get_object( builder, INPUT_PASSO ));
-//	mundo->moverBaixo(gtk_spin_button_get_value(inputPasso));
-
-	mundo->rotacionar();
+	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, INPUT_PASSO ));
+	mundo->moverBaixo(gtk_spin_button_get_value(inputPasso));
 
 	atualizarTela();
 }
@@ -300,6 +328,57 @@ void TelaPrincipal::zoomOut() {
 	atualizarTela();
 }
 
+void TelaPrincipal::aplicarTranslacao() {
+	GtkSpinButton *spinX = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_TRANSLACAO_X ));
+	GtkSpinButton *spinY = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_TRANSLACAO_Y ));
+
+	mundo->transladar(getObjetoSelecionado(),
+			Coordenada(gtk_spin_button_get_value(spinX),
+					gtk_spin_button_get_value(spinY)));
+
+	atualizarTela();
+}
+
+void TelaPrincipal::aplicarEscalonamento() {
+	GtkSpinButton *spinX = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_ESCALONAMENTO_X ));
+	GtkSpinButton *spinY = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_ESCALONAMENTO_Y ));
+
+	mundo->escalonar(getObjetoSelecionado(),
+			Coordenada(gtk_spin_button_get_value(spinX),
+					gtk_spin_button_get_value(spinY)));
+
+	atualizarTela();
+}
+
+void TelaPrincipal::aplicarRotacao() {
+	GtkSpinButton *spinAngulo = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_ANGULO_ROTACAO ));
+	double angulo = gtk_spin_button_get_value(spinAngulo);
+	switch (this->radioRotacaoSelecionada()) {
+	case 1:
+		mundo->rotacionar(getObjetoSelecionado(), angulo);
+		break;
+	case 2:
+		mundo->rotacionar(getObjetoSelecionado(), angulo, Coordenada(0, 0));
+		break;
+	case 3:
+		GtkSpinButton *spinX = GTK_SPIN_BUTTON(
+				gtk_builder_get_object( builder, SPIN_ROTACAO_X ));
+		GtkSpinButton *spinY = GTK_SPIN_BUTTON(
+				gtk_builder_get_object( builder, SPIN_ROTACAO_Y ));
+		mundo->rotacionar(getObjetoSelecionado(), angulo,
+				Coordenada(gtk_spin_button_get_value(spinX),
+						gtk_spin_button_get_value(spinY)));
+		break;
+	}
+
+	atualizarTela();
+}
+
 ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
 	GtkWidget *drawingArea = GTK_WIDGET(
 			gtk_builder_get_object( builder, AREA_DESENHO ));
@@ -326,16 +405,37 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
 	return coordenadas;
 }
 
-int TelaPrincipal::radioTelaSelecionado() {
-	GtkRadioButton *radioTela = GTK_RADIO_BUTTON(
-			gtk_builder_get_object (builder, RADIO_TELA));
-	GtkRadioButton *radioObjeto = GTK_RADIO_BUTTON(
-			gtk_builder_get_object (builder, RADIO_OBJETO));
+char* TelaPrincipal::getObjetoSelecionado() {
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(
+			GTK_TREE_VIEW(gtk_builder_get_object( builder, ARVORE_OBJETOS )));
+	GtkTreeModel *model;
+	GtkTreeIter iter;
 
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioTela))) {
+	if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
+		gchar *name;
+		gtk_tree_model_get(model, &iter, 0, &name, -1);
+		return name;
+	}
+
+	return NULL;
+}
+
+int TelaPrincipal::radioRotacaoSelecionada() {
+	GtkRadioButton *radioCentroObjeto = GTK_RADIO_BUTTON(
+			gtk_builder_get_object (builder, RADIO_ROTACAO_CENTRO_OBJETO));
+	GtkRadioButton *radioCentroTela = GTK_RADIO_BUTTON(
+			gtk_builder_get_object (builder, RADIO_ROTACAO_ORIGEM));
+	GtkRadioButton *radioCentroPonto = GTK_RADIO_BUTTON(
+			gtk_builder_get_object (builder, RADIO_ROTACAO_PONTO));
+
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioCentroObjeto))) {
 		return 1;
-	} else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioObjeto))) {
+	} else if (gtk_toggle_button_get_active(
+			GTK_TOGGLE_BUTTON(radioCentroTela))) {
 		return 2;
+	} else if (gtk_toggle_button_get_active(
+			GTK_TOGGLE_BUTTON(radioCentroPonto))) {
+		return 3;
 	}
 	return -1;
 }

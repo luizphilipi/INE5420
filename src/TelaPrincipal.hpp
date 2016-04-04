@@ -43,9 +43,17 @@ public:
 
 	void zoomOut();
 
+	void aplicarTranslacao();
+
+	void aplicarEscalonamento();
+
+	void aplicarRotacao();
+
 	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico obj);
 
-	int radioTelaSelecionado();
+private:
+	int radioRotacaoSelecionada();
+	char* getObjetoSelecionado();
 };
 
 #endif

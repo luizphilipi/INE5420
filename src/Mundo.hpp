@@ -6,6 +6,7 @@
 #include "ObjetoGrafico.hpp"
 #include "Poligono.hpp"
 #include "Ponto.hpp"
+#include <cstring>
 
 class Mundo {
 private:
@@ -65,19 +66,44 @@ public:
 		canvas.zoom(-passo);
 	}
 
-	void transladar() {
-		std::cout << "transladar" << std::endl;
-		displayFile->recuperaDaPosicao(0).transladar(Coordenada(25, 25));
+	void transladar(char* nome, Coordenada coord) {
+		for (int i = 0; i < this->displayFile->getSize(); ++i) {
+			ObjetoGrafico obj = this->displayFile->recuperaDaPosicao(i);
+			if (strcmp(nome, obj.getNome()) == 0) {
+				obj.transladar(coord);
+				break;
+			}
+		}
 	}
 
-	void escalonar() {
-		std::cout << "escalonar" << std::endl;
-		displayFile->recuperaDaPosicao(0).escalonar(Coordenada(2, 2));
+	void escalonar(char* nome, Coordenada coord) {
+		for (int i = 0; i < this->displayFile->getSize(); ++i) {
+			ObjetoGrafico obj = this->displayFile->recuperaDaPosicao(i);
+			if (strcmp(nome, obj.getNome()) == 0) {
+				obj.escalonar(coord);
+				break;
+			}
+		}
 	}
 
-	void rotacionar() {
-		std::cout << "rotacionar" << std::endl;
-		displayFile->recuperaDaPosicao(0).rotacionar(-25);
+	void rotacionar(char* nome, double angulo) {
+		for (int i = 0; i < this->displayFile->getSize(); ++i) {
+			ObjetoGrafico obj = this->displayFile->recuperaDaPosicao(i);
+			if (strcmp(nome, obj.getNome()) == 0) {
+				obj.rotacionar(angulo);
+				break;
+			}
+		}
+	}
+
+	void rotacionar(char* nome, double angulo, Coordenada coord) {
+		for (int i = 0; i < this->displayFile->getSize(); ++i) {
+			ObjetoGrafico obj = this->displayFile->recuperaDaPosicao(i);
+			if (strcmp(nome, obj.getNome()) == 0) {
+				obj.rotacionar(coord, angulo);
+				break;
+			}
+		}
 	}
 };
 
