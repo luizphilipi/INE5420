@@ -1,4 +1,5 @@
 #include "TelaPrincipal.hpp"
+#include "DescritorObj.hpp"
 
 extern "C" {
 gboolean callback_desenhar_tudo(GtkWidget *widget, cairo_t *cr,
@@ -319,6 +320,15 @@ void TelaPrincipal::moverBaixo() {
 	mundo->moverBaixo(gtk_spin_button_get_value(inputPasso));
 
 	atualizarTela();
+
+
+	// ----------teste----------------
+	DescritorObj * dobj = new DescritorObj();
+	ListaEnc<ObjetoGrafico> * df = new ListaEnc<ObjetoGrafico>;
+	df = dobj->ler("teste");
+	mundo->adicionaObjetos(df);
+	//------------fim teste------------
+
 }
 
 void TelaPrincipal::moverEsquerda() {

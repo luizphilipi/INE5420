@@ -27,12 +27,24 @@ protected:
 	ListaEnc<Coordenada> *listaCoords;
 
 public:
+
+	ObjetoGrafico() :
+			nome(""), tipo(PONTO), listaCoords(NULL) {
+	}
+
+
 	string getNome() {
 		return nome;
+	}
+	void setNome(string n) {
+		nome = n;
 	}
 
 	tipoGeometria getTipo() {
 		return tipo;
+	}
+	void setTipo(tipoGeometria t) {
+		tipo = t;
 	}
 
 	int getQuantidadeCoords() {
@@ -41,6 +53,9 @@ public:
 
 	ListaEnc<Coordenada> * getListaCoord() {
 		return listaCoords;
+	}
+	void setListaCoord(ListaEnc<Coordenada> * l) {
+		listaCoords = l;
 	}
 
 	Coordenada getCoord(int i) {
@@ -116,7 +131,7 @@ public:
 	 *       f 1 2 3
 	 */
 	string transcreveObj(){
-		string vertices = "# " + nome + "\n";
+		string vertices = "#" + nome + "\n";
 		string f = "f ";
 
 		for(int i = 0; i<listaCoords->getSize(); i++){
