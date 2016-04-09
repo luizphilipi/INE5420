@@ -114,11 +114,13 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(G_OBJECT(botaoAdicionarObjeto), "clicked",
 			G_CALLBACK(adicionar_objeto), this);
 
-	GtkWidget *addCoordButton = GTK_WIDGET(
-			gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_POLIGONO));
-	g_signal_connect(G_OBJECT(addCoordButton), "clicked",
-			G_CALLBACK(adicionar_coordenada_poligono), this);
-
+/*
+ *
+ * 	GtkWidget *addCoordButton = GTK_WIDGET(
+ * 				gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_POLIGONO));
+ * 	g_signal_connect(G_OBJECT(addCoordButton), "clicked",
+ * 				G_CALLBACK(adicionar_coordenada_poligono), this);
+*/
 	// FAZ COM QUE NÃO DELETE A POP-UP, SÓ ESCONDA
 	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET(
 			gtk_builder_get_object (builder, MODAL_ADICIONAR_COORDENADAS));

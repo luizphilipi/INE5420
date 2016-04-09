@@ -104,6 +104,34 @@ public:
 		aplicarTransformacao(matrizRotacao, emTornoDe);
 	}
 
+	/*
+	 * Transcreve um objeto gráfico para o formato .obj
+	 * nome, tipo, vértices e arestas
+	 * Ex: To describe a polygon, the file first describes each point
+	 * with the "v"keyword, then describes the face with the "f" keyword.
+	 *       # Simple Wavefront file
+	 *       v 0.0 0.0 0.0
+	 *       v 0.0 1.0 0.0
+	 *       v 1.0 0.0 0.0
+	 *       f 1 2 3
+	 */
+	string transcreveObj(){
+		string vertices = "# " + nome + "\n";
+		string f = "f ";
+
+		for(int i = 0; i<listaCoords->getSize(); i++){
+			Coordenada atual = getCoord(i);
+			vertices += "v " +
+					std::to_string(atual.getX()) + " " +
+					std::to_string(atual.getY()) + " " +
+					std::to_string(atual.getZ()) + "\n";
+			f += std::to_string(i+1) + " ";
+		}
+		f += "\n\n";
+		return vertices + f;
+	}
+
+
 private:
 
 	// [x' y' z' ... ] = [x y z ...] * matriz transformação
@@ -125,6 +153,7 @@ private:
 
 		aplicarTransformacao(resultado);
 	}
+
 };
 
 #endif
