@@ -115,13 +115,13 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(G_OBJECT(botaoAdicionarObjeto), "clicked",
 			G_CALLBACK(adicionar_objeto), this);
 
-/*
- *
- * 	GtkWidget *addCoordButton = GTK_WIDGET(
- * 				gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_POLIGONO));
- * 	g_signal_connect(G_OBJECT(addCoordButton), "clicked",
- * 				G_CALLBACK(adicionar_coordenada_poligono), this);
-*/
+	/*
+	 *
+	 * 	GtkWidget *addCoordButton = GTK_WIDGET(
+	 * 				gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_POLIGONO));
+	 * 	g_signal_connect(G_OBJECT(addCoordButton), "clicked",
+	 * 				G_CALLBACK(adicionar_coordenada_poligono), this);
+	 */
 	// FAZ COM QUE NÃO DELETE A POP-UP, SÓ ESCONDA
 	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET(
 			gtk_builder_get_object (builder, MODAL_ADICIONAR_COORDENADAS));
@@ -171,9 +171,6 @@ void TelaPrincipal::adicionarObjeto() {
 
 	GtkNotebook *objNotebook = GTK_NOTEBOOK(
 			gtk_builder_get_object( builder, ABAS_MODAL_ADICIONAR ));
-
-	GtkListStore *listStoreObjetos = GTK_LIST_STORE(
-			gtk_builder_get_object( builder, LIST_STORE_OBJETOS ));
 
 	const char* nomeObjeto = gtk_entry_get_text(inputObjeto);
 	nomeObjeto = (nomeObjeto[0] == '\0') ? "objeto" : nomeObjeto;
@@ -249,12 +246,18 @@ void TelaPrincipal::adicionarObjeto() {
 		break;
 	}
 
-	GtkTreeIter iter;
-	gtk_list_store_append(listStoreObjetos, &iter);
-	gtk_list_store_set(listStoreObjetos, &iter, 0, nomeObjeto, -1);
+	adicionarObjetoNaLista(nomeObjeto);
 
 	atualizarTela();
 	fecharPopupAdicionar();
+}
+
+void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
+	GtkListStore *listStoreObjetos = GTK_LIST_STORE(
+			gtk_builder_get_object( builder, LIST_STORE_OBJETOS ));
+	GtkTreeIter iter;
+	gtk_list_store_append(listStoreObjetos, &iter);
+	gtk_list_store_set(listStoreObjetos, &iter, 0, nomeObjeto, -1);
 }
 
 void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
@@ -321,12 +324,27 @@ void TelaPrincipal::moverBaixo() {
 
 	atualizarTela();
 
-
 	// ----------teste----------------
 	DescritorObj * dobj = new DescritorObj();
 	ListaEnc<ObjetoGrafico> * df = new ListaEnc<ObjetoGrafico>;
 	df = dobj->ler("teste");
-	mundo->adicionaObjetos(df);
+	for (int i = 0; i < df->size; i++) {
+		ObjetoGrafico atual = df->recuperaDaPosicao(i);
+		switch (atual.getTipo()) {
+		case PONTO:
+			mundo->adicionaPonto(atual.getNome(), atual.getCoord(0));
+			break;
+		case LINHA:
+			mundo->adicionaLinha(atual.getNome(), atual.getCoord(0),
+					atual.getCoord(1));
+			break;
+		case POLIGONO:
+			mundo->adicionaPoligono(atual.getNome(), atual.getListaCoord());
+			break;
+		}
+		adicionarObjetoNaLista(atual.getNome().c_str());
+	}
+
 	//------------fim teste------------
 
 }

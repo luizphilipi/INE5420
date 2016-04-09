@@ -56,6 +56,7 @@ public:
 private:
 	int radioRotacaoSelecionada();
 	char* getObjetoSelecionado();
+	void adicionarObjetoNaLista(const char* nome);
 };
 
 #endif

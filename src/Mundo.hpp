@@ -25,24 +25,6 @@ public:
 	virtual ~Mundo() {
 	}
 
-	void adicionaObjetos(ListaEnc<ObjetoGrafico> * df){
-		for(int i = 0; i<df->size; i++){
-			ObjetoGrafico atual = df->recuperaDaPosicao(i);
-			switch(atual.getTipo()){
-				case PONTO:
-					adicionaPonto(atual.getNome(), atual.getCoord(0));
-					break;
-				case LINHA:
-					adicionaLinha(atual.getNome(), atual.getCoord(0), atual.getCoord(1));
-					break;
-				case POLIGONO:
-					adicionaPoligono(atual.getNome(), atual.getListaCoord());
-					break;
-			}
-		}
-	}
-
-
 	void adicionaPonto(string nome, Coordenada coord) {
 		displayFile->adiciona(Ponto(nome, coord));
 	}
