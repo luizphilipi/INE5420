@@ -5,7 +5,7 @@
 
 class Linha: public ObjetoGrafico {
 public:
-	Linha(const char* nome, Coordenada coord1, Coordenada coord2) :
+	Linha(string nome, Coordenada coord1, Coordenada coord2) :
 			ObjetoGrafico(nome, LINHA) {
 		listaCoords->adiciona(coord1);
 		listaCoords->adiciona(coord2);

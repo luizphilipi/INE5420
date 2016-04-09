@@ -5,7 +5,7 @@
 
 class Ponto: public ObjetoGrafico {
 public:
-	Ponto(char const* nome, Coordenada coord) :
+	Ponto(string nome, Coordenada coord) :
 			ObjetoGrafico(nome, PONTO) {
 		listaCoords->adiciona(coord);
 	}

@@ -23,6 +23,7 @@
 
 // popup de adicionar (POLIGONO)
 #define BOX_POLIGONO "boxPoligono"
+#define BOTAO_ADICIONAR_COORD_POLIGONO "botaoAdicionarCoordPoligono"
 
 // botões de movimentação
 #define MOVE_UP_BTN "btnUp"

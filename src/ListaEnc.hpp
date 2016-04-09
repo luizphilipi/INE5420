@@ -8,10 +8,10 @@ template<typename T>
 class ListaEnc {
 
 private:
-	Elemento<T>* head;
-	int size;
 
 public:
+	Elemento<T>* head;
+	int size;
 	ListaEnc() {
 		size = 0;
 		head = 0;
@@ -72,7 +72,8 @@ public:
 		for (int i = 1; i < pos; i++) {
 			anterior = anterior->getProximo();
 		}
-		Elemento<T> *novo = new Elemento<T>(dado, anterior->getProximo());
+		Elemento<T> *novo = new Elemento<T>(dado);
+		novo->setProximo(anterior->getProximo());
 		if (novo == 0) {
 			throw std::runtime_error(
 					"Não foi possível alocar memória p/ novo elemento");
@@ -151,7 +152,7 @@ public:
 		return retorno;
 	}
 
-	const T recuperaDaPosicao(int pos) const {
+	T recuperaDaPosicao(int pos) {
 		if (pos >= size || pos < 0) { //pq pos começa em 0
 			throw std::runtime_error(
 					"Impossível recuperar elemento: posição inválida.");
@@ -159,6 +160,7 @@ public:
 		if (pos == 0) {
 			return recuperaDoInicio();
 		}
+
 		Elemento<T> *atual = head;
 		for (int i = 0; i < pos; i++) {
 			atual = atual->getProximo();

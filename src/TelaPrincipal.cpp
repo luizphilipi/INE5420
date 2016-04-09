@@ -50,6 +50,11 @@ void aplicar_escalonamento(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 void aplicar_rotacao(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->aplicarRotacao();
 }
+
+void adicionar_coordenada_poligono(GtkWidget *widget,
+		TelaPrincipal *telaPrincipal) {
+	telaPrincipal->adicionarCoordenadaPoligono();
+}
 }
 
 void TelaPrincipal::atualizarTela() {
@@ -108,6 +113,11 @@ TelaPrincipal::TelaPrincipal() {
 			gtk_builder_get_object(builder, BOTAO_ADICIONAR_OBJETO));
 	g_signal_connect(G_OBJECT(botaoAdicionarObjeto), "clicked",
 			G_CALLBACK(adicionar_objeto), this);
+
+	GtkWidget *addCoordButton = GTK_WIDGET(
+			gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_POLIGONO));
+	g_signal_connect(G_OBJECT(addCoordButton), "clicked",
+			G_CALLBACK(adicionar_coordenada_poligono), this);
 
 	// FAZ COM QUE NÃO DELETE A POP-UP, SÓ ESCONDA
 	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET(
@@ -208,13 +218,26 @@ void TelaPrincipal::adicionarObjeto() {
 		int i = 0;
 		GtkSpinButton *input;
 		for (l = children; i < g_list_length(children); l = l->next, ++i) {
-			GtkGrid *coordGrid = GTK_GRID(l->data);
+			GtkBox *coordGrid = GTK_BOX(l->data);
 
-			input = GTK_SPIN_BUTTON(gtk_grid_get_child_at(coordGrid, 1, 0));
-			int x = gtk_spin_button_get_value(input);
-
-			input = GTK_SPIN_BUTTON(gtk_grid_get_child_at(coordGrid, 3, 0));
-			int y = gtk_spin_button_get_value(input);
+			GList* children2 = gtk_container_get_children(
+					GTK_CONTAINER(coordGrid));
+			GList * l2;
+			int i = 0;
+			GtkSpinButton *input;
+			int j = 0;
+			int x = 0;
+			int y = 0;
+			for (l2 = children2; j < g_list_length(children2);
+					l2 = l2->next, ++j) {
+				if (j == 1) {
+					GtkSpinButton *inputX = GTK_SPIN_BUTTON(l2->data);
+					x = gtk_spin_button_get_value(inputX);
+				} else if (j == 3) {
+					GtkSpinButton *inputY = GTK_SPIN_BUTTON(l2->data);
+					y = gtk_spin_button_get_value(inputY);
+				}
+			}
 
 			coordenadas->adiciona(Coordenada(x, y));
 		}
@@ -358,25 +381,28 @@ void TelaPrincipal::aplicarRotacao() {
 	GtkSpinButton *spinAngulo = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_ANGULO_ROTACAO ));
 	double angulo = gtk_spin_button_get_value(spinAngulo);
-	switch (this->radioRotacaoSelecionada()) {
-	case 1:
-		mundo->rotacionar(getObjetoSelecionado(), angulo);
-		break;
-	case 2:
-		mundo->rotacionar(getObjetoSelecionado(), angulo, Coordenada(0, 0));
-		break;
-	case 3:
-		GtkSpinButton *spinX = GTK_SPIN_BUTTON(
-				gtk_builder_get_object( builder, SPIN_ROTACAO_X ));
-		GtkSpinButton *spinY = GTK_SPIN_BUTTON(
-				gtk_builder_get_object( builder, SPIN_ROTACAO_Y ));
-		mundo->rotacionar(getObjetoSelecionado(), angulo,
-				Coordenada(gtk_spin_button_get_value(spinX),
-						gtk_spin_button_get_value(spinY)));
-		break;
-	}
 
-	atualizarTela();
+	if (getObjetoSelecionado() != NULL) {
+		switch (this->radioRotacaoSelecionada()) {
+		case 1:
+			mundo->rotacionar(getObjetoSelecionado(), angulo);
+			break;
+		case 2:
+			mundo->rotacionar(getObjetoSelecionado(), angulo, Coordenada(0, 0));
+			break;
+		case 3:
+			GtkSpinButton *spinX = GTK_SPIN_BUTTON(
+					gtk_builder_get_object( builder, SPIN_ROTACAO_X ));
+			GtkSpinButton *spinY = GTK_SPIN_BUTTON(
+					gtk_builder_get_object( builder, SPIN_ROTACAO_Y ));
+			mundo->rotacionar(getObjetoSelecionado(), angulo,
+					Coordenada(gtk_spin_button_get_value(spinX),
+							gtk_spin_button_get_value(spinY)));
+			break;
+		}
+
+		atualizarTela();
+	}
 }
 
 ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
@@ -418,10 +444,11 @@ char* TelaPrincipal::getObjetoSelecionado() {
 	}
 
 	GtkDialogFlags flags = GTK_DIALOG_DESTROY_WITH_PARENT;
-	GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(gtk_builder_get_object( builder, TELA_PRINCIPAL )), flags, GTK_MESSAGE_ERROR,
-			GTK_BUTTONS_CLOSE, "Selecione um objeto");
+	GtkWidget *dialog = gtk_message_dialog_new(
+			GTK_WINDOW(gtk_builder_get_object( builder, TELA_PRINCIPAL )),
+			flags, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Selecione um objeto");
 	gtk_dialog_run(GTK_DIALOG(dialog));
-	gtk_widget_destroy (dialog);
+	gtk_widget_destroy(dialog);
 
 	return NULL;
 }
@@ -444,4 +471,33 @@ int TelaPrincipal::radioRotacaoSelecionada() {
 		return 3;
 	}
 	return -1;
+}
+
+void TelaPrincipal::adicionarCoordenadaPoligono() {
+	GtkBox *boxPoligono = GTK_BOX(
+			gtk_builder_get_object(builder, BOX_POLIGONO));
+
+	GtkBox *boxNovo = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+
+	GtkWidget *labelX = gtk_label_new("X: ");
+	GtkWidget *labelY = gtk_label_new("Y: ");
+
+	GtkAdjustment *adjustmentX = gtk_adjustment_new(0.0, -9999.0, 9999.0, 1.0,
+			10.0, 0.0);
+
+	GtkWidget *spinX = gtk_spin_button_new(adjustmentX, 1.0, 0);
+
+	GtkAdjustment *adjustmentY = gtk_adjustment_new(0.0, -9999.0, 9999.0, 1.0,
+			10.0, 0.0);
+
+	GtkWidget *spinY = gtk_spin_button_new(adjustmentY, 1.0, 0);
+
+	gtk_box_pack_end(boxNovo, labelX, false, true, 0);
+	gtk_box_pack_end(boxNovo, spinX, false, true, 0);
+	gtk_box_pack_end(boxNovo, labelY, false, true, 0);
+	gtk_box_pack_end(boxNovo, spinY, false, true, 0);
+
+	gtk_box_pack_end(boxPoligono, GTK_WIDGET(boxNovo), false, true, 0);
+
+	gtk_widget_queue_draw(GTK_WIDGET(boxPoligono));
 }

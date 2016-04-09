@@ -5,7 +5,7 @@
 
 class Poligono: public ObjetoGrafico {
 public:
-	Poligono(char const* nome, ListaEnc<Coordenada>* pontos) :
+	Poligono(string nome, ListaEnc<Coordenada>* pontos) :
 			ObjetoGrafico(nome, POLIGONO, pontos) {
 	}
 };

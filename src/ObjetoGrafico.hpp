@@ -4,6 +4,7 @@
 #include "ListaEnc.hpp"
 #include "Coordenada.hpp"
 #include "MatrizUtil.hpp"
+#include <string>
 
 enum tipoGeometria {
 	PONTO, LINHA, POLIGONO
@@ -11,22 +12,22 @@ enum tipoGeometria {
 
 class ObjetoGrafico {
 protected:
-	ObjetoGrafico(char const* nome, tipoGeometria tipo) :
+	ObjetoGrafico(string nome, tipoGeometria tipo) :
 			nome(nome), tipo(tipo) {
 		listaCoords = new ListaEnc<Coordenada>();
 	}
 
-	ObjetoGrafico(char const* nome, tipoGeometria tipo,
+	ObjetoGrafico(string nome, tipoGeometria tipo,
 			ListaEnc<Coordenada> *coords) :
 			nome(nome), tipo(tipo), listaCoords(coords) {
 	}
 
-	char const *nome;
+	string nome;
 	tipoGeometria tipo;
 	ListaEnc<Coordenada> *listaCoords;
 
 public:
-	char const* getNome() {
+	string getNome() {
 		return nome;
 	}
 

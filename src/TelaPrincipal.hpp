@@ -49,8 +49,9 @@ public:
 
 	void aplicarRotacao();
 
-	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico obj);
+	void adicionarCoordenadaPoligono();
 
+	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico obj);
 private:
 	int radioRotacaoSelecionada();
 	char* getObjetoSelecionado();
