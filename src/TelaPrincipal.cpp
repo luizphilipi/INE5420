@@ -32,6 +32,14 @@ void adicionar_objeto(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->adicionarObjeto();
 }
 
+void abrir_mundo(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->abrirMundo();
+}
+
+void salvar_mundo(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->salvarMundo();
+}
+
 void zoom_in(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->zoomIn();
 }
@@ -150,6 +158,20 @@ TelaPrincipal::TelaPrincipal() {
 			G_CALLBACK(aplicar_rotacao), this);
 
 	// fim signals de transformações
+
+
+	//signal mundo abrir/salvar
+	GtkWidget *botaoAbrirMundo = GTK_WIDGET(
+			gtk_builder_get_object(builder, ABRIR_MUNDO));
+	g_signal_connect(G_OBJECT(botaoAbrirMundo), "clicked",
+			G_CALLBACK(abrir_mundo), this);
+
+	GtkWidget *botaoSalvarMundo = GTK_WIDGET(
+				gtk_builder_get_object(builder, SALVAR_MUNDO));
+		g_signal_connect(G_OBJECT(botaoSalvarMundo), "clicked",
+				G_CALLBACK(salvar_mundo), this);
+	//FIM signal mundo abrir/salvar
+
 
 	//para de rodar ao clicar no X
 	g_signal_connect(telaPrincipal, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -323,11 +345,16 @@ void TelaPrincipal::moverBaixo() {
 	mundo->moverBaixo(gtk_spin_button_get_value(inputPasso));
 
 	atualizarTela();
+}
 
-	// ----------teste----------------
+void TelaPrincipal::abrirMundo() {
+	GtkEntry * caminhoArquivo = GTK_ENTRY(
+			gtk_builder_get_object(builder, CAMINHO_ARQUIVO));
+	string caminho = gtk_entry_get_text(caminhoArquivo);
+
 	DescritorObj * dobj = new DescritorObj();
 	ListaEnc<ObjetoGrafico> * df = new ListaEnc<ObjetoGrafico>;
-	df = dobj->ler("teste");
+	df = dobj->ler(caminho);
 	for (int i = 0; i < df->size; i++) {
 		ObjetoGrafico atual = df->recuperaDaPosicao(i);
 		switch (atual.getTipo()) {
@@ -344,10 +371,20 @@ void TelaPrincipal::moverBaixo() {
 		}
 		adicionarObjetoNaLista(atual.getNome().c_str());
 	}
-
-	//------------fim teste------------
+	atualizarTela();
 
 }
+
+void TelaPrincipal::salvarMundo() {
+	GtkEntry * caminhoArquivo = GTK_ENTRY(
+			gtk_builder_get_object(builder, CAMINHO_ARQUIVO));
+	string caminho = gtk_entry_get_text(caminhoArquivo);
+
+	DescritorObj * dobj = new DescritorObj();
+	dobj->escrever(mundo, caminho);
+}
+
+
 
 void TelaPrincipal::moverEsquerda() {
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(

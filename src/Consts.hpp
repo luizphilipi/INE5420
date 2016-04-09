@@ -5,6 +5,10 @@
 #define AREA_DESENHO "drawingArea"
 #define INPUT_PASSO "spinPasso"
 
+#define ABRIR_MUNDO "botaoAbrirMundo"
+#define SALVAR_MUNDO "botaoSalvarMundo"
+#define CAMINHO_ARQUIVO "caminhoArquivo"
+
 // popup de adicionar
 #define MODAL_ADICIONAR_COORDENADAS "addObjectWindow"
 #define ABAS_MODAL_ADICIONAR "abasModalAdicionar"

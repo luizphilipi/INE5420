@@ -52,11 +52,16 @@ public:
 
 	void adicionarCoordenadaPoligono();
 
+	void abrirMundo();
+
+	void salvarMundo();
+
 	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico obj);
 private:
 	int radioRotacaoSelecionada();
 	char* getObjetoSelecionado();
 	void adicionarObjetoNaLista(const char* nome);
+
 };
 
 #endif
