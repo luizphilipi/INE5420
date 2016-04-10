@@ -15,35 +15,77 @@ public:
 	virtual ~DescritorObj(){}
 
 	void escrever(Mundo * mundo, string caminho){
+		int count = 1;
+		int *pcount = &count;
+
 		ofstream arquivo;
 		arquivo.open(caminho.c_str());
 		if(arquivo.is_open()){
 			for(int i = 0; i<mundo->getObjetos()->getSize(); ++i){
 				ObjetoGrafico obj = mundo->getObjetos()->recuperaDaPosicao(i);
-				arquivo << obj.transcreveObj();
+				arquivo << transcreveObj(mundo->getObjetos()->recuperaDaPosicao(i), pcount);
 			}
 		}
 		arquivo.close();
 	}
 
+	/*
+	 * Transcreve um objeto gráfico para o formato .obj
+	 * nome, tipo, vértices e arestas
+	 * Ex: To describe a polygon, the file first describes each point
+	 * with the "v"keyword, then describes the face with the "f" keyword.
+	 *   1    v 0.0 0.0 0.0
+	 *   2   v 0.0 1.0 0.0
+	 *   3   v 1.0 0.0 0.0
+	 *   4   f 1 2 3
+	 */
+	string transcreveObj(ObjetoGrafico obj, int * count){
+		string retorno = "o " + obj.getNome() + "\n";
+		*count = *count+1;
+		string final;
+		ListaEnc<Coordenada> * coords = obj.getListaCoord();
+		for(int i = 0; i<coords->getSize(); i++){
+			Coordenada atual = coords->recuperaDaPosicao(i);
+			retorno += "v " +
+					std::to_string(atual.getX()) + " " +
+					std::to_string(atual.getY()) + " " +
+					std::to_string(atual.getZ()) + "\n";
+			final += " " + std::to_string(*count);
+			*count = *count+1;
+		}
+		if(obj.getTipo() == PONTO){
+			retorno += "p" + final + "\n";
+		} else {
+			retorno += "l" + final + "\n";
+		}
+		*count = *count+1;
+		return retorno;
+	}
 
+
+	/* tá "errado" ainda: no momento as coordenadas dos objetos têm que
+	 * estar em sequência e só podem ser usadas por aquele obj
+	 *
+	 * mudar p/: ao percorrer o arquivo guardar todas as coord e
+	 * seus respectivos números da linha em que estão
+	 * na hora de colocar as coord dos objetos verificar que coord eles têm
+	 * (pelos números após 'p' ou 'l') e então colocar as coord das linhas certas
+	 *
+	 */
 	ListaEnc<ObjetoGrafico> * ler(string caminho){
+		ListaEnc<ObjetoGrafico> * displayFile = new ListaEnc<ObjetoGrafico>();
 		string linha;
 		ifstream arquivo(caminho);
-		ListaEnc<ObjetoGrafico> * displayFile = new ListaEnc<ObjetoGrafico>();
-
 		if(arquivo.is_open()){
-
 			ObjetoGrafico * obj;
 
 			while(getline(arquivo, linha)){
-
 				ListaEnc<Coordenada> * coords;
 				string nome;
 
-				if(!linha.find("#")){
+				if(!linha.find("o")){
 					obj = new ObjetoGrafico();
-					nome = linha.erase(0,1);
+					nome = linha.erase(0,2);
 					nome = split(nome, " ").front();
 					obj->setNome(nome);
 
@@ -57,7 +99,7 @@ public:
 							atoi(coordenadas[3].c_str()));
 					coords->adiciona(*coord);
 
-					} else if (!linha.find("f")){
+					} else if (!linha.find("p") || !linha.find("l")){
 						vector<string> f = split(linha, " ");
 						if(f.size()== 2){
 							std::cout<< nome << endl;
@@ -65,26 +107,24 @@ public:
 							obj->setListaCoord(coords);
 							displayFile->adiciona(*obj);
 
-							std::cout << obj->transcreveObj() << endl; //teste
 
 						} else if (f.size() == 3){
 							obj->setTipo(LINHA);
 							obj->setListaCoord(coords);
 							displayFile->adiciona(*obj);
 
-							std::cout << obj->transcreveObj() << endl; //teste
 
 						} else {
 							obj->setTipo(POLIGONO);
 							obj->setListaCoord(coords);
 							displayFile->adiciona(*obj);
 
-							std::cout << obj->transcreveObj() << endl; //teste
 						}
 					}
 				}
 			arquivo.close();
 		}
+
 		return displayFile;
 	}
 

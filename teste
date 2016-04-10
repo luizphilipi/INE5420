@@ -1,24 +1,20 @@
-#ponto1
+o ponto1
 v 100 100 1
-f 1
-
-#ponto2
+p 2
+o ponto2
 v 200 100 1
-f 1
-
-#linha1
+p 5
+o linha1
 v 200 200 1
 v 300 300 1
-f 1 2
-
-#poligono1
+l 8 9
+o poligono1
 v 300 400 1
 v 300 500 1
 v 400 350 1
-f 1 2 3
-
-#poligono2
+l 12 13 14
+o poligono2
 v 10 10 1
 v 10 50 1
 v 50 50 1
-f 1 2 3
+l 17 18 19
