@@ -29,7 +29,8 @@ protected:
 public:
 
 	ObjetoGrafico() :
-			nome(""), tipo(PONTO), listaCoords(NULL) {
+			nome(""), tipo(PONTO) {
+		listaCoords = new ListaEnc<Coordenada>();
 	}
 
 
@@ -60,6 +61,10 @@ public:
 
 	Coordenada getCoord(int i) {
 		return listaCoords->recuperaDaPosicao(i);
+	}
+
+	void setCoord(Coordenada c, int i) {
+		listaCoords->adicionaNaPosicao(c, i);
 	}
 
 	/* Centro do objeto = (Cx, Cy)
