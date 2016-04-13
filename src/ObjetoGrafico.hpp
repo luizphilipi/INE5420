@@ -21,6 +21,7 @@ protected:
 	ObjetoGrafico(string nome, tipoGeometria tipo, ListaEnc<Coordenada> *coords) :
 			nome(nome), tipo(tipo), coordenadasMundo(coords) {
 		coordenadasTela = new ListaEnc<Coordenada>;
+		coordenadasTela = new ListaEnc<Coordenada>();
 		for (int i = 0; i < coords->getSize(); ++i) {
 			coordenadasTela->adiciona(Coordenada());
 		}
@@ -74,7 +75,7 @@ public:
 	}
 
 	void setCoord(Coordenada c, int i) {
-		coordenadasMundo->adicionaNaPosicao(c, i);
+		this->coordenadasMundo->adicionaNaPosicao(c, i);
 	}
 
 	/* Centro do objeto = (Cx, Cy)
@@ -143,12 +144,19 @@ public:
 
 			Matriz matrizCoordenadas = Matriz(coord) * matrizNormalizacao;
 
+			std::cout << matrizCoordenadas << std::endl;
+
 			double xNormalizado = (matrizCoordenadas(0, 0) - centroTela._x)
 					/ (xOffset);
 			double yNormalizado = (matrizCoordenadas(0, 1) - centroTela._y)
 					/ (yOffset);
 			double zNormalizado = (matrizCoordenadas(0, 2) - centroTela._z)
 					/ (zOffset);
+
+			std::cout << xNormalizado << std::endl;
+			std::cout << yNormalizado << std::endl;
+			std::cout << zNormalizado << std::endl;
+
 
 			Coordenada coordenadaNormalizada = Coordenada(xNormalizado,
 					yNormalizado, zNormalizado);

@@ -57,7 +57,6 @@ public:
 		return 1;
 	}
 
-	// Matriz que contem a transformação que precisa ser feita para rotacionar e mover os objetos para a sua posição original
 	Matriz matrizTransformacaoCanvas() {
 		double radianos = vupVector.angleWith(Coordenada(0, 1));
 
@@ -68,13 +67,12 @@ public:
 			angulo = 360 - angulo;
 		}
 
-		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao(3, 3,
-				_centro.negativa());
+		// move pro centro
+		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao(3, 3, _centro);
+		// rotaciona novamente pra vertical
 		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, angulo);
-		Matriz translationBackMatrix = MatrizUtil::matrizTranslacao(3, 3,
-				centro());
 
-		return matrizTranslacao * matrizRotacao * translationBackMatrix;
+		return matrizTranslacao * matrizRotacao;
 	}
 
 private:

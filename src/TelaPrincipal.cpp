@@ -65,12 +65,8 @@ void adicionar_coordenada_poligono(GtkWidget *widget,
 	telaPrincipal->adicionarCoordenadaPoligono();
 }
 
-void rotacao_mundo_esquerda(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
-	telaPrincipal->rotacaoMundoEsquerda();
-}
-
-void rotacao_mundo_direita(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
-	telaPrincipal->rotacaoMundoDireita();
+void rotacao_mundo(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->rotacaoMundo();
 }
 }
 
@@ -121,14 +117,9 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(G_OBJECT(zoomOutBtn), "clicked", G_CALLBACK(zoom_out),
 			this);
 
-	GtkWidget *leftRotation = GTK_WIDGET(
-			gtk_builder_get_object (builder, LEFT_ROTATION_BTN));
-	g_signal_connect(G_OBJECT(leftRotation), "clicked", G_CALLBACK(rotacao_mundo_esquerda), this);
-
-	GtkWidget *rightRotation = GTK_WIDGET(
-			gtk_builder_get_object (builder, RIGHT_ROTATION_BTN));
-	g_signal_connect(G_OBJECT(rightRotation), "clicked", G_CALLBACK(rotacao_mundo_direita),
-			this);
+	GtkWidget *windowRotationBtn = GTK_WIDGET(
+			gtk_builder_get_object (builder, WINDOW_ROTATION_BTN));
+	g_signal_connect(G_OBJECT(windowRotationBtn), "clicked", G_CALLBACK(rotacao_mundo), this);
 
 	GtkWidget *addButton = GTK_WIDGET(
 			gtk_builder_get_object(builder, "addObj"));
@@ -417,14 +408,7 @@ void TelaPrincipal::zoomOut() {
 	atualizarTela();
 }
 
-void TelaPrincipal::rotacaoMundoEsquerda() {
-	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
-			gtk_builder_get_object( builder, INPUT_PASSO ));
-	mundo->rotacionar(-gtk_spin_button_get_value(inputPasso));
-	atualizarTela();
-}
-
-void TelaPrincipal::rotacaoMundoDireita() {
+void TelaPrincipal::rotacaoMundo() {
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->rotacionar(gtk_spin_button_get_value(inputPasso));

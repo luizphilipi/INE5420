@@ -638,7 +638,8 @@
     </child>
   </object>
   <object class="GtkAdjustment" id="adjustment7">
-    <property name="upper">100</property>
+    <property name="lower">-360</property>
+    <property name="upper">360</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -649,7 +650,8 @@
     </columns>
   </object>
   <object class="GtkAdjustment" id="stepAdjust">
-    <property name="upper">100</property>
+    <property name="lower">-360</property>
+    <property name="upper">360</property>
     <property name="value">10</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
@@ -1067,8 +1069,8 @@
                                     <property name="can_focus">False</property>
                                     <property name="homogeneous">True</property>
                                     <child>
-                                      <object class="GtkButton" id="btnRotacaoEsq">
-                                        <property name="label" translatable="yes">&lt;&lt;</property>
+                                      <object class="GtkButton" id="btnRotacaoTela">
+                                        <property name="label" translatable="yes">Rotacionar</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
@@ -1077,19 +1079,6 @@
                                         <property name="expand">False</property>
                                         <property name="fill">True</property>
                                         <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="btnRotacaoDir">
-                                        <property name="label" translatable="yes">&gt;&gt;</property>
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
                                       </packing>
                                     </child>
                                   </object>

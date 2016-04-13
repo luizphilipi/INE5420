@@ -13,7 +13,7 @@ public:
 	 * | 1	0	0 |
 	 * | 0	1	0 |
 	 * | Dx	Dy	1 |
-	*/
+	 */
 	static Matriz matrizTranslacao(int m, int n, Coordenada deslocamento) {
 		Matriz matrizTransformacao = matrizIdentidade(m, n);
 
@@ -27,7 +27,7 @@ public:
 	 * | Sx	0	0 |
 	 * | 0	Sy	0 |
 	 * | 0	0	1 |
-	*/
+	 */
 	static Matriz matrizEscalonamento(int m, int n, Coordenada fator) {
 		Matriz matrizEscalonamento = matrizIdentidade(m, n);
 
@@ -41,15 +41,26 @@ public:
 	 * | cos(Θ)	-sin(Θ)	0 |
 	 * | sin(Θ)	 cos(Θ)	0 |
 	 * | 0		 0		1 |
-	*/
+	 */
 	static Matriz matrizRotacao(int m, int n, double anguloGraus) {
 		Matriz matrizRotacao = matrizIdentidade(m, n);
 		double radianos = grausParaRadianos(anguloGraus);
 
 		matrizRotacao(0, 0) = cos(radianos);
-		matrizRotacao(0, 1) = sin(radianos);
-		matrizRotacao(1, 0) = -sin(radianos);
+		matrizRotacao(0, 1) = -sin(radianos);
+		matrizRotacao(1, 0) = sin(radianos);
 		matrizRotacao(1, 1) = cos(radianos);
+
+		return matrizRotacao;
+	}
+
+	static Matriz teste(int m, int n, double valor) {
+		Matriz matrizRotacao = matrizIdentidade(m, n);
+
+		matrizRotacao(0, 0) = cos(valor);
+		matrizRotacao(0, 1) = sin(valor);
+		matrizRotacao(1, 0) = -sin(valor);
+		matrizRotacao(1, 1) = cos(valor);
 
 		return matrizRotacao;
 	}

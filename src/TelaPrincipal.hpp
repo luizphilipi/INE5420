@@ -43,9 +43,7 @@ public:
 
 	void zoomOut();
 
-	void rotacaoMundoEsquerda();
-
-	void rotacaoMundoDireita();
+	void rotacaoMundo();
 
 	void aplicarTranslacao();
 
