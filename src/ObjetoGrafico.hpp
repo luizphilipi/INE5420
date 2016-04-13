@@ -70,6 +70,10 @@ public:
 		return coordenadasMundo->recuperaDaPosicao(i);
 	}
 
+	void setCoord(Coordenada c, int i) {
+		listaCoords->adicionaNaPosicao(c, i);
+	}
+
 	/* Centro do objeto = (Cx, Cy)
 	 * Cx = [ SOMA(xi) i=1 até n ] / n
 	 * Cy = [ SOMA(yi) i=1 até n ] / n

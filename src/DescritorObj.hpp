@@ -62,71 +62,75 @@ public:
 		return retorno;
 	}
 
-
-	/* tá "errado" ainda: no momento as coordenadas dos objetos têm que
-	 * estar em sequência e só podem ser usadas por aquele obj
-	 *
-	 * mudar p/: ao percorrer o arquivo guardar todas as coord e
-	 * seus respectivos números da linha em que estão
-	 * na hora de colocar as coord dos objetos verificar que coord eles têm
-	 * (pelos números após 'p' ou 'l') e então colocar as coord das linhas certas
-	 *
-	 */
 	ListaEnc<ObjetoGrafico> * ler(string caminho){
 		ListaEnc<ObjetoGrafico> * displayFile = new ListaEnc<ObjetoGrafico>();
 		string linha;
+		ListaEnc<int> * linhaCoord = new ListaEnc<int>;
+		ListaEnc<Coordenada> * listaCoords = leCoordenadas(caminho, linhaCoord);
 		ifstream arquivo(caminho);
 		if(arquivo.is_open()){
 			ObjetoGrafico * obj;
-
 			while(getline(arquivo, linha)){
-				ListaEnc<Coordenada> * coords;
 				string nome;
-
 				if(!linha.find("o")){
 					obj = new ObjetoGrafico();
 					nome = linha.erase(0,2);
 					nome = split(nome, " ").front();
 					obj->setNome(nome);
+				} else if (!linha.find("p") || !linha.find("l")){
+					vector<string> pontos = split(linha, " ");
+					switch(pontos.size()){
+					case 2:
+						obj->setTipo(PONTO);
+						break;
+					case 3:
+						obj->setTipo(LINHA);
+						break;
+					default:
+						obj->setTipo(POLIGONO);
+					}
+					for(int i = 0; i<pontos.size()-1; i++){
+						int linhaPonto = atoi(pontos[i+1].c_str() );
+						int pos = linhaCoord->posicao(linhaPonto);
+						Coordenada c = listaCoords->recuperaDaPosicao(pos);
+						obj->setCoord(c, i);
 
-					coords = new ListaEnc<Coordenada>();
+					}
+					displayFile->adiciona(*obj);
+				}
+			}
+			arquivo.close();
+		}
+		return displayFile;
+	}
 
-				} else if (!linha.find("v")){
+
+	ListaEnc<Coordenada> * leCoordenadas(string caminho, ListaEnc<int> * linhaCoord){
+		ListaEnc<Coordenada> * coords = new ListaEnc<Coordenada>();
+		string linha;
+		int count = 1;
+		ifstream arquivo(caminho);
+		if(arquivo.is_open()){
+			while(getline(arquivo, linha)){
+				if (!linha.find("v")){
 					Coordenada *coord;
 					vector<string> coordenadas = split(linha, " ");
 					coord = new Coordenada(atoi(coordenadas[1].c_str()),
 							atoi(coordenadas[2].c_str()),
 							atoi(coordenadas[3].c_str()));
 					coords->adiciona(*coord);
-
-					} else if (!linha.find("p") || !linha.find("l")){
-						vector<string> f = split(linha, " ");
-						if(f.size()== 2){
-							std::cout<< nome << endl;
-							obj->setTipo(PONTO);
-							obj->setListaCoord(coords);
-							displayFile->adiciona(*obj);
-
-
-						} else if (f.size() == 3){
-							obj->setTipo(LINHA);
-							obj->setListaCoord(coords);
-							displayFile->adiciona(*obj);
-
-
-						} else {
-							obj->setTipo(POLIGONO);
-							obj->setListaCoord(coords);
-							displayFile->adiciona(*obj);
-
-						}
+					linhaCoord->adiciona(count);
 					}
+				count++;
 				}
 			arquivo.close();
 		}
-
-		return displayFile;
+		return coords;
 	}
+
+
+
+
 
 	vector<string> split(string s, string delimitador) {
 		vector<string> tokens;
