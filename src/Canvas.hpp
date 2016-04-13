@@ -68,11 +68,12 @@ public:
 		}
 
 		// move pro centro
-		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao(3, 3, _centro);
+		Matriz matrizTranslacaoNeg = MatrizUtil::matrizTranslacao(3, 3, _centro.negativa());
 		// rotaciona novamente pra vertical
 		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, angulo);
+		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao(3, 3, _centro);
 
-		return matrizTranslacao * matrizRotacao;
+		return matrizTranslacaoNeg * matrizTranslacao * matrizRotacao;
 	}
 
 private:

@@ -144,7 +144,6 @@ public:
 
 			Matriz matrizCoordenadas = Matriz(coord) * matrizNormalizacao;
 
-			std::cout << matrizCoordenadas << std::endl;
 
 			double xNormalizado = (matrizCoordenadas(0, 0) - centroTela._x)
 					/ (xOffset);
@@ -152,10 +151,6 @@ public:
 					/ (yOffset);
 			double zNormalizado = (matrizCoordenadas(0, 2) - centroTela._z)
 					/ (zOffset);
-
-			std::cout << xNormalizado << std::endl;
-			std::cout << yNormalizado << std::endl;
-			std::cout << zNormalizado << std::endl;
 
 
 			Coordenada coordenadaNormalizada = Coordenada(xNormalizado,
