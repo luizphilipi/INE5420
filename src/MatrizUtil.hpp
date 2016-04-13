@@ -47,8 +47,8 @@ public:
 		double radianos = grausParaRadianos(anguloGraus);
 
 		matrizRotacao(0, 0) = cos(radianos);
-		matrizRotacao(0, 1) = -sin(radianos);
-		matrizRotacao(1, 0) = sin(radianos);
+		matrizRotacao(0, 1) = sin(radianos);
+		matrizRotacao(1, 0) = -sin(radianos);
 		matrizRotacao(1, 1) = cos(radianos);
 
 		return matrizRotacao;

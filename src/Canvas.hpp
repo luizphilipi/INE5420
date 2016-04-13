@@ -2,57 +2,86 @@
 #define CANVAS
 
 #include "ObjetoGrafico.hpp"
+#include <math.h>
 
 class Canvas {
 public:
-	Canvas(Coordenada cantoInferiorEsquerdo, Coordenada cantoSuperiorDireito) :
-			cantoInferiorEsquerdo(cantoInferiorEsquerdo), cantoSuperiorDireito(
-					cantoSuperiorDireito) {
+	Canvas(double largura, double altura) :
+			largura(largura), altura(altura), _centro(0, 0), vupVector(0, 1) {
 	}
 
 	void move(Coordenada passo) {
-		double xFactor = (this->cantoSuperiorDireito.getX()
-				- this->cantoInferiorEsquerdo.getX()) * passo.getX() / 100.0;
-		double yFactor = (this->cantoSuperiorDireito.getY()
-				- this->cantoInferiorEsquerdo.getY()) * passo.getY() / 100.0;
+		double xFactor = largura * passo.getX() / 100.0;
+		double yFactor = altura * passo.getY() / 100.0;
 
-		this->cantoInferiorEsquerdo += Coordenada(xFactor, yFactor);
-		this->cantoSuperiorDireito += Coordenada(xFactor, yFactor);
+		_centro += Coordenada(xFactor, yFactor);
 	}
 
 	void zoom(double passo) {
-		double largura = (this->cantoSuperiorDireito.getX()
-				- this->cantoInferiorEsquerdo.getX());
-		double altura = (this->cantoSuperiorDireito.getY()
-				- cantoInferiorEsquerdo.getY());
+		double xFactor = xOffset() * passo / 100.0;
+		if (xFactor > xOffset()) {
+			xFactor = xOffset();
+		}
 
-		double xFactor = largura * passo / 100.0;
+		double yFactor = yOffset() * passo / 100.0;
+		if (yFactor > yOffset()) {
+			yFactor = yOffset();
+		}
 
-		double yFactor = altura * passo / 100.0;
-
-		this->cantoInferiorEsquerdo += Coordenada(xFactor, yFactor);
-		this->cantoSuperiorDireito -= Coordenada(xFactor, yFactor);
+		largura -= 2 * xFactor;
+		altura -= 2 * yFactor;
 	}
 
-	double Xmin() {
-		return this->cantoInferiorEsquerdo.getX();
+	void rotacionar(double angulo) {
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, angulo);
+		Matriz matrizVUP = Matriz(vupVector);
+		Matriz result = matrizVUP * matrizRotacao;
+
+		vupVector._x = result(0, 0);
+		vupVector._y = result(0, 1);
 	}
 
-	double Ymin() {
-		return this->cantoInferiorEsquerdo.getY();
+	Coordenada centro() {
+		return this->_centro;
 	}
 
-	double Xmax() {
-		return this->cantoSuperiorDireito.getX();
+	double xOffset() {
+		return this->largura / 2;
 	}
 
-	double Ymax() {
-		return this->cantoSuperiorDireito.getY();
+	double yOffset() {
+		return this->altura / 2;
+	}
+
+	double zOffset() {
+		return 1;
+	}
+
+	// Matriz que contem a transformação que precisa ser feita para rotacionar e mover os objetos para a sua posição original
+	Matriz matrizTransformacaoCanvas() {
+		double radianos = vupVector.angleWith(Coordenada(0, 1));
+
+		double angulo = radianos / PI * 180.0;
+
+		// gambi do joão pra fazer funcionar a rotação total e não só meia lua :v
+		if (vupVector._x < 0) {
+			angulo = 360 - angulo;
+		}
+
+		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao(3, 3,
+				_centro.negativa());
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, angulo);
+		Matriz translationBackMatrix = MatrizUtil::matrizTranslacao(3, 3,
+				centro());
+
+		return matrizTranslacao * matrizRotacao * translationBackMatrix;
 	}
 
 private:
-	Coordenada cantoInferiorEsquerdo;
-	Coordenada cantoSuperiorDireito;
+	double altura, largura;
+	Coordenada _centro;
+	// View-Up Vector - vetor que guarda a referência de "pra cima" do nosso canvas.
+	Coordenada vupVector;
 };
 
 #endif

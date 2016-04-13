@@ -1,11 +1,18 @@
 #ifndef COORDENADA
 #define COORDENADA
 
+#include <math.h>
+
 class Coordenada {
 public:
 	double _x;
 	double _y;
 	double _z;
+
+	Coordenada() :
+			_x(0), _y(0), _z(0) {
+
+	}
 
 	Coordenada(double x, double y) :
 			_x(x), _y(y), _z(1) {
@@ -45,6 +52,18 @@ public:
 		this->_z -= c2._z;
 
 		return *this;
+	}
+
+	double tamanho() {
+		return sqrt(pow(_x, 2) + pow(_y, 2));
+	}
+
+	double produtoEscalar(Coordenada other) {
+		return (_x * other._x) + (_y * other._y);
+	}
+
+	double angleWith(Coordenada other) {
+		return acos(produtoEscalar(other) / (tamanho() * other.tamanho()));
 	}
 };
 

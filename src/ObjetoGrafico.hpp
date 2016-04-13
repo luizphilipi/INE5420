@@ -14,24 +14,27 @@ class ObjetoGrafico {
 protected:
 	ObjetoGrafico(string nome, tipoGeometria tipo) :
 			nome(nome), tipo(tipo) {
-		listaCoords = new ListaEnc<Coordenada>();
+		coordenadasMundo = new ListaEnc<Coordenada>();
+		coordenadasTela = new ListaEnc<Coordenada>();
 	}
 
-	ObjetoGrafico(string nome, tipoGeometria tipo,
-			ListaEnc<Coordenada> *coords) :
-			nome(nome), tipo(tipo), listaCoords(coords) {
+	ObjetoGrafico(string nome, tipoGeometria tipo, ListaEnc<Coordenada> *coords) :
+			nome(nome), tipo(tipo), coordenadasMundo(coords) {
+		for (int i = 0; i < coords->getSize(); ++i) {
+			coordenadasTela->adiciona(Coordenada());
+		}
 	}
 
 	string nome;
 	tipoGeometria tipo;
-	ListaEnc<Coordenada> *listaCoords;
+	ListaEnc<Coordenada> *coordenadasMundo;
+	ListaEnc<Coordenada> *coordenadasTela;
 
 public:
 
 	ObjetoGrafico() :
-			nome(""), tipo(PONTO), listaCoords(NULL) {
+			nome(""), tipo(PONTO), coordenadasMundo(NULL), coordenadasTela(NULL) {
 	}
-
 
 	string getNome() {
 		return nome;
@@ -48,18 +51,23 @@ public:
 	}
 
 	int getQuantidadeCoords() {
-		return listaCoords->getSize();
+		return coordenadasMundo->getSize();
 	}
 
 	ListaEnc<Coordenada> * getListaCoord() {
-		return listaCoords;
+		return coordenadasMundo;
 	}
+
+	ListaEnc<Coordenada> * getListaCoordTela() {
+		return coordenadasTela;
+	}
+
 	void setListaCoord(ListaEnc<Coordenada> * l) {
-		listaCoords = l;
+		coordenadasMundo = l;
 	}
 
 	Coordenada getCoord(int i) {
-		return listaCoords->recuperaDaPosicao(i);
+		return coordenadasMundo->recuperaDaPosicao(i);
 	}
 
 	/* Centro do objeto = (Cx, Cy)
@@ -69,10 +77,10 @@ public:
 	const Coordenada centro() const {
 		int x = 0;
 		int y = 0;
-		int tamanho = listaCoords->getSize();
+		int tamanho = coordenadasMundo->getSize();
 		for (int i = 0; i < tamanho; ++i) {
-			x += listaCoords->recuperaDaPosicao(i).getX();
-			y += listaCoords->recuperaDaPosicao(i).getY();
+			x += coordenadasMundo->recuperaDaPosicao(i).getX();
+			y += coordenadasMundo->recuperaDaPosicao(i).getY();
 		}
 
 		x = x / tamanho;
@@ -119,27 +127,47 @@ public:
 		aplicarTransformacao(matrizRotacao, emTornoDe);
 	}
 
+	void normalizar(Coordenada centroTela, double xOffset, double yOffset,
+			double zOffset, Matriz matrizNormalizacao) {
+		coordenadasTela->destroiLista();
 
+		for (int i = 0; i < coordenadasMundo->getSize(); ++i) {
+			Coordenada coord = coordenadasMundo->recuperaDaPosicao(i);
 
+			Matriz matrizCoordenadas = Matriz(coord) * matrizNormalizacao;
+
+			double xNormalizado = (matrizCoordenadas(0, 0) - centroTela._x)
+					/ (xOffset);
+			double yNormalizado = (matrizCoordenadas(0, 1) - centroTela._y)
+					/ (yOffset);
+			double zNormalizado = (matrizCoordenadas(0, 2) - centroTela._z)
+					/ (zOffset);
+
+			Coordenada coordenadaNormalizada = Coordenada(xNormalizado,
+					yNormalizado, zNormalizado);
+			coordenadasTela->adiciona(coordenadaNormalizada);
+		}
+	}
 
 private:
 
 	// [x' y' z' ... ] = [x y z ...] * matriz transformação
 	const void aplicarTransformacao(Matriz matrizTransformacao) const {
-		for (int i = 0; i < listaCoords->getSize(); ++i) {
-			Coordenada coord = listaCoords->eliminaDaPosicao(i);
+		for (int i = 0; i < coordenadasMundo->getSize(); ++i) {
+			Coordenada coord = coordenadasMundo->eliminaDaPosicao(i);
 			Matriz resultado = Matriz(coord) * matrizTransformacao;
 			coord._x = resultado(0, 0);
 			coord._y = resultado(0, 1);
 			coord._z = resultado(0, 2);
-			listaCoords->adicionaNaPosicao(coord, i);
+			coordenadasMundo->adicionaNaPosicao(coord, i);
 		}
 	}
 
-
-	const void aplicarTransformacao(Matriz matrizTransformacao, Coordenada posicao) const {
-		Matriz resultado = MatrizUtil::matrizTranslacao(3, 3, posicao.negativa()) *
-							matrizTransformacao * MatrizUtil::matrizTranslacao(3, 3, posicao);
+	const void aplicarTransformacao(Matriz matrizTransformacao,
+			Coordenada posicao) const {
+		Matriz resultado = MatrizUtil::matrizTranslacao(3, 3,
+				posicao.negativa()) * matrizTransformacao
+				* MatrizUtil::matrizTranslacao(3, 3, posicao);
 
 		aplicarTransformacao(resultado);
 	}

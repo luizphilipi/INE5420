@@ -154,8 +154,9 @@ public:
 
 	T recuperaDaPosicao(int pos) {
 		if (pos >= size || pos < 0) { //pq pos começa em 0
-			throw std::runtime_error(
-					"Impossível recuperar elemento: posição inválida.");
+			std::string msg =
+					"Impossível recuperar elemento: posição inválida: ";
+			throw std::runtime_error(msg + std::to_string(pos));
 		}
 		if (pos == 0) {
 			return recuperaDoInicio();

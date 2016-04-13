@@ -15,6 +15,7 @@ public:
 	Matriz(int _linhas, int _colunas);
 	Matriz(const Matriz& matrizB);
 	Matriz(Coordenada coord);
+	Matriz(Coordenada *coord);
 	virtual ~Matriz();
 
 	Matriz& operator=(const Matriz& matrizB);

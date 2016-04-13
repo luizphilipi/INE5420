@@ -35,6 +35,18 @@ Matriz::Matriz(Coordenada coord) {
 	colunas = 3;
 }
 
+Matriz::Matriz(Coordenada *coord) {
+	mat.resize(1);
+	mat[0].resize(3);
+
+	mat[0][0] = coord->getX();
+	mat[0][1] = coord->getY();
+	mat[0][2] = coord->getZ();
+
+	linhas = 1;
+	colunas = 3;
+}
+
 // (Virtual) Destructor
 
 Matriz::~Matriz() {

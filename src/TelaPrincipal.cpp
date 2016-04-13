@@ -64,6 +64,14 @@ void adicionar_coordenada_poligono(GtkWidget *widget,
 		TelaPrincipal *telaPrincipal) {
 	telaPrincipal->adicionarCoordenadaPoligono();
 }
+
+void rotacao_mundo_esquerda(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->rotacaoMundoEsquerda();
+}
+
+void rotacao_mundo_direita(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->rotacaoMundoDireita();
+}
 }
 
 void TelaPrincipal::atualizarTela() {
@@ -113,6 +121,15 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(G_OBJECT(zoomOutBtn), "clicked", G_CALLBACK(zoom_out),
 			this);
 
+	GtkWidget *leftRotation = GTK_WIDGET(
+			gtk_builder_get_object (builder, LEFT_ROTATION_BTN));
+	g_signal_connect(G_OBJECT(leftRotation), "clicked", G_CALLBACK(rotacao_mundo_esquerda), this);
+
+	GtkWidget *rightRotation = GTK_WIDGET(
+			gtk_builder_get_object (builder, RIGHT_ROTATION_BTN));
+	g_signal_connect(G_OBJECT(rightRotation), "clicked", G_CALLBACK(rotacao_mundo_direita),
+			this);
+
 	GtkWidget *addButton = GTK_WIDGET(
 			gtk_builder_get_object(builder, "addObj"));
 	g_signal_connect(G_OBJECT(addButton), "clicked",
@@ -159,7 +176,6 @@ TelaPrincipal::TelaPrincipal() {
 
 	// fim signals de transformações
 
-
 	//signal mundo abrir/salvar
 	GtkWidget *botaoAbrirMundo = GTK_WIDGET(
 			gtk_builder_get_object(builder, ABRIR_MUNDO));
@@ -167,11 +183,10 @@ TelaPrincipal::TelaPrincipal() {
 			G_CALLBACK(abrir_mundo), this);
 
 	GtkWidget *botaoSalvarMundo = GTK_WIDGET(
-				gtk_builder_get_object(builder, SALVAR_MUNDO));
-		g_signal_connect(G_OBJECT(botaoSalvarMundo), "clicked",
-				G_CALLBACK(salvar_mundo), this);
+			gtk_builder_get_object(builder, SALVAR_MUNDO));
+	g_signal_connect(G_OBJECT(botaoSalvarMundo), "clicked",
+			G_CALLBACK(salvar_mundo), this);
 	//FIM signal mundo abrir/salvar
-
 
 	//para de rodar ao clicar no X
 	g_signal_connect(telaPrincipal, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -384,8 +399,6 @@ void TelaPrincipal::salvarMundo() {
 	dobj->escrever(mundo, caminho);
 }
 
-
-
 void TelaPrincipal::moverEsquerda() {
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
@@ -406,7 +419,6 @@ void TelaPrincipal::zoomIn() {
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->zoomIn(gtk_spin_button_get_value(inputPasso));
-
 	atualizarTela();
 }
 
@@ -414,7 +426,20 @@ void TelaPrincipal::zoomOut() {
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->zoomOut(gtk_spin_button_get_value(inputPasso));
+	atualizarTela();
+}
 
+void TelaPrincipal::rotacaoMundoEsquerda() {
+	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, INPUT_PASSO ));
+	mundo->rotacionar(-gtk_spin_button_get_value(inputPasso));
+	atualizarTela();
+}
+
+void TelaPrincipal::rotacaoMundoDireita() {
+	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, INPUT_PASSO ));
+	mundo->rotacionar(gtk_spin_button_get_value(inputPasso));
 	atualizarTela();
 }
 
@@ -483,14 +508,10 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
 	int x, y;
 
 	ListaEnc<Coordenada> coordenadas = ListaEnc<Coordenada>();
-
-	for (int i = 0; i < obj.getListaCoord()->getSize(); ++i) {
-		Coordenada coord = obj.getListaCoord()->recuperaDaPosicao(i);
-		x = ((coord.getX() - canvas.Xmin()) / (canvas.Xmax() - canvas.Xmin()))
-				* Xvmax;
-		y = (1
-				- (coord.getY() - canvas.Ymin())
-						/ (canvas.Ymax() - canvas.Ymin())) * Yvmax;
+	for (int i = 0; i < obj.getListaCoordTela()->getSize(); ++i) {
+		Coordenada coord = obj.getListaCoordTela()->recuperaDaPosicao(i);
+		x = ((coord.getX() + 1) / 2) * Xvmax;
+		y = (1 - (coord.getY() + 1) / 2) * Yvmax;
 
 		coordenadas.adiciona(Coordenada(x, y));
 	}

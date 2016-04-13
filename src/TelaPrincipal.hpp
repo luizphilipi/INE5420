@@ -6,7 +6,6 @@
 #include "Consts.hpp"
 #include "Mundo.hpp"
 
-
 class TelaPrincipal {
 public:
 
@@ -43,6 +42,10 @@ public:
 	void zoomIn();
 
 	void zoomOut();
+
+	void rotacaoMundoEsquerda();
+
+	void rotacaoMundoDireita();
 
 	void aplicarTranslacao();
 

@@ -39,6 +39,10 @@
 #define ZOOM_IN_BTN "btnZoomIn"
 #define ZOOM_OUT_BTN "btnZoomOut"
 
+// botões de rotação
+#define LEFT_ROTATION_BTN "btnRotacaoEsq"
+#define RIGHT_ROTATION_BTN "btnRotacaoDir"
+
 #define RADIO_TELA "radioTela"
 #define RADIO_OBJETO "radioObjeto"
 

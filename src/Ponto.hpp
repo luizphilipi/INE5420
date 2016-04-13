@@ -7,15 +7,15 @@ class Ponto: public ObjetoGrafico {
 public:
 	Ponto(string nome, Coordenada coord) :
 			ObjetoGrafico(nome, PONTO) {
-		listaCoords->adiciona(coord);
+		coordenadasMundo->adiciona(coord);
 	}
 
 	int getX() {
-		return listaCoords->recuperaDaPosicao(0).getX();
+		return coordenadasMundo->recuperaDaPosicao(0).getX();
 	}
 
 	int getY() {
-		return listaCoords->recuperaDaPosicao(0).getY();
+		return coordenadasMundo->recuperaDaPosicao(0).getY();
 	}
 
 };
