@@ -361,29 +361,17 @@ void TelaPrincipal::moverBaixo() {
 
 	atualizarTela();
 }
-
+#include <iostream>
 void TelaPrincipal::abrirMundo() {
 	GtkEntry * caminhoArquivo = GTK_ENTRY(
 			gtk_builder_get_object(builder, CAMINHO_ARQUIVO));
 	string caminho = gtk_entry_get_text(caminhoArquivo);
 
 	DescritorObj * dobj = new DescritorObj();
-	ListaEnc<ObjetoGrafico> * df = new ListaEnc<ObjetoGrafico>;
-	df = dobj->ler(caminho);
-	for (int i = 0; i < df->size; i++) {
-		ObjetoGrafico atual = df->recuperaDaPosicao(i);
-		switch (atual.getTipo()) {
-		case PONTO:
-			mundo->adicionaPonto(atual.getNome(), atual.getCoord(0));
-			break;
-		case LINHA:
-			mundo->adicionaLinha(atual.getNome(), atual.getCoord(0),
-					atual.getCoord(1));
-			break;
-		case POLIGONO:
-			mundo->adicionaPoligono(atual.getNome(), atual.getListaCoord());
-			break;
-		}
+
+	mundo = dobj->ler(caminho);
+	for (int i = 0; i < mundo->getObjetos()->size; i++) {
+		ObjetoGrafico atual = mundo->getObjetos()->recuperaDaPosicao(i);
 		adicionarObjetoNaLista(atual.getNome().c_str());
 	}
 	atualizarTela();

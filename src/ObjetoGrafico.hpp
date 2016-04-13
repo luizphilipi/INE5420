@@ -20,6 +20,7 @@ protected:
 
 	ObjetoGrafico(string nome, tipoGeometria tipo, ListaEnc<Coordenada> *coords) :
 			nome(nome), tipo(tipo), coordenadasMundo(coords) {
+		coordenadasTela = new ListaEnc<Coordenada>;
 		for (int i = 0; i < coords->getSize(); ++i) {
 			coordenadasTela->adiciona(Coordenada());
 		}
@@ -28,12 +29,14 @@ protected:
 	string nome;
 	tipoGeometria tipo;
 	ListaEnc<Coordenada> *coordenadasMundo;
-	ListaEnc<Coordenada> *coordenadasTela;
+	ListaEnc<Coordenada> *coordenadasTela;  //coord normalizadas
 
 public:
 
 	ObjetoGrafico() :
-			nome(""), tipo(PONTO), coordenadasMundo(NULL), coordenadasTela(NULL) {
+			nome(""), tipo(PONTO) {
+		coordenadasTela = new ListaEnc<Coordenada>;
+		coordenadasMundo = new ListaEnc<Coordenada>();
 	}
 
 	string getNome() {
@@ -71,7 +74,7 @@ public:
 	}
 
 	void setCoord(Coordenada c, int i) {
-		listaCoords->adicionaNaPosicao(c, i);
+		coordenadasMundo->adicionaNaPosicao(c, i);
 	}
 
 	/* Centro do objeto = (Cx, Cy)

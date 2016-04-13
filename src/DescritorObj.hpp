@@ -62,8 +62,8 @@ public:
 		return retorno;
 	}
 
-	ListaEnc<ObjetoGrafico> * ler(string caminho){
-		ListaEnc<ObjetoGrafico> * displayFile = new ListaEnc<ObjetoGrafico>();
+	Mundo * ler(string caminho){
+		Mundo * m = new Mundo();
 		string linha;
 		ListaEnc<int> * linhaCoord = new ListaEnc<int>;
 		ListaEnc<Coordenada> * listaCoords = leCoordenadas(caminho, linhaCoord);
@@ -79,29 +79,30 @@ public:
 					obj->setNome(nome);
 				} else if (!linha.find("p") || !linha.find("l")){
 					vector<string> pontos = split(linha, " ");
-					switch(pontos.size()){
-					case 2:
-						obj->setTipo(PONTO);
-						break;
-					case 3:
-						obj->setTipo(LINHA);
-						break;
-					default:
-						obj->setTipo(POLIGONO);
-					}
 					for(int i = 0; i<pontos.size()-1; i++){
 						int linhaPonto = atoi(pontos[i+1].c_str() );
 						int pos = linhaCoord->posicao(linhaPonto);
 						Coordenada c = listaCoords->recuperaDaPosicao(pos);
 						obj->setCoord(c, i);
-
 					}
-					displayFile->adiciona(*obj);
+					switch(pontos.size()){
+					case 2:
+						obj->setTipo(PONTO);
+						m->adicionaObj(obj);
+						break;
+					case 3:
+						obj->setTipo(LINHA);
+						m->adicionaObj(obj);
+						break;
+					default:
+						obj->setTipo(POLIGONO);
+						m->adicionaObj(obj);
+					}
 				}
 			}
 			arquivo.close();
 		}
-		return displayFile;
+		return m;
 	}
 
 

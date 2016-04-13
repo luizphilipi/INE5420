@@ -31,6 +31,11 @@ public:
 		displayFile->adiciona(ponto);
 	}
 
+	void adicionaObj(ObjetoGrafico * obj) {
+		normalizar(*obj);
+		displayFile->adiciona(*obj);
+	}
+
 	void adicionaLinha(string nome, Coordenada p1, Coordenada p2) {
 		Linha linha = Linha(nome, p1, p2);
 		normalizar(linha);
@@ -42,6 +47,7 @@ public:
 		normalizar(poligono);
 		displayFile->adiciona(poligono);
 	}
+
 
 	ListaEnc<ObjetoGrafico>* getObjetos() {
 		return displayFile;
