@@ -313,8 +313,7 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 						coords.recuperaDaPosicao(i).getY());
 			}
 
-			if (obj->ePreenchido()) {
-				std::cout << "preenchido" << endl;
+			if (obj->isPreenchido()) {
 				cairo_set_source_rgb(cr, 1, 0, 1);
 				cairo_fill(cr);
 			}
