@@ -267,10 +267,13 @@ void TelaPrincipal::adicionarObjeto() {
 					y = gtk_spin_button_get_value(inputY);
 				}
 			}
-
 			coordenadas->adiciona(Coordenada(x, y));
 		}
-		mundo->adicionaPoligono(nomeObjeto, coordenadas);
+		GtkToggleButton *botaoPreencher = GTK_TOGGLE_BUTTON(
+				gtk_builder_get_object(builder, BOTAO_PREENCHER));
+		bool preenchimento = gtk_toggle_button_get_active(botaoPreencher);
+		std::cout << preenchimento << endl;
+		mundo->adicionaPoligono(nomeObjeto, coordenadas, preenchimento);
 	}
 		break;
 	}
@@ -289,7 +292,8 @@ void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
 	gtk_list_store_set(listStoreObjetos, &iter, 0, nomeObjeto, -1);
 }
 
-void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
+void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
+	ListaEnc<Coordenada> coords = mapearNoMundo(obj);
 	if (coords.getSize() > 0) {
 		if (coords.getSize() == 1) {
 			cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
@@ -307,6 +311,12 @@ void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
 			for (int i = 1; i < coords.getSize(); i++) {
 				cairo_line_to(cr, coords.recuperaDaPosicao(i).getX(),
 						coords.recuperaDaPosicao(i).getY());
+			}
+
+			if (obj->ePreenchido()) {
+				std::cout << "preenchido" << endl;
+				cairo_set_source_rgb(cr, 1, 0, 1);
+				cairo_fill(cr);
 			}
 
 			cairo_close_path(cr);
@@ -341,7 +351,7 @@ void TelaPrincipal::desenharTudo(cairo_t *cr) {
 	cairo_set_line_width(cr, 1);
 
 	for (int i = 0; i < mundo->getObjetos()->getSize(); ++i) {
-		desenhar(cr, mapearNoMundo(mundo->getObjetos()->recuperaDaPosicao(i)));
+		desenhar(cr, mundo->getObjetos()->recuperaDaPosicao(i));
 	}
 }
 
@@ -507,7 +517,6 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 			Coordenada coord = clipped->recuperaDaPosicao(i);
 			x = 10 + ((coord.getX() + 1) / 2) * Xvmax;
 			y = 10 + (1 - (coord.getY() + 1) / 2) * Yvmax;
-			std::cout << "Clipping: " << x << ", " << y << std::endl;
 			coordenadas.adiciona(Coordenada(x, y));
 		}
 	}

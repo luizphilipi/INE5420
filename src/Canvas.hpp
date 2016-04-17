@@ -73,7 +73,7 @@ public:
 		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, angulo);
 		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao(3, 3, _centro);
 
-		return matrizTranslacaoNeg * matrizTranslacao * matrizRotacao;
+		return  matrizTranslacaoNeg *  matrizRotacao ;
 	}
 
 private:

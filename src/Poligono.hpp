@@ -5,8 +5,8 @@
 
 class Poligono: public ObjetoGrafico {
 public:
-	Poligono(string nome, ListaEnc<Coordenada>* pontos) :
-			ObjetoGrafico(nome, POLIGONO, pontos) {
+	Poligono(string nome, ListaEnc<Coordenada>* pontos, bool preenchimento) :
+			ObjetoGrafico(nome, POLIGONO, pontos, preenchimento) {
 	}
 
 	ListaEnc<Coordenada>* clip() {

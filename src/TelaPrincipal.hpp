@@ -23,7 +23,7 @@ public:
 
 	void adicionarObjeto();
 
-	void desenhar(cairo_t *cr, ListaEnc<Coordenada> coords);
+	void desenhar(cairo_t *cr, ObjetoGrafico *obj);
 
 	void desenharTudo(cairo_t *cr);
 

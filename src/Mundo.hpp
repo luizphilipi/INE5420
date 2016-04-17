@@ -42,12 +42,12 @@ public:
 		displayFile->adiciona(linha);
 	}
 
-	void adicionaPoligono(string nome, ListaEnc<Coordenada> *coords) {
-		Poligono *poligono = new Poligono(nome, coords);
+	void adicionaPoligono(string nome, ListaEnc<Coordenada> *coords,
+			bool preenchimento) {
+		Poligono *poligono = new Poligono(nome, coords, preenchimento);
 		normalizar(poligono);
 		displayFile->adiciona(poligono);
 	}
-
 
 	ListaEnc<ObjetoGrafico*>* getObjetos() {
 		return displayFile;
@@ -58,22 +58,22 @@ public:
 	}
 
 	void moverCima(int passo) {
-		canvas.move(Coordenada(0, passo));
-		normalizarTudo();
-	}
-
-	void moverBaixo(int passo) {
 		canvas.move(Coordenada(0, -passo));
 		normalizarTudo();
 	}
 
+	void moverBaixo(int passo) {
+		canvas.move(Coordenada(0, passo));
+		normalizarTudo();
+	}
+
 	void moverEsquerda(int passo) {
-		canvas.move(Coordenada(-passo, 0));
+		canvas.move(Coordenada(passo, 0));
 		normalizarTudo();
 	}
 
 	void moverDireita(int passo) {
-		canvas.move(Coordenada(passo, 0));
+		canvas.move(Coordenada(-passo, 0));
 		normalizarTudo();
 	}
 
@@ -144,8 +144,6 @@ public:
 
 	void normalizar(ObjetoGrafico* obj) {
 		Matriz matrizNormalizacao = canvas.matrizTransformacaoCanvas();
-//		std::cout << "Matriz de normalização: " << std::endl;
-//		std::cout << matrizNormalizacao << std::endl << std::endl;
 		obj->normalizar(canvas.centro(), canvas.xOffset(), canvas.yOffset(),
 				canvas.zOffset(), matrizNormalizacao);
 	}

@@ -93,7 +93,7 @@ public:
 								coordenadas->recuperaDaPosicao(1));
 						break;
 					default:
-						obj = new Poligono(nome, coordenadas);
+						obj = new Poligono(nome, coordenadas, false);
 					}
 					m->adicionaObj(obj);
 				}
