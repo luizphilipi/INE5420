@@ -57,7 +57,7 @@ public:
 
 	void salvarMundo();
 
-	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico obj);
+	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico* obj);
 private:
 	int radioRotacaoSelecionada();
 	char* getObjetoSelecionado();

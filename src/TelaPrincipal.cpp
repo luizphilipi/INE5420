@@ -119,7 +119,8 @@ TelaPrincipal::TelaPrincipal() {
 
 	GtkWidget *windowRotationBtn = GTK_WIDGET(
 			gtk_builder_get_object (builder, WINDOW_ROTATION_BTN));
-	g_signal_connect(G_OBJECT(windowRotationBtn), "clicked", G_CALLBACK(rotacao_mundo), this);
+	g_signal_connect(G_OBJECT(windowRotationBtn), "clicked",
+			G_CALLBACK(rotacao_mundo), this);
 
 	GtkWidget *addButton = GTK_WIDGET(
 			gtk_builder_get_object(builder, "addObj"));
@@ -289,33 +290,52 @@ void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
 }
 
 void TelaPrincipal::desenhar(cairo_t *cr, ListaEnc<Coordenada> coords) {
-	if (coords.getSize() == 1) {
-		cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
-				coords.recuperaDaPosicao(0).getY());
-		cairo_arc(cr, coords.recuperaDaPosicao(0).getX(),
-				coords.recuperaDaPosicao(0).getY(), 1.0, 0.0, 2.0 * 3.14);
-		cairo_fill_preserve(cr);
-		cairo_stroke(cr);
-	} else {
-		cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
-				coords.recuperaDaPosicao(0).getY());
-		cairo_line_to(cr, coords.recuperaDaPosicao(0).getX(),
-				coords.recuperaDaPosicao(0).getY());
+	if (coords.getSize() > 0) {
+		if (coords.getSize() == 1) {
+			cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
+					coords.recuperaDaPosicao(0).getY());
+			cairo_arc(cr, coords.recuperaDaPosicao(0).getX(),
+					coords.recuperaDaPosicao(0).getY(), 1.0, 0.0, 2.0 * 3.14);
+			cairo_fill_preserve(cr);
+			cairo_stroke(cr);
+		} else {
+			cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
+					coords.recuperaDaPosicao(0).getY());
+			cairo_line_to(cr, coords.recuperaDaPosicao(0).getX(),
+					coords.recuperaDaPosicao(0).getY());
 
-		for (int i = 1; i < coords.getSize(); i++) {
-			cairo_line_to(cr, coords.recuperaDaPosicao(i).getX(),
-					coords.recuperaDaPosicao(i).getY());
+			for (int i = 1; i < coords.getSize(); i++) {
+				cairo_line_to(cr, coords.recuperaDaPosicao(i).getX(),
+						coords.recuperaDaPosicao(i).getY());
+			}
+
+			cairo_close_path(cr);
+
+			cairo_stroke(cr);
 		}
-
-		cairo_close_path(cr);
-
-		cairo_stroke(cr);
 	}
 }
 
 void TelaPrincipal::desenharTudo(cairo_t *cr) {
 	cairo_set_source_rgb(cr, 1, 1, 1);
 	cairo_paint(cr);
+
+	// borda vermelha do canvas
+	cairo_set_source_rgb(cr, 1, 0, 0);
+	cairo_set_line_width(cr, 1);
+
+	GtkWidget *drawingArea = GTK_WIDGET(
+			gtk_builder_get_object(builder, AREA_DESENHO));
+	int Xvmax = gtk_widget_get_allocated_width(drawingArea) - 10;
+	int Yvmax = gtk_widget_get_allocated_height(drawingArea) - 10;
+
+	cairo_move_to(cr, 10, 10);
+	cairo_line_to(cr, Xvmax, 10);
+	cairo_line_to(cr, Xvmax, Yvmax);
+	cairo_line_to(cr, 10, Yvmax);
+	cairo_line_to(cr, 10, 10);
+
+	cairo_stroke(cr);
 
 	cairo_set_source_rgb(cr, 0, 0, 0);
 	cairo_set_line_width(cr, 1);
@@ -362,8 +382,8 @@ void TelaPrincipal::abrirMundo() {
 
 	mundo = dobj->ler(caminho);
 	for (int i = 0; i < mundo->getObjetos()->size; i++) {
-		ObjetoGrafico atual = mundo->getObjetos()->recuperaDaPosicao(i);
-		adicionarObjetoNaLista(atual.getNome().c_str());
+		ObjetoGrafico *atual = mundo->getObjetos()->recuperaDaPosicao(i);
+		adicionarObjetoNaLista(atual->getNome().c_str());
 	}
 	atualizarTela();
 
@@ -469,23 +489,27 @@ void TelaPrincipal::aplicarRotacao() {
 	}
 }
 
-ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico obj) {
+ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 	GtkWidget *drawingArea = GTK_WIDGET(
 			gtk_builder_get_object( builder, AREA_DESENHO ));
 	Canvas canvas = mundo->getCanvas();
 
-	double Xvmax = gtk_widget_get_allocated_width(drawingArea);
-	double Yvmax = gtk_widget_get_allocated_height(drawingArea);
+	double Xvmax = gtk_widget_get_allocated_width(drawingArea) - 20;
+	double Yvmax = gtk_widget_get_allocated_height(drawingArea) - 20;
 
 	int x, y;
 
 	ListaEnc<Coordenada> coordenadas = ListaEnc<Coordenada>();
-	for (int i = 0; i < obj.getListaCoordTela()->getSize(); ++i) {
-		Coordenada coord = obj.getListaCoordTela()->recuperaDaPosicao(i);
-		x = ((coord.getX() + 1) / 2) * Xvmax;
-		y = (1 - (coord.getY() + 1) / 2) * Yvmax;
+	ListaEnc<Coordenada> *clipped = obj->clip();
 
-		coordenadas.adiciona(Coordenada(x, y));
+	if (clipped) {
+		for (int i = 0; i < clipped->getSize(); ++i) {
+			Coordenada coord = clipped->recuperaDaPosicao(i);
+			x = 10 + ((coord.getX() + 1) / 2) * Xvmax;
+			y = 10 + (1 - (coord.getY() + 1) / 2) * Yvmax;
+			std::cout << "Clipping: " << x << ", " << y << std::endl;
+			coordenadas.adiciona(Coordenada(x, y));
+		}
 	}
 
 	return coordenadas;

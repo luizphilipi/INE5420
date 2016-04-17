@@ -45,8 +45,8 @@ public:
 
 	static Matriz matrizIdentidade(int tamanho);
 
+	friend std::ostream& operator<<(std::ostream& os, const Matriz& obj);
 };
 
-std::ostream& operator<<(std::ostream& os, const Matriz& obj);
 
 #endif

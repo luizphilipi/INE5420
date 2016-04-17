@@ -33,12 +33,16 @@ protected:
 	ListaEnc<Coordenada> *coordenadasTela;  //coord normalizadas
 
 public:
-
 	ObjetoGrafico() :
 			nome(""), tipo(PONTO) {
 		coordenadasTela = new ListaEnc<Coordenada>;
 		coordenadasMundo = new ListaEnc<Coordenada>();
 	}
+
+	virtual ~ObjetoGrafico() {
+	}
+
+	virtual ListaEnc<Coordenada>* clip() = 0;
 
 	string getNome() {
 		return nome;
@@ -144,14 +148,12 @@ public:
 
 			Matriz matrizCoordenadas = Matriz(coord) * matrizNormalizacao;
 
-
 			double xNormalizado = (matrizCoordenadas(0, 0) - centroTela._x)
 					/ (xOffset);
 			double yNormalizado = (matrizCoordenadas(0, 1) - centroTela._y)
 					/ (yOffset);
 			double zNormalizado = (matrizCoordenadas(0, 2) - centroTela._z)
 					/ (zOffset);
-
 
 			Coordenada coordenadaNormalizada = Coordenada(xNormalizado,
 					yNormalizado, zNormalizado);

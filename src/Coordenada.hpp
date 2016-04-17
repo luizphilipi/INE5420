@@ -2,6 +2,7 @@
 #define COORDENADA
 
 #include <math.h>
+#include <iostream>
 
 class Coordenada {
 public:
@@ -65,6 +66,11 @@ public:
 	double angleWith(Coordenada other) {
 		return acos(produtoEscalar(other) / (tamanho() * other.tamanho()));
 	}
+
+	void print() {
+		std::cout << "(" << _x << ", " << _y << ", " << _z << ")" << std::endl;
+	}
+
 };
 
 #endif

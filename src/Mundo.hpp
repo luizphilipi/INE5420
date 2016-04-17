@@ -13,43 +13,43 @@
 
 class Mundo {
 private:
-	ListaEnc<ObjetoGrafico> *displayFile;
+	ListaEnc<ObjetoGrafico*> *displayFile;
 	Canvas canvas;
 
 public:
 	Mundo() :
 			canvas(550, 550) {
-		displayFile = new ListaEnc<ObjetoGrafico>();
+		displayFile = new ListaEnc<ObjetoGrafico*>();
 	}
 
 	virtual ~Mundo() {
 	}
 
 	void adicionaPonto(string nome, Coordenada coord) {
-		Ponto ponto = Ponto(nome, coord);
+		Ponto *ponto = new Ponto(nome, coord);
 		normalizar(ponto);
 		displayFile->adiciona(ponto);
 	}
 
 	void adicionaObj(ObjetoGrafico * obj) {
-		normalizar(*obj);
-		displayFile->adiciona(*obj);
+		normalizar(obj);
+		displayFile->adiciona(obj);
 	}
 
 	void adicionaLinha(string nome, Coordenada p1, Coordenada p2) {
-		Linha linha = Linha(nome, p1, p2);
+		Linha *linha = new Linha(nome, p1, p2);
 		normalizar(linha);
 		displayFile->adiciona(linha);
 	}
 
 	void adicionaPoligono(string nome, ListaEnc<Coordenada> *coords) {
-		Poligono poligono = Poligono(nome, coords);
+		Poligono *poligono = new Poligono(nome, coords);
 		normalizar(poligono);
 		displayFile->adiciona(poligono);
 	}
 
 
-	ListaEnc<ObjetoGrafico>* getObjetos() {
+	ListaEnc<ObjetoGrafico*>* getObjetos() {
 		return displayFile;
 	}
 
@@ -94,9 +94,9 @@ public:
 
 	void transladar(string nome, Coordenada coord) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
-			if (nome == displayFile->recuperaDaPosicao(i).getNome()) {
-				ObjetoGrafico obj = displayFile->recuperaDaPosicao(i);
-				obj.transladar(coord);
+			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
+				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
+				obj->transladar(coord);
 				normalizar(obj);
 				break;
 			}
@@ -105,9 +105,9 @@ public:
 
 	void escalonar(string nome, Coordenada coord) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
-			if (nome == displayFile->recuperaDaPosicao(i).getNome()) {
-				ObjetoGrafico obj = displayFile->recuperaDaPosicao(i);
-				obj.escalonar(coord);
+			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
+				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
+				obj->escalonar(coord);
 				normalizar(obj);
 				break;
 			}
@@ -116,9 +116,9 @@ public:
 
 	void rotacionar(string nome, double angulo) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
-			if (nome == displayFile->recuperaDaPosicao(i).getNome()) {
-				ObjetoGrafico obj = displayFile->recuperaDaPosicao(i);
-				obj.rotacionar(angulo);
+			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
+				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
+				obj->rotacionar(angulo);
 				normalizar(obj);
 				break;
 			}
@@ -127,9 +127,9 @@ public:
 
 	void rotacionar(string nome, double angulo, Coordenada coord) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
-			if (nome == displayFile->recuperaDaPosicao(i).getNome()) {
-				ObjetoGrafico obj = displayFile->recuperaDaPosicao(i);
-				obj.rotacionar(coord, angulo);
+			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
+				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
+				obj->rotacionar(coord, angulo);
 				normalizar(obj);
 				break;
 			}
@@ -142,11 +142,11 @@ public:
 		}
 	}
 
-	void normalizar(ObjetoGrafico obj) {
+	void normalizar(ObjetoGrafico* obj) {
 		Matriz matrizNormalizacao = canvas.matrizTransformacaoCanvas();
 //		std::cout << "Matriz de normalização: " << std::endl;
 //		std::cout << matrizNormalizacao << std::endl << std::endl;
-		obj.normalizar(canvas.centro(), canvas.xOffset(), canvas.yOffset(),
+		obj->normalizar(canvas.centro(), canvas.xOffset(), canvas.yOffset(),
 				canvas.zOffset(), matrizNormalizacao);
 	}
 };

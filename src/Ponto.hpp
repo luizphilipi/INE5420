@@ -18,5 +18,14 @@ public:
 		return coordenadasMundo->recuperaDaPosicao(0).getY();
 	}
 
+	ListaEnc<Coordenada>* clip() {
+		Coordenada coord = this->coordenadasTela->recuperaDaPosicao(0);
+		if (coord._x < -1 || coord._x > 1 || coord._y < -1 || coord._y > 1) {
+			std::cout << "Deu ruim" << std::endl;
+			return NULL;
+		}
+		std::cout << "Deu bom" << std::endl;
+		return this->coordenadasTela;
+	}
 };
 #endif

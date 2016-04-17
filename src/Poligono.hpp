@@ -8,5 +8,9 @@ public:
 	Poligono(string nome, ListaEnc<Coordenada>* pontos) :
 			ObjetoGrafico(nome, POLIGONO, pontos) {
 	}
+
+	ListaEnc<Coordenada>* clip() {
+		return coordenadasMundo;
+	}
 };
 #endif
