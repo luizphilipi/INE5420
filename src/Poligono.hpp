@@ -9,18 +9,8 @@ public:
 			ObjetoGrafico(nome, POLIGONO, pontos, preenchimento) {
 	}
 
+	// baseado em https://rosettacode.org/wiki/Sutherland-Hodgman_polygon_clipping#Java
 	ListaEnc<Coordenada>* clip() {
-//		return coordenadasTela;
-		return clipPolygon();
-	}
-private:
-
-	// Tela vai de (-1,-1) até (1,1);
-	int xmin = -1, ymin = -1, xmax = 1, ymax = 1;
-	Coordenada tela[4] = { Coordenada(xmin, ymin), Coordenada(xmax, ymin),
-			Coordenada(xmax, ymax), Coordenada(xmin, ymax) };
-
-	ListaEnc<Coordenada>* clipPolygon() {
 		ListaEnc<Coordenada> *resultado = new ListaEnc<Coordenada>();
 		for (int i = 0; i < this->coordenadasTela->getSize(); ++i) {
 			resultado->adiciona(this->coordenadasTela->recuperaDaPosicao(i));
@@ -54,6 +44,12 @@ private:
 		}
 		return resultado;
 	}
+private:
+
+	// Tela vai de (-1,-1) até (1,1);
+	int xmin = -1, ymin = -1, xmax = 1, ymax = 1;
+	Coordenada tela[4] = { Coordenada(xmin, ymin), Coordenada(xmax, ymin),
+			Coordenada(xmax, ymax), Coordenada(xmin, ymax) };
 
 	bool isInside(Coordenada a, Coordenada b, Coordenada c) {
 		return (a._x - c._x) * (b._y - c._y) > (a._y - c._y) * (b._x - c._x);
