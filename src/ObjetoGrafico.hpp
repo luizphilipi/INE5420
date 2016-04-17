@@ -13,14 +13,21 @@ enum tipoGeometria {
 class ObjetoGrafico {
 protected:
 	ObjetoGrafico(string nome, tipoGeometria tipo) :
-			nome(nome), tipo(tipo) {
+			nome(nome), tipo(tipo), preenchido(false) {
 		coordenadasMundo = new ListaEnc<Coordenada>();
 		coordenadasTela = new ListaEnc<Coordenada>();
 	}
 
 	ObjetoGrafico(string nome, tipoGeometria tipo, ListaEnc<Coordenada> *coords) :
-			nome(nome), tipo(tipo), coordenadasMundo(coords) {
-		coordenadasTela = new ListaEnc<Coordenada>;
+			nome(nome), tipo(tipo), coordenadasMundo(coords), preenchido(false) {
+		coordenadasTela = new ListaEnc<Coordenada>();
+		for (int i = 0; i < coords->getSize(); ++i) {
+			coordenadasTela->adiciona(Coordenada());
+		}
+	}
+
+	ObjetoGrafico(string nome, tipoGeometria tipo, ListaEnc<Coordenada> *coords, bool preenchimento) :
+			nome(nome), tipo(tipo), coordenadasMundo(coords), preenchido(preenchimento) {
 		coordenadasTela = new ListaEnc<Coordenada>();
 		for (int i = 0; i < coords->getSize(); ++i) {
 			coordenadasTela->adiciona(Coordenada());
@@ -31,11 +38,12 @@ protected:
 	tipoGeometria tipo;
 	ListaEnc<Coordenada> *coordenadasMundo;
 	ListaEnc<Coordenada> *coordenadasTela;  //coord normalizadas
+	bool preenchido = false;
 
 public:
 
 	ObjetoGrafico() :
-			nome(""), tipo(PONTO) {
+			nome(""), tipo(PONTO), preenchido(false) {
 		coordenadasTela = new ListaEnc<Coordenada>;
 		coordenadasMundo = new ListaEnc<Coordenada>();
 	}
@@ -45,6 +53,10 @@ public:
 	}
 	void setNome(string n) {
 		nome = n;
+	}
+
+	bool ePreenchido(){
+		return preenchido;
 	}
 
 	tipoGeometria getTipo() {

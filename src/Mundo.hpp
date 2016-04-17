@@ -42,8 +42,8 @@ public:
 		displayFile->adiciona(linha);
 	}
 
-	void adicionaPoligono(string nome, ListaEnc<Coordenada> *coords) {
-		Poligono poligono = Poligono(nome, coords);
+	void adicionaPoligono(string nome, ListaEnc<Coordenada> *coords, bool preenchimento) {
+		Poligono poligono = Poligono(nome, coords, preenchimento);
 		normalizar(poligono);
 		displayFile->adiciona(poligono);
 	}
