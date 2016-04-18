@@ -93,7 +93,8 @@
     <property name="page_increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment6">
-    <property name="upper">100</property>
+    <property name="lower">-9999</property>
+    <property name="upper">9999</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -783,6 +784,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">False</property>
+                                <property name="text" translatable="yes">amostra.obj</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -805,11 +807,13 @@
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkButton" id="botaoAbrirMundo">
-                                <property name="label" translatable="yes">Abrir mundo</property>
+                                <property name="label">gtk-open</property>
                                 <property name="width_request">120</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="use_stock">True</property>
+                                <property name="always_show_image">True</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -819,11 +823,13 @@
                             </child>
                             <child>
                               <object class="GtkButton" id="botaoSalvarMundo">
-                                <property name="label" translatable="yes">Salvar mundo</property>
+                                <property name="label">gtk-save</property>
                                 <property name="width_request">120</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="use_stock">True</property>
+                                <property name="always_show_image">True</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -889,7 +895,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="addObj">
-                        <property name="label" translatable="yes">Adicionar</property>
+                        <property name="label">gtk-add</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -898,6 +904,8 @@
                         <property name="margin_top">5</property>
                         <property name="margin_bottom">5</property>
                         <property name="relief">half</property>
+                        <property name="use_stock">True</property>
+                        <property name="always_show_image">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -991,13 +999,15 @@
                                     <property name="margin_bottom">10</property>
                                     <child>
                                       <object class="GtkButton" id="btnZoomIn">
-                                        <property name="label" translatable="yes">+</property>
+                                        <property name="label">gtk-zoom-in</property>
                                         <property name="width_request">30</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
-                                        <property name="margin_left">30</property>
-                                        <property name="margin_right">30</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">5</property>
+                                        <property name="use_stock">True</property>
+                                        <property name="always_show_image">True</property>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
@@ -1007,13 +1017,13 @@
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="btnZoomOut">
-                                        <property name="label" translatable="yes">-</property>
-                                        <property name="width_request">30</property>
+                                        <property name="label">gtk-zoom-out</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
-                                        <property name="margin_left">30</property>
-                                        <property name="margin_right">30</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="use_stock">True</property>
+                                        <property name="always_show_image">True</property>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
@@ -1137,6 +1147,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="yalign">0.50999999046325684</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1337,10 +1348,12 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="btnAplicarTranslacao">
-                                    <property name="label" translatable="yes">Aplicar</property>
+                                    <property name="label">gtk-apply</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
+                                    <property name="use_stock">True</property>
+                                    <property name="always_show_image">True</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1473,10 +1486,12 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="btnAplicarEscalonamento">
-                                    <property name="label" translatable="yes">Aplicar</property>
+                                    <property name="label">gtk-apply</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
+                                    <property name="use_stock">True</property>
+                                    <property name="always_show_image">True</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1542,6 +1557,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="adjustment">adjustment7</property>
+                                        <property name="value">30</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -1692,10 +1708,12 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="btnAplicarRotacao">
-                                    <property name="label" translatable="yes">Aplicar</property>
+                                    <property name="label">gtk-apply</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
+                                    <property name="use_stock">True</property>
+                                    <property name="always_show_image">True</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
