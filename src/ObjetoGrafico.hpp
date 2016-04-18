@@ -73,7 +73,7 @@ public:
 		nome = n;
 	}
 
-	bool ePreenchido(){
+	bool isPreenchido(){
 		return preenchido;
 	}
 
