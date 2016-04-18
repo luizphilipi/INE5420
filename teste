@@ -9,12 +9,26 @@ v 200 200 1
 v 300 300 1
 l 8 9
 o poligono1
+usemtl azul
 v -10 -200 1
 v -150 -100 1
 v -250 -130 1
-l 12 13 14
+l 13 14 15
 o poligono2
+usemtl vermelho
 v 10 10 1
 v 10 50 1
 v 50 50 1
-l 17 18 19
+l 19 20 21
+o poligono3
+usemtl amarelo
+v 30 -200 1
+v 30 -100 1
+v 200 -100 1
+l 25 26 27
+o poligono4
+v 0 0 1
+v 5 -50 1
+v 50 -50 1
+l 30 31 32
+mtllib teste.mtl

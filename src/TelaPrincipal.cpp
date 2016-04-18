@@ -271,9 +271,13 @@ void TelaPrincipal::adicionarObjeto() {
 		}
 		GtkToggleButton *botaoPreencher = GTK_TOGGLE_BUTTON(
 				gtk_builder_get_object(builder, BOTAO_PREENCHER));
+		GtkColorChooser *corPreenchimento = GTK_COLOR_CHOOSER(
+						gtk_builder_get_object(builder, COR_PREENCHIMENTO));
 		bool preenchimento = gtk_toggle_button_get_active(botaoPreencher);
-		std::cout << preenchimento << endl;
-		mundo->adicionaPoligono(nomeObjeto, coordenadas, preenchimento);
+
+		GdkRGBA cor;
+		gtk_color_chooser_get_rgba(corPreenchimento, &cor);
+		mundo->adicionaPoligono(nomeObjeto, coordenadas, preenchimento, cor);
 	}
 		break;
 	}
@@ -315,8 +319,12 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 
 			if (obj->ePreenchido()) {
 				std::cout << "preenchido" << endl;
-				cairo_set_source_rgb(cr, 1, 0, 1);
+				GdkRGBA cor = obj->getCor();
+
+				cairo_set_source_rgb(cr, cor.red, cor.green, cor.blue);
 				cairo_fill(cr);
+			} else {
+				cairo_set_source_rgb(cr, 0, 0, 0);
 			}
 
 			cairo_close_path(cr);

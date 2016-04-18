@@ -5,6 +5,7 @@
 #include "Coordenada.hpp"
 #include "MatrizUtil.hpp"
 #include <string>
+#include <gtk/gtk.h>
 
 enum tipoGeometria {
 	PONTO, LINHA, POLIGONO
@@ -34,11 +35,24 @@ protected:
 		}
 	}
 
+	ObjetoGrafico(string nome,
+			tipoGeometria tipo,
+			ListaEnc<Coordenada> *coords,
+			bool preenchimento,
+			GdkRGBA cor) :
+				nome(nome), tipo(tipo), coordenadasMundo(coords), preenchido(preenchimento), cor(cor) {
+			coordenadasTela = new ListaEnc<Coordenada>();
+			for (int i = 0; i < coords->getSize(); ++i) {
+				coordenadasTela->adiciona(Coordenada());
+			}
+		}
+
 	string nome;
 	tipoGeometria tipo;
 	ListaEnc<Coordenada> *coordenadasMundo;
 	ListaEnc<Coordenada> *coordenadasTela;  //coord normalizadas
 	bool preenchido = false;
+	GdkRGBA cor;
 
 public:
 	ObjetoGrafico() :
@@ -68,6 +82,10 @@ public:
 	}
 	void setTipo(tipoGeometria t) {
 		tipo = t;
+	}
+
+	GdkRGBA getCor(){
+		return cor;
 	}
 
 	int getQuantidadeCoords() {

@@ -43,8 +43,8 @@ public:
 	}
 
 	void adicionaPoligono(string nome, ListaEnc<Coordenada> *coords,
-			bool preenchimento) {
-		Poligono *poligono = new Poligono(nome, coords, preenchimento);
+			bool preenchimento, GdkRGBA cor) {
+		Poligono *poligono = new Poligono(nome, coords, preenchimento, cor);
 		normalizar(poligono);
 		displayFile->adiciona(poligono);
 	}

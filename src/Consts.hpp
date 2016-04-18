@@ -29,6 +29,7 @@
 #define BOX_POLIGONO "boxPoligono"
 #define BOTAO_ADICIONAR_COORD_POLIGONO "botaoAdicionarCoordPoligono"
 #define BOTAO_PREENCHER "botaoPreencher"
+#define COR_PREENCHIMENTO "corPreenchimento"
 
 // botões de movimentação
 #define MOVE_UP_BTN "btnUp"

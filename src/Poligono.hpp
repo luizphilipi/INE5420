@@ -5,12 +5,16 @@
 
 class Poligono: public ObjetoGrafico {
 public:
+	Poligono(string nome, ListaEnc<Coordenada>* pontos, bool preenchimento, GdkRGBA cor) :
+			ObjetoGrafico(nome, POLIGONO, pontos, preenchimento, cor) {
+	}
+
 	Poligono(string nome, ListaEnc<Coordenada>* pontos, bool preenchimento) :
 			ObjetoGrafico(nome, POLIGONO, pontos, preenchimento) {
 	}
 
 	ListaEnc<Coordenada>* clip() {
-		return coordenadasMundo;
+		return coordenadasTela;
 	}
 };
 #endif
