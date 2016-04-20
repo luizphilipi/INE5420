@@ -143,9 +143,16 @@ public:
 	}
 
 	void normalizar(ObjetoGrafico* obj) {
+		clock_t begin = clock();
+
 		Matriz matrizNormalizacao = canvas.matrizTransformacaoCanvas();
 		obj->normalizar(canvas.centro(), canvas.xOffset(), canvas.yOffset(),
 				canvas.zOffset(), matrizNormalizacao);
+
+		clock_t end = clock();
+		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		std::cout << "Objeto " << obj->getNome() << " normalizado em: "
+				<< elapsed_secs << std::endl;
 	}
 };
 

@@ -66,3 +66,8 @@
 #define SPIN_ROTACAO_X "spinRotacaoPontoX"
 #define SPIN_ROTACAO_Y "spinRotacaoPontoY"
 #define BOTAO_APLICAR_ROTACAO "btnAplicarRotacao"
+
+// clipping
+#define RADIO_COHEN "radioCohen"
+#define RADIO_LIANG "radioLiang"
+#define RADIO_DESATIVAR_CLIPPING "radioDesativarClipping"

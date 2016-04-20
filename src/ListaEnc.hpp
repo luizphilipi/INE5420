@@ -166,6 +166,7 @@ public:
 		for (int i = 0; i < pos; i++) {
 			atual = atual->getProximo();
 		}
+
 		return atual->getInfo();
 	}
 

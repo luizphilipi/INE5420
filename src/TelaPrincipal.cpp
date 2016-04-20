@@ -68,6 +68,10 @@ void adicionar_coordenada_poligono(GtkWidget *widget,
 void rotacao_mundo(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->rotacaoMundo();
 }
+
+void atualizar_tela(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->atualizarTela();
+}
 }
 
 void TelaPrincipal::atualizarTela() {
@@ -180,6 +184,22 @@ TelaPrincipal::TelaPrincipal() {
 			G_CALLBACK(salvar_mundo), this);
 	//FIM signal mundo abrir/salvar
 
+	// Clipping
+	GtkWidget *radioCohen = GTK_WIDGET(
+			gtk_builder_get_object(builder, RADIO_COHEN));
+	g_signal_connect(G_OBJECT(radioCohen), "toggled",
+			G_CALLBACK(atualizar_tela), this);
+
+	GtkWidget *radioLiang = GTK_WIDGET(
+			gtk_builder_get_object(builder, RADIO_LIANG));
+	g_signal_connect(G_OBJECT(radioLiang), "toggled",
+			G_CALLBACK(atualizar_tela), this);
+
+	GtkWidget *radioDesativarClipping = GTK_WIDGET(
+			gtk_builder_get_object(builder, RADIO_DESATIVAR_CLIPPING));
+	g_signal_connect(G_OBJECT(radioDesativarClipping), "toggled",
+			G_CALLBACK(atualizar_tela), this);
+
 	//para de rodar ao clicar no X
 	g_signal_connect(telaPrincipal, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
@@ -272,7 +292,7 @@ void TelaPrincipal::adicionarObjeto() {
 		GtkToggleButton *botaoPreencher = GTK_TOGGLE_BUTTON(
 				gtk_builder_get_object(builder, BOTAO_PREENCHER));
 		GtkColorChooser *corPreenchimento = GTK_COLOR_CHOOSER(
-						gtk_builder_get_object(builder, COR_PREENCHIMENTO));
+				gtk_builder_get_object(builder, COR_PREENCHIMENTO));
 		bool preenchimento = gtk_toggle_button_get_active(botaoPreencher);
 
 		GdkRGBA cor;
@@ -299,6 +319,8 @@ void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
 void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 	ListaEnc<Coordenada> coords = mapearNoMundo(obj);
 	if (coords.getSize() > 0) {
+		clock_t begin = clock();
+
 		if (coords.getSize() == 1) {
 			cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
 					coords.recuperaDaPosicao(0).getY());
@@ -317,7 +339,6 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 						coords.recuperaDaPosicao(i).getY());
 			}
 
-
 			if (obj->isPreenchido()) {
 				GdkRGBA cor = obj->getCor();
 
@@ -332,6 +353,11 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 
 			cairo_stroke(cr);
 		}
+
+		clock_t end = clock();
+		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		std::cout << "Desenhando objeto " << obj->getNome() << " em: "
+				<< elapsed_secs << std::endl;
 	}
 }
 
@@ -377,11 +403,17 @@ void TelaPrincipal::fecharPopupAdicionar() {
 }
 
 void TelaPrincipal::moverCima() {
+	clock_t begin = clock();
+
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->moverCima(gtk_spin_button_get_value(inputPasso));
 
 	atualizarTela();
+
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	std::cout << "Movendo mundo para cima em: " << elapsed_secs << std::endl;
 }
 
 void TelaPrincipal::moverBaixo() {
@@ -509,6 +541,8 @@ void TelaPrincipal::aplicarRotacao() {
 }
 
 ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
+	clock_t begin = clock();
+
 	GtkWidget *drawingArea = GTK_WIDGET(
 			gtk_builder_get_object( builder, AREA_DESENHO ));
 	Canvas canvas = mundo->getCanvas();
@@ -519,7 +553,7 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 	int x, y;
 
 	ListaEnc<Coordenada> coordenadas = ListaEnc<Coordenada>();
-	ListaEnc<Coordenada> *clipped = obj->clip();
+	ListaEnc<Coordenada> *clipped = obj->clip(radioClippingSelecionado());
 
 	if (clipped) {
 		for (int i = 0; i < clipped->getSize(); ++i) {
@@ -529,6 +563,11 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 			coordenadas.adiciona(Coordenada(x, y));
 		}
 	}
+
+	clock_t end = clock();
+	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+	std::cout << "Mapeando objeto " << obj->getNome() << " em: " << elapsed_secs
+			<< std::endl;
 
 	return coordenadas;
 }
@@ -571,6 +610,25 @@ int TelaPrincipal::radioRotacaoSelecionada() {
 	} else if (gtk_toggle_button_get_active(
 			GTK_TOGGLE_BUTTON(radioCentroPonto))) {
 		return 3;
+	}
+	return -1;
+}
+
+int TelaPrincipal::radioClippingSelecionado() {
+	GtkRadioButton *radioCohen = GTK_RADIO_BUTTON(
+			gtk_builder_get_object (builder, RADIO_COHEN));
+	GtkRadioButton *radioLiang = GTK_RADIO_BUTTON(
+			gtk_builder_get_object (builder, RADIO_LIANG));
+	GtkRadioButton *radioDesativar = GTK_RADIO_BUTTON(
+			gtk_builder_get_object (builder, RADIO_DESATIVAR_CLIPPING));
+
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioCohen))) {
+		return 1;
+	} else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(radioLiang))) {
+		return 2;
+	} else if (gtk_toggle_button_get_active(
+			GTK_TOGGLE_BUTTON(radioDesativar))) {
+		return 0;
 	}
 	return -1;
 }

@@ -5,7 +5,8 @@
 
 class Poligono: public ObjetoGrafico {
 public:
-	Poligono(string nome, ListaEnc<Coordenada>* pontos, bool preenchimento, GdkRGBA cor) :
+	Poligono(string nome, ListaEnc<Coordenada>* pontos, bool preenchimento,
+			GdkRGBA cor) :
 			ObjetoGrafico(nome, POLIGONO, pontos, preenchimento, cor) {
 	}
 
@@ -14,39 +15,51 @@ public:
 	}
 
 	// baseado em https://rosettacode.org/wiki/Sutherland-Hodgman_polygon_clipping#Java
-	ListaEnc<Coordenada>* clip() {
-		ListaEnc<Coordenada> *resultado = new ListaEnc<Coordenada>();
-		for (int i = 0; i < this->coordenadasTela->getSize(); ++i) {
-			resultado->adiciona(this->coordenadasTela->recuperaDaPosicao(i));
-		}
+	ListaEnc<Coordenada>* clip(int status) {
+		if (status) {
+			clock_t begin = clock();
 
-		int len = 4;
-		for (int i = 0; i < len; i++) {
+			ListaEnc<Coordenada> *resultado = new ListaEnc<Coordenada>();
+			for (int i = 0; i < this->coordenadasTela->getSize(); ++i) {
+				resultado->adiciona(
+						this->coordenadasTela->recuperaDaPosicao(i));
+			}
 
-			int len2 = resultado->getSize();
+			int len = 4;
+			for (int i = 0; i < len; i++) {
 
-			ListaEnc<Coordenada> *input = resultado;
-			resultado = new ListaEnc<Coordenada>();
+				int len2 = resultado->getSize();
 
-			Coordenada A = tela[(i + len - 1) % len];
-			Coordenada B = tela[i];
+				ListaEnc<Coordenada> *input = resultado;
+				resultado = new ListaEnc<Coordenada>();
 
-			for (int j = 0; j < len2; j++) {
+				Coordenada A = tela[(i + len - 1) % len];
+				Coordenada B = tela[i];
 
-				Coordenada P = input->recuperaDaPosicao((j + len2 - 1) % len2);
-				Coordenada Q = input->recuperaDaPosicao(j);
+				for (int j = 0; j < len2; j++) {
 
-				if (isInside(A, B, Q)) {
-					if (!isInside(A, B, P)) {
+					Coordenada P = input->recuperaDaPosicao(
+							(j + len2 - 1) % len2);
+					Coordenada Q = input->recuperaDaPosicao(j);
+
+					if (isInside(A, B, Q)) {
+						if (!isInside(A, B, P)) {
+							resultado->adiciona(intersection(A, B, P, Q));
+						}
+						resultado->adiciona(Q);
+					} else if (isInside(A, B, P)) {
 						resultado->adiciona(intersection(A, B, P, Q));
 					}
-					resultado->adiciona(Q);
-				} else if (isInside(A, B, P)) {
-					resultado->adiciona(intersection(A, B, P, Q));
 				}
 			}
+
+			clock_t end = clock();
+			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+			std::cout << "Clip do poligono " << nome << " em: " << elapsed_secs
+					<< std::endl;
+			return resultado;
 		}
-		return resultado;
+		return coordenadasTela;
 	}
 private:
 

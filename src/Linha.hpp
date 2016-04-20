@@ -19,9 +19,14 @@ public:
 		return coordenadasMundo->recuperaDaPosicao(1);
 	}
 
-	ListaEnc<Coordenada> *clip() {
-//		return cohenSutherland();
-		return liangBarsky();
+	ListaEnc<Coordenada> *clip(int status) {
+		if (status == 1) {
+			return cohenSutherland();
+		} else if (status == 2) {
+			return liangBarsky();
+		} else {
+			return coordenadasTela;
+		}
 	}
 
 private:

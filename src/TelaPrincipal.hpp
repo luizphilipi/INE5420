@@ -60,6 +60,7 @@ public:
 	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico* obj);
 private:
 	int radioRotacaoSelecionada();
+	int radioClippingSelecionado();
 	char* getObjetoSelecionado();
 	void adicionarObjetoNaLista(const char* nome);
 
