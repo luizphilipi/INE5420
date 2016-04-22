@@ -108,10 +108,10 @@ public:
 					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
 							listaCoords);
 					switch (coordenadas.size()) {
-					case 2:
+					case 1:
 						obj = new Ponto(nome, coordenadas[0]);
 						break;
-					case 3:
+					case 2:
 						obj = new Linha(nome, coordenadas[0], coordenadas[1]);
 						break;
 					default:
