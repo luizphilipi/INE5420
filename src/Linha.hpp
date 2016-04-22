@@ -5,21 +5,21 @@
 
 class Linha: public ObjetoGrafico {
 public:
-	Linha(string nome, Coordenada coord1, Coordenada coord2) :
+	Linha(std::string nome, Coordenada coord1, Coordenada coord2) :
 			ObjetoGrafico(nome, LINHA) {
-		coordenadasMundo->adiciona(coord1);
-		coordenadasMundo->adiciona(coord2);
+		coordenadasMundo.push_back(coord1);
+		coordenadasMundo.push_back(coord2);
 	}
 
 	Coordenada getPonto1() {
-		return coordenadasMundo->recuperaDaPosicao(0);
+		return coordenadasMundo[0];
 	}
 
 	Coordenada getPonto2() {
-		return coordenadasMundo->recuperaDaPosicao(1);
+		return coordenadasMundo[1];
 	}
 
-	ListaEnc<Coordenada> *clip(int status) {
+	std::vector<Coordenada> clip(int status) {
 		if (status == 1) {
 			return cohenSutherland();
 		} else if (status == 2) {
@@ -55,9 +55,9 @@ private:
 	}
 
 	// implementação baseada na wikipedia: https://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
-	ListaEnc<Coordenada> *cohenSutherland() {
-		Coordenada c1 = coordenadasTela->recuperaDaPosicao(0);
-		Coordenada c2 = coordenadasTela->recuperaDaPosicao(1);
+	std::vector<Coordenada> cohenSutherland() {
+		Coordenada c1 = coordenadasTela[0];
+		Coordenada c2 = coordenadasTela[1];
 
 		int outcode1 = getcode(c1);
 		int outcode2 = getcode(c2);
@@ -102,18 +102,18 @@ private:
 			}
 		}
 		if (aceita) {
-			ListaEnc<Coordenada> *novasCoordenadas = new ListaEnc<Coordenada>();
-			novasCoordenadas->adiciona(c1);
-			novasCoordenadas->adiciona(c2);
+			std::vector<Coordenada> novasCoordenadas;
+			novasCoordenadas.push_back(c1);
+			novasCoordenadas.push_back(c2);
 
 			return novasCoordenadas;
 		}
-		return NULL;
+		return std::vector<Coordenada>();
 	}
 
-	ListaEnc<Coordenada> *liangBarsky() {
-		Coordenada c1 = coordenadasTela->recuperaDaPosicao(0);
-		Coordenada c2 = coordenadasTela->recuperaDaPosicao(1);
+	std::vector<Coordenada> liangBarsky() {
+		Coordenada c1 = coordenadasTela[0];
+		Coordenada c2 = coordenadasTela[1];
 
 		double dx = c2._x - c1._x;
 		double dy = c2._y - c1._y;
@@ -132,7 +132,7 @@ private:
 
 		for (int i = 0; i < 4; i++) {
 			if (p[i] == 0 && q[i] < 0) {
-				return NULL;
+				return std::vector<Coordenada>();
 			}
 		}
 
@@ -141,27 +141,27 @@ private:
 		double coef2 = coeficiente2(p, q);
 
 		if (coef1 > coef2) {
-			return NULL;
+			return std::vector<Coordenada>();
 		}
 
-		ListaEnc<Coordenada> *clippedCoords = new ListaEnc<Coordenada>();
+		std::vector<Coordenada> clippedCoords;
 
 		if (coef1 > 0) {
 			x = c1._x + coef1 * dx;
 			y = c1._y + coef1 * dy;
 
-			clippedCoords->adiciona(Coordenada(x, y));
+			clippedCoords.push_back(Coordenada(x, y));
 		} else {
-			clippedCoords->adiciona(c1);
+			clippedCoords.push_back(c1);
 		}
 
 		if (coef2 < 1) {
 			x = c1._x + coef2 * dx;
 			y = c1._y + coef2 * dy;
 
-			clippedCoords->adiciona(Coordenada(x, y));
+			clippedCoords.push_back(Coordenada(x, y));
 		} else {
-			clippedCoords->adiciona(c2);
+			clippedCoords.push_back(c2);
 		}
 
 		return clippedCoords;
@@ -171,20 +171,20 @@ private:
 		double r1 = (p[0] < 0) ? (q[0] / p[0]) : (q[1] / p[1]);
 		double r2 = (p[2] < 0) ? (q[2] / p[2]) : (q[3] / p[3]);
 
-		r1 = (!isfinite(r1)) ? 0.0 : r1;
-		r2 = (!isfinite(r2)) ? 0.0 : r2;
+		r1 = (!std::isfinite(r1)) ? 0.0 : r1;
+		r2 = (!std::isfinite(r2)) ? 0.0 : r2;
 
-		return max(0.0, max(r1, r2));
+		return std::max(0.0, std::max(r1, r2));
 	}
 
 	double coeficiente2(double p[], double q[]) {
 		double r1 = (p[1] < 0) ? (q[0] / p[0]) : (q[1] / p[1]);
 		double r2 = (p[3] < 0) ? (q[2] / p[2]) : (q[3] / p[3]);
 
-		r1 = (!isfinite(r1)) ? 1.0 : r1;
-		r2 = (!isfinite(r2)) ? 1.0 : r2;
+		r1 = (!std::isfinite(r1)) ? 1.0 : r1;
+		r2 = (!std::isfinite(r2)) ? 1.0 : r2;
 
-		return min(1.0, min(r1, r2));
+		return std::min(1.0, std::min(r1, r2));
 	}
 };
 #endif

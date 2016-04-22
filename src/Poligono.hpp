@@ -5,50 +5,54 @@
 
 class Poligono: public ObjetoGrafico {
 public:
-	Poligono(string nome, ListaEnc<Coordenada>* pontos, bool preenchimento,
-			GdkRGBA cor) :
+	Poligono(std::string nome, std::vector<Coordenada> pontos,
+			bool preenchimento, GdkRGBA cor) :
 			ObjetoGrafico(nome, POLIGONO, pontos, preenchimento, cor) {
 	}
 
-	Poligono(string nome, ListaEnc<Coordenada>* pontos, bool preenchimento) :
+	Poligono(std::string nome, std::vector<Coordenada> pontos,
+			bool preenchimento) :
 			ObjetoGrafico(nome, POLIGONO, pontos, preenchimento) {
 	}
 
 	// baseado em https://rosettacode.org/wiki/Sutherland-Hodgman_polygon_clipping#Java
-	ListaEnc<Coordenada>* clip(int status) {
+	std::vector<Coordenada> clip(int status) {
+		std::cout << "Clippando objeto " << nome << " com "
+				<< coordenadasTela.size() << " pontos." << std::endl;
+
 		if (status) {
 			clock_t begin = clock();
 
-			ListaEnc<Coordenada> *resultado = new ListaEnc<Coordenada>();
-			for (int i = 0; i < this->coordenadasTela->getSize(); ++i) {
-				resultado->adiciona(
-						this->coordenadasTela->recuperaDaPosicao(i));
+			std::vector<Coordenada> resultado;
+			for (Coordenada &coord : coordenadasTela) {
+				resultado.push_back(coord);
 			}
 
 			int len = 4;
 			for (int i = 0; i < len; i++) {
 
-				int len2 = resultado->getSize();
+				int len2 = resultado.size();
 
-				ListaEnc<Coordenada> *input = resultado;
-				resultado = new ListaEnc<Coordenada>();
+				std::vector<Coordenada> input(resultado);
+				resultado = std::vector<Coordenada>();
+				std::cout << "Tamanho do input: " << input.size() << std::endl;
+				std::cout << "Tamanho do resultado: " << len2 << std::endl;
 
 				Coordenada A = tela[(i + len - 1) % len];
 				Coordenada B = tela[i];
 
 				for (int j = 0; j < len2; j++) {
 
-					Coordenada P = input->recuperaDaPosicao(
-							(j + len2 - 1) % len2);
-					Coordenada Q = input->recuperaDaPosicao(j);
+					Coordenada P = input[(j + len2 - 1) % len2];
+					Coordenada Q = input[j];
 
 					if (isInside(A, B, Q)) {
 						if (!isInside(A, B, P)) {
-							resultado->adiciona(intersection(A, B, P, Q));
+							resultado.push_back(intersection(A, B, P, Q));
 						}
-						resultado->adiciona(Q);
+						resultado.push_back(Q);
 					} else if (isInside(A, B, P)) {
-						resultado->adiciona(intersection(A, B, P, Q));
+						resultado.push_back(intersection(A, B, P, Q));
 					}
 				}
 			}
@@ -56,8 +60,9 @@ public:
 			clock_t end = clock();
 			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 			std::cout << "Clip do poligono " << nome << " em: " << elapsed_secs
-					<< std::endl;
+					<< " com " << resultado.size() << " pontos" << std::endl;
 			return resultado;
+
 		}
 		return coordenadasTela;
 	}

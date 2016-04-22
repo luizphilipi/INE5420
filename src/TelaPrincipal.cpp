@@ -1,5 +1,6 @@
 #include "TelaPrincipal.hpp"
 #include "DescritorObj.hpp"
+#include <vector>
 
 extern "C" {
 gboolean callback_desenhar_tudo(GtkWidget *widget, cairo_t *cr,
@@ -257,7 +258,7 @@ void TelaPrincipal::adicionarObjeto() {
 		break;
 	case 2: {
 		//TODO generalizar, ia ser muito bom...
-		ListaEnc<Coordenada> *coordenadas = new ListaEnc<Coordenada>();
+		std::vector<Coordenada> coordenadas;
 
 		GtkBox *boxPoligono = GTK_BOX(
 				gtk_builder_get_object( builder, BOX_POLIGONO ));
@@ -287,7 +288,7 @@ void TelaPrincipal::adicionarObjeto() {
 					y = gtk_spin_button_get_value(inputY);
 				}
 			}
-			coordenadas->adiciona(Coordenada(x, y));
+			coordenadas.push_back(Coordenada(x, y));
 		}
 		GtkToggleButton *botaoPreencher = GTK_TOGGLE_BUTTON(
 				gtk_builder_get_object(builder, BOTAO_PREENCHER));
@@ -317,26 +318,21 @@ void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
 }
 
 void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
-	ListaEnc<Coordenada> coords = mapearNoMundo(obj);
-	if (coords.getSize() > 0) {
+	vector<Coordenada> coords = mapearNoMundo(obj);
+	if (coords.size() > 0) {
 		clock_t begin = clock();
 
-		if (coords.getSize() == 1) {
-			cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
-					coords.recuperaDaPosicao(0).getY());
-			cairo_arc(cr, coords.recuperaDaPosicao(0).getX(),
-					coords.recuperaDaPosicao(0).getY(), 1.0, 0.0, 2.0 * 3.14);
+		if (coords.size() == 1) {
+			cairo_move_to(cr, coords[0]._x, coords[0]._y);
+			cairo_arc(cr, coords[0]._x, coords[0]._y, 1.0, 0.0, 2.0 * 3.14);
 			cairo_fill_preserve(cr);
 			cairo_stroke(cr);
 		} else {
-			cairo_move_to(cr, coords.recuperaDaPosicao(0).getX(),
-					coords.recuperaDaPosicao(0).getY());
-			cairo_line_to(cr, coords.recuperaDaPosicao(0).getX(),
-					coords.recuperaDaPosicao(0).getY());
+			cairo_move_to(cr, coords[0]._x, coords[0]._y);
+			cairo_line_to(cr, coords[0]._x, coords[0]._y);
 
-			for (int i = 1; i < coords.getSize(); i++) {
-				cairo_line_to(cr, coords.recuperaDaPosicao(i).getX(),
-						coords.recuperaDaPosicao(i).getY());
+			for (auto &coord : coords) {
+				cairo_line_to(cr, coord._x, coord._y);
 			}
 
 			if (obj->isPreenchido()) {
@@ -427,7 +423,7 @@ void TelaPrincipal::moverBaixo() {
 void TelaPrincipal::abrirMundo() {
 	GtkEntry * caminhoArquivo = GTK_ENTRY(
 			gtk_builder_get_object(builder, CAMINHO_ARQUIVO));
-	string caminho = gtk_entry_get_text(caminhoArquivo);
+	std::string caminho = gtk_entry_get_text(caminhoArquivo);
 
 	DescritorObj * dobj = new DescritorObj();
 
@@ -443,7 +439,7 @@ void TelaPrincipal::abrirMundo() {
 void TelaPrincipal::salvarMundo() {
 	GtkEntry * caminhoArquivo = GTK_ENTRY(
 			gtk_builder_get_object(builder, CAMINHO_ARQUIVO));
-	string caminho = gtk_entry_get_text(caminhoArquivo);
+	std::string caminho = gtk_entry_get_text(caminhoArquivo);
 
 	DescritorObj * dobj = new DescritorObj();
 	dobj->escrever(mundo, caminho);
@@ -540,7 +536,7 @@ void TelaPrincipal::aplicarRotacao() {
 	}
 }
 
-ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
+std::vector<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 	clock_t begin = clock();
 
 	GtkWidget *drawingArea = GTK_WIDGET(
@@ -552,21 +548,18 @@ ListaEnc<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 
 	int x, y;
 
-	ListaEnc<Coordenada> coordenadas = ListaEnc<Coordenada>();
-	ListaEnc<Coordenada> *clipped = obj->clip(radioClippingSelecionado());
+	std::vector<Coordenada> coordenadas;
+	std::vector<Coordenada> clipped = obj->clip(radioClippingSelecionado());
 
-	if (clipped) {
-		for (int i = 0; i < clipped->getSize(); ++i) {
-			Coordenada coord = clipped->recuperaDaPosicao(i);
-			x = 10 + ((coord.getX() + 1) / 2) * Xvmax;
-			y = 10 + (1 - (coord.getY() + 1) / 2) * Yvmax;
-			coordenadas.adiciona(Coordenada(x, y));
-		}
+	for (auto &coord : clipped) {
+		x = 10 + ((coord._x + 1) / 2) * Xvmax;
+		y = 10 + (1 - (coord._y + 1) / 2) * Yvmax;
+		coordenadas.push_back(Coordenada(x, y));
 	}
 
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-	std::cout << "Mapeando objeto " << obj->getNome() << " em: " << elapsed_secs
+	std::cout << "Mapeando objeto " << obj->getNome() << " com " << coordenadas.size() <<" pontos em: " << elapsed_secs
 			<< std::endl;
 
 	return coordenadas;

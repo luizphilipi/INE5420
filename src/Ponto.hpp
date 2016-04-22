@@ -5,28 +5,28 @@
 
 class Ponto: public ObjetoGrafico {
 public:
-	Ponto(string nome, Coordenada coord) :
+	Ponto(std::string nome, Coordenada coord) :
 			ObjetoGrafico(nome, PONTO) {
-		coordenadasMundo->adiciona(coord);
+		coordenadasMundo.push_back(coord);
 	}
 
 	int getX() {
-		return coordenadasMundo->recuperaDaPosicao(0).getX();
+		return coordenadasMundo[0]._x;
 	}
 
 	int getY() {
-		return coordenadasMundo->recuperaDaPosicao(0).getY();
+		return coordenadasMundo[0]._y;
 	}
 
-	ListaEnc<Coordenada>* clip(int status) {
+	std::vector<Coordenada> clip(int status) {
 		if (status) {
-			Coordenada coord = this->coordenadasTela->recuperaDaPosicao(0);
+			Coordenada coord = coordenadasTela[0];
 			if (coord._x < -1 || coord._x > 1 || coord._y < -1
 					|| coord._y > 1) {
-				return NULL;
+				return std::vector<Coordenada>();
 			}
 		}
-		return this->coordenadasTela;
+		return coordenadasTela;
 	}
 };
 #endif

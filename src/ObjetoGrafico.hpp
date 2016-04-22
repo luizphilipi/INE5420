@@ -1,11 +1,12 @@
 #ifndef GEOMETRIA
 #define GEOMETRIA
 
-#include "ListaEnc.hpp"
 #include "Coordenada.hpp"
 #include "MatrizUtil.hpp"
 #include <string>
 #include <gtk/gtk.h>
+#include <vector>
+#include "ListaEnc.hpp"
 
 enum tipoGeometria {
 	PONTO, LINHA, POLIGONO
@@ -13,67 +14,62 @@ enum tipoGeometria {
 
 class ObjetoGrafico {
 protected:
-	ObjetoGrafico(string nome, tipoGeometria tipo) :
+	ObjetoGrafico(std::string nome, tipoGeometria tipo) :
 			nome(nome), tipo(tipo), preenchido(false) {
-		coordenadasMundo = new ListaEnc<Coordenada>();
-		coordenadasTela = new ListaEnc<Coordenada>();
 	}
 
-	ObjetoGrafico(string nome, tipoGeometria tipo, ListaEnc<Coordenada> *coords) :
-			nome(nome), tipo(tipo), coordenadasMundo(coords), preenchido(false) {
-		coordenadasTela = new ListaEnc<Coordenada>();
-		for (int i = 0; i < coords->getSize(); ++i) {
-			coordenadasTela->adiciona(Coordenada());
+	ObjetoGrafico(std::string nome, tipoGeometria tipo,
+			std::vector<Coordenada> coords) :
+			nome(nome), tipo(tipo), coordenadasMundo(coords), coordenadasTela(
+					coords), preenchido(false) {
+	}
+
+	ObjetoGrafico(std::string nome, tipoGeometria tipo,
+			std::vector<Coordenada> coords, bool preenchimento) :
+			nome(nome), tipo(tipo), coordenadasMundo(coords), preenchido(
+					preenchimento) {
+		for (int i = 0; i < coords.size(); ++i) {
+			coordenadasTela.push_back(Coordenada());
 		}
 	}
 
-	ObjetoGrafico(string nome, tipoGeometria tipo, ListaEnc<Coordenada> *coords, bool preenchimento) :
-			nome(nome), tipo(tipo), coordenadasMundo(coords), preenchido(preenchimento) {
-		coordenadasTela = new ListaEnc<Coordenada>();
-		for (int i = 0; i < coords->getSize(); ++i) {
-			coordenadasTela->adiciona(Coordenada());
+	ObjetoGrafico(std::string nome, tipoGeometria tipo,
+			std::vector<Coordenada> coords, bool preenchimento, GdkRGBA cor) :
+			nome(nome), tipo(tipo), coordenadasMundo(coords), preenchido(
+					preenchimento), cor(cor) {
+		for (int i = 0; i < coords.size(); ++i) {
+			coordenadasTela.push_back(Coordenada());
 		}
 	}
 
-	ObjetoGrafico(string nome,
-			tipoGeometria tipo,
-			ListaEnc<Coordenada> *coords,
-			bool preenchimento,
-			GdkRGBA cor) :
-				nome(nome), tipo(tipo), coordenadasMundo(coords), preenchido(preenchimento), cor(cor) {
-			coordenadasTela = new ListaEnc<Coordenada>();
-			for (int i = 0; i < coords->getSize(); ++i) {
-				coordenadasTela->adiciona(Coordenada());
-			}
-		}
-
-	string nome;
+	std::string nome;
 	tipoGeometria tipo;
-	ListaEnc<Coordenada> *coordenadasMundo;
-	ListaEnc<Coordenada> *coordenadasTela;  //coord normalizadas
+	std::vector<Coordenada> coordenadasMundo;
+	std::vector<Coordenada> coordenadasTela;  //coord normalizadas
 	bool preenchido = false;
 	GdkRGBA cor;
+	Coordenada *centroObj = NULL;
 
 public:
 	ObjetoGrafico() :
 			nome(""), tipo(PONTO), preenchido(false) {
-		coordenadasTela = new ListaEnc<Coordenada>;
-		coordenadasMundo = new ListaEnc<Coordenada>();
 	}
 
 	virtual ~ObjetoGrafico() {
 	}
 
-	virtual ListaEnc<Coordenada>* clip() = 0;
+	// status = 0 é desativado, 1 = Sutherland, 2 = Liang Barsky
+	virtual std::vector<Coordenada> clip(int status) = 0;
 
-	string getNome() {
+	std::string getNome() {
 		return nome;
 	}
-	void setNome(string n) {
-		nome = n;
+
+	void setNome(std::string nome) {
+		this->nome = nome;
 	}
 
-	bool isPreenchido(){
+	bool isPreenchido() {
 		return preenchido;
 	}
 
@@ -84,51 +80,51 @@ public:
 		tipo = t;
 	}
 
-	GdkRGBA getCor(){
+	GdkRGBA getCor() {
 		return cor;
 	}
 
 	int getQuantidadeCoords() {
-		return coordenadasMundo->getSize();
+		return coordenadasMundo.size();
 	}
 
-	ListaEnc<Coordenada> * getListaCoord() {
+	std::vector<Coordenada> getListaCoord() {
 		return coordenadasMundo;
 	}
 
-	ListaEnc<Coordenada> * getListaCoordTela() {
+	std::vector<Coordenada> getListaCoordTela() {
 		return coordenadasTela;
 	}
 
-	void setListaCoord(ListaEnc<Coordenada> * l) {
+	void setListaCoord(std::vector<Coordenada> l) {
 		coordenadasMundo = l;
 	}
 
 	Coordenada getCoord(int i) {
-		return coordenadasMundo->recuperaDaPosicao(i);
-	}
-
-	void setCoord(Coordenada c, int i) {
-		this->coordenadasMundo->adicionaNaPosicao(c, i);
+		return coordenadasMundo[i];
 	}
 
 	/* Centro do objeto = (Cx, Cy)
 	 * Cx = [ SOMA(xi) i=1 até n ] / n
 	 * Cy = [ SOMA(yi) i=1 até n ] / n
 	 */
-	const Coordenada centro() const {
+	Coordenada centro() {
+//		if (!centroObj) {
 		int x = 0;
 		int y = 0;
-		int tamanho = coordenadasMundo->getSize();
-		for (int i = 0; i < tamanho; ++i) {
-			x += coordenadasMundo->recuperaDaPosicao(i).getX();
-			y += coordenadasMundo->recuperaDaPosicao(i).getY();
+
+		for (auto &coordenada : coordenadasMundo) {
+			x += coordenada._x;
+			y += coordenada._y;
 		}
 
+		int tamanho = coordenadasMundo.size();
 		x = x / tamanho;
 		y = y / tamanho;
 
 		return Coordenada(x, y);
+//		}
+//		return *centroObj;
 	}
 
 	/* Aplica o deslocamento (Dx, Dy) a todas as coordenadas [x y 1]
@@ -136,7 +132,7 @@ public:
 	 * [x' y' 1] = [x y 1] * |0	 1	0|
 	 * 						 |Dx Dy	1|
 	 */
-	const void transladar(Coordenada vetorDeslocamento) const {
+	void transladar(Coordenada vetorDeslocamento) {
 		Matriz matrizTransformacao = MatrizUtil::matrizTranslacao(3, 3,
 				vetorDeslocamento);
 		aplicarTransformacao(matrizTransformacao);
@@ -148,7 +144,7 @@ public:
 	 * [x'' y'' 1] = [x y 1] *	|0	 1	 0| * |0	Sy	0| * |0		1	0|
 	 * 							|-Cx -Cy 1|	  |0	0	1|   |Cx	Cy	1|
 	 */
-	const void escalonar(Coordenada fator) const {
+	void escalonar(Coordenada fator) {
 		Matriz matrizEscalonamento = MatrizUtil::matrizEscalonamento(3, 3,
 				fator);
 		aplicarTransformacao(matrizEscalonamento, this->centro());
@@ -159,23 +155,21 @@ public:
 	 * [x'' y'' 1] = [x y 1] *	|0	 1	 0| *	|sin(Θ)	 cos(Θ)	0| *|0	1	0|
 	 * 							|-Dx -Dy 1|		|0		0		1|	|Dx	Dy	1|
 	 */
-	const void rotacionar(double anguloEmGraus) const {
+	void rotacionar(double anguloEmGraus) {
 		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, anguloEmGraus);
 		aplicarTransformacao(matrizRotacao, this->centro());
 	}
 
-	const void rotacionar(Coordenada emTornoDe, double anguloEmGraus) const {
+	void rotacionar(Coordenada emTornoDe, double anguloEmGraus) {
 		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, anguloEmGraus);
 		aplicarTransformacao(matrizRotacao, emTornoDe);
 	}
 
 	void normalizar(Coordenada centroTela, double xOffset, double yOffset,
 			double zOffset, Matriz matrizNormalizacao) {
-		coordenadasTela->destroiLista();
+		coordenadasTela.clear();
 
-		for (int i = 0; i < coordenadasMundo->getSize(); ++i) {
-			Coordenada coord = coordenadasMundo->recuperaDaPosicao(i);
-
+		for (auto &coord : coordenadasMundo) {
 			Matriz matrizCoordenadas = Matriz(coord) * matrizNormalizacao;
 
 			double xNormalizado = (matrizCoordenadas(0, 0) - centroTela._x)
@@ -187,30 +181,27 @@ public:
 
 			Coordenada coordenadaNormalizada = Coordenada(xNormalizado,
 					yNormalizado, zNormalizado);
-			coordenadasTela->adiciona(coordenadaNormalizada);
+			coordenadasTela.push_back(coordenadaNormalizada);
 		}
 	}
 
 private:
 
 	// [x' y' z' ... ] = [x y z ...] * matriz transformação
-	const void aplicarTransformacao(Matriz matrizTransformacao) const {
-		for (int i = 0; i < coordenadasMundo->getSize(); ++i) {
-			Coordenada coord = coordenadasMundo->eliminaDaPosicao(i);
+	void aplicarTransformacao(Matriz matrizTransformacao) {
+		for (auto &coord : coordenadasMundo) {
 			Matriz resultado = Matriz(coord) * matrizTransformacao;
 			coord._x = resultado(0, 0);
 			coord._y = resultado(0, 1);
 			coord._z = resultado(0, 2);
-			coordenadasMundo->adicionaNaPosicao(coord, i);
+//			coordenadasMundo[i] = coord;
 		}
 	}
 
-	const void aplicarTransformacao(Matriz matrizTransformacao,
-			Coordenada posicao) const {
+	void aplicarTransformacao(Matriz matrizTransformacao, Coordenada posicao) {
 		Matriz resultado = MatrizUtil::matrizTranslacao(3, 3,
 				posicao.negativa()) * matrizTransformacao
 				* MatrizUtil::matrizTranslacao(3, 3, posicao);
-
 		aplicarTransformacao(resultado);
 	}
 

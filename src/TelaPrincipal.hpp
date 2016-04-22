@@ -57,7 +57,7 @@ public:
 
 	void salvarMundo();
 
-	ListaEnc<Coordenada> mapearNoMundo(ObjetoGrafico* obj);
+	vector<Coordenada> mapearNoMundo(ObjetoGrafico* obj);
 private:
 	int radioRotacaoSelecionada();
 	int radioClippingSelecionado();

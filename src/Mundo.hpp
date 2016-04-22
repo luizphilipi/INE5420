@@ -25,7 +25,7 @@ public:
 	virtual ~Mundo() {
 	}
 
-	void adicionaPonto(string nome, Coordenada coord) {
+	void adicionaPonto(std::string nome, Coordenada coord) {
 		Ponto *ponto = new Ponto(nome, coord);
 		normalizar(ponto);
 		displayFile->adiciona(ponto);
@@ -36,13 +36,13 @@ public:
 		displayFile->adiciona(obj);
 	}
 
-	void adicionaLinha(string nome, Coordenada p1, Coordenada p2) {
+	void adicionaLinha(std::string nome, Coordenada p1, Coordenada p2) {
 		Linha *linha = new Linha(nome, p1, p2);
 		normalizar(linha);
 		displayFile->adiciona(linha);
 	}
 
-	void adicionaPoligono(string nome, ListaEnc<Coordenada> *coords,
+	void adicionaPoligono(std::string nome, std::vector<Coordenada> coords,
 			bool preenchimento, GdkRGBA cor) {
 		Poligono *poligono = new Poligono(nome, coords, preenchimento, cor);
 		normalizar(poligono);
@@ -92,7 +92,7 @@ public:
 		normalizarTudo();
 	}
 
-	void transladar(string nome, Coordenada coord) {
+	void transladar(std::string nome, Coordenada coord) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
 			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
 				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
@@ -103,7 +103,7 @@ public:
 		}
 	}
 
-	void escalonar(string nome, Coordenada coord) {
+	void escalonar(std::string nome, Coordenada coord) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
 			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
 				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
@@ -114,7 +114,7 @@ public:
 		}
 	}
 
-	void rotacionar(string nome, double angulo) {
+	void rotacionar(std::string nome, double angulo) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
 			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
 				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
@@ -125,7 +125,7 @@ public:
 		}
 	}
 
-	void rotacionar(string nome, double angulo, Coordenada coord) {
+	void rotacionar(std::string nome, double angulo, Coordenada coord) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
 			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
 				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
@@ -151,7 +151,7 @@ public:
 
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "Objeto " << obj->getNome() << " normalizado em: "
+		std::cout << "Objeto " << obj->getNome() << " com " << obj->getListaCoordTela().size() << " pontos normalizado em: "
 				<< elapsed_secs << std::endl;
 	}
 };

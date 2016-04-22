@@ -7,6 +7,8 @@
 #include <cstring>      /* c_str */
 #include <stdlib.h>     /* atoi */
 #include "Mundo.hpp"
+#include <algorithm>
+#include <map>
 
 class DescritorObj {
 public:
@@ -15,7 +17,7 @@ public:
 	virtual ~DescritorObj() {
 	}
 
-	void escrever(Mundo * mundo, string caminho) {
+	void escrever(Mundo * mundo, std::string caminho) {
 		int count = 1;
 		int *pcount = &count;
 
@@ -40,13 +42,12 @@ public:
 	 *   3   v 1.0 0.0 0.0
 	 *   4   f 1 2 3
 	 */
-	string transcreveObj(ObjetoGrafico* obj, int * countLinha) {
-		string retorno = "o " + obj->getNome() + "\n";
+	std::string transcreveObj(ObjetoGrafico* obj, int * countLinha) {
+		std::string retorno = "o " + obj->getNome() + "\n";
 		*countLinha = *countLinha + 1;
-		string coordenadas;
-		ListaEnc<Coordenada> * coords = obj->getListaCoord();
-		for (int i = 0; i < coords->getSize(); i++) {
-			Coordenada atual = coords->recuperaDaPosicao(i);
+		std::string coordenadas;
+		std::vector<Coordenada> coords = obj->getListaCoord();
+		for (auto &atual : coords) {
 			retorno += "v " + std::to_string(atual.getX()) + " "
 					+ std::to_string(atual.getY()) + " "
 					+ std::to_string(atual.getZ()) + "\n";
@@ -62,24 +63,20 @@ public:
 		return retorno;
 	}
 
-	Mundo * ler(string caminhoObj) {
+	Mundo * ler(std::string caminhoObj) {
 		clock_t begin = clock();
 		//percorre o arquivo.obj e guarda todas as coordenadas
-		ListaEnc<double> * linhaCoord = new ListaEnc<double>;
-		ListaEnc<Coordenada> * listaCoords = leCoordenadas(caminhoObj,
-				linhaCoord);
+		std::map<int, Coordenada> listaCoords = leCoordenadas(caminhoObj);
 
 		//percorre o arquivo.obj e busca arquivo de descrição de material .mtl
-		string caminhoMtl = buscaMtl(caminhoObj);
-		ListaEnc<string> * nomeCor = new ListaEnc<string>;
-		ListaEnc<Coordenada> * rgb = new ListaEnc<Coordenada>;
+		std::string caminhoMtl = buscaMtl(caminhoObj);
+		std::vector<std::string> *nomeCor = new std::vector<std::string>();
+		std::vector<Coordenada> *rgb = new std::vector<Coordenada>();
 		if (caminhoMtl != "") {
 			lerMtl(caminhoMtl, nomeCor, rgb);
 		}
-
 		//le o arquivo .obj e cria todos os objetos num mundo
-		Mundo* mundo = lerObj(caminhoObj, linhaCoord, listaCoords, nomeCor,
-				rgb);
+		Mundo* mundo = lerObj(caminhoObj, listaCoords, nomeCor, rgb);
 
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -89,15 +86,14 @@ public:
 		return mundo;
 	}
 
-	Mundo * lerObj(string caminho, ListaEnc<double> *linhaCoord,
-			ListaEnc<Coordenada> *listaCoords, ListaEnc<string> * nomeCor,
-			ListaEnc<Coordenada> * rgb) {
+	Mundo * lerObj(std::string caminho, std::map<int, Coordenada> listaCoords,
+			std::vector<std::string> *nomeCor, std::vector<Coordenada> *rgb) {
 		Mundo * m = new Mundo();
-		string linha;
+		std::string linha;
 		ifstream arquivo(caminho);
 		if (arquivo.is_open()) {
 			ObjetoGrafico *obj;
-			string nome;
+			std::string nome;
 			GdkRGBA corObjeto;
 			bool preenchimento = false;
 			while (getline(arquivo, linha)) {
@@ -106,20 +102,17 @@ public:
 					nome = split(nome, " ").front();
 				} else if (!linha.find("usemtl")) {
 					preenchimento = true;
-					string aux = linha.erase(0, 7);
+					std::string aux = linha.erase(0, 7);
 					corObjeto = setCor(nomeCor, rgb, aux);
 				} else if (!linha.find("p") || !linha.find("l")) {
-					vector<string> pontos = split(linha, " ");
-					ListaEnc<Coordenada> *coordenadas = coordenadaObj(pontos,
-							listaCoords, linhaCoord);
-					switch (pontos.size()) {
+					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
+							listaCoords);
+					switch (coordenadas.size()) {
 					case 2:
-						obj = new Ponto(nome,
-								coordenadas->recuperaDaPosicao(0));
+						obj = new Ponto(nome, coordenadas[0]);
 						break;
 					case 3:
-						obj = new Linha(nome, coordenadas->recuperaDaPosicao(0),
-								coordenadas->recuperaDaPosicao(1));
+						obj = new Linha(nome, coordenadas[0], coordenadas[1]);
 						break;
 					default:
 						if (preenchimento) {
@@ -140,59 +133,59 @@ public:
 		return m;
 	}
 
-	GdkRGBA setCor(ListaEnc<string> * nomeCor, ListaEnc<Coordenada> * rgb,
-			string aux) {
+	GdkRGBA setCor(std::vector<std::string> *nomeCor,
+			std::vector<Coordenada> *rgb, std::string aux) {
 		GdkRGBA corObjeto;
-		Coordenada coordRgb = rgb->recuperaDaPosicao(nomeCor->posicao(aux));
+		Coordenada coordRgb = rgb->at(
+				find(nomeCor->begin(), nomeCor->end(), aux) - nomeCor->begin());
 		corObjeto.red = coordRgb._x;
 		corObjeto.green = coordRgb._y;
 		corObjeto.blue = coordRgb._z;
 		return corObjeto;
 	}
 
-	void lerMtl(string caminho, ListaEnc<string> * newmtl,
-			ListaEnc<Coordenada> * kd) {
-		string linha;
+	void lerMtl(std::string caminho, std::vector<std::string> *newmtl,
+			std::vector<Coordenada> *kd) {
+		std::string linha;
 		ifstream arquivo(caminho);
 		if (arquivo.is_open()) {
-			string nome;
+			std::string nome;
 			while (getline(arquivo, linha)) {
 				if (!linha.find("newmtl")) {
 					nome = linha.erase(0, 7);
-					newmtl->adiciona(nome);
+					newmtl->push_back(nome);
 				} else if (!linha.find("Kd")) {
-					vector<string> valores = split(linha, " ");
+					std::vector<std::string> valores = split(linha, " ");
 					Coordenada * rgb = new Coordenada(atoi(valores[1].c_str()),
 							atoi(valores[2].c_str()), atoi(valores[3].c_str()));
-					kd->adiciona(*rgb);
+					kd->push_back(*rgb);
 				}
 			}
 			arquivo.close();
 		}
 	}
 
-	ListaEnc<Coordenada> * coordenadaObj(vector<string> pontos,
-			ListaEnc<Coordenada> *listaCoords, ListaEnc<double> * linhaCoord) {
+	std::vector<Coordenada> coordenadaObj(string linha,
+			std::map<int, Coordenada> listaCoords) {
+		std::vector<Coordenada> coordenadas;
+		std::vector<std::string> pontos = split(linha, " ");
 
-		ListaEnc<Coordenada> *coordenadas = new ListaEnc<Coordenada>();
-		for (int i = 0; i < pontos.size() - 1; i++) {
-			double linhaPonto = atoi(pontos[i + 1].c_str());
-			int pos = linhaCoord->posicao(linhaPonto);
-			Coordenada c = listaCoords->recuperaDaPosicao(pos);
-			coordenadas->adiciona(c);
+		for (int i = 1; i < pontos.size(); i++) {
+			int posicao = atoi(pontos[i].c_str());
+			coordenadas.push_back(listaCoords[posicao]);
 		}
 		return coordenadas;
 	}
 
-	string buscaMtl(string caminho) {
-		string mtl = "";
+	std::string buscaMtl(std::string caminho) {
+		std::string mtl = "";
 
-		string linha;
+		std::string linha;
 		ifstream arquivo(caminho);
 		if (arquivo.is_open()) {
 			while (getline(arquivo, linha)) {
 				if (!linha.find("mtllib")) {
-					vector<string> coordenadas = split(linha, " ");
+					std::vector<std::string> coordenadas = split(linha, " ");
 					mtl = coordenadas[1].c_str();
 				}
 			}
@@ -201,32 +194,30 @@ public:
 		return mtl;
 	}
 
-	ListaEnc<Coordenada> * leCoordenadas(string caminho,
-			ListaEnc<double> * linhaCoord) {
-		ListaEnc<Coordenada> * coords = new ListaEnc<Coordenada>();
-		string linha;
-		int count = 1;
+	std::map<int, Coordenada> leCoordenadas(std::string caminho) {
+		std::map<int, Coordenada> coords;
+		std::string linha;
+		int posicao = 1;
 		ifstream arquivo(caminho);
 		if (arquivo.is_open()) {
 			while (getline(arquivo, linha)) {
-				if (!linha.find("v")) {
-					Coordenada *coord;
-					vector<string> coordenadas = split(linha, " ");
-					coord = new Coordenada(atoi(coordenadas[1].c_str()),
-							atoi(coordenadas[2].c_str()),
-							atoi(coordenadas[3].c_str()));
-					coords->adiciona(*coord);
-					linhaCoord->adiciona(count);
+				if (linha.at(0) == 'v') {
+					std::vector<std::string> coordenadas = split(linha, " ");
+					double x = atof(coordenadas[1].c_str());
+					double y = atof(coordenadas[2].c_str());
+					double z = atof(coordenadas[3].c_str());
+					std::cout << x << ", " << y << std::endl;
+					coords[posicao] = Coordenada(x, y, z);
 				}
-				count++;
+				posicao++;
 			}
 			arquivo.close();
 		}
 		return coords;
 	}
 
-	vector<string> split(string s, string delimitador) {
-		vector<string> tokens;
+	std::vector<std::string> split(std::string s, std::string delimitador) {
+		std::vector<std::string> tokens;
 		size_t pos = 0;
 		std::string token;
 		while ((pos = s.find(delimitador)) != std::string::npos) {
