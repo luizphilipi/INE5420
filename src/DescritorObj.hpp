@@ -70,13 +70,12 @@ public:
 
 		//percorre o arquivo.obj e busca arquivo de descrição de material .mtl
 		std::string caminhoMtl = buscaMtl(caminhoObj);
-		std::vector<std::string> *nomeCor = new std::vector<std::string>();
-		std::vector<Coordenada> *rgb = new std::vector<Coordenada>();
+		std::map<std::string, GdkRGBA> cores;
 		if (caminhoMtl != "") {
-			lerMtl(caminhoMtl, nomeCor, rgb);
+			cores = lerMtl(caminhoMtl);
 		}
 		//le o arquivo .obj e cria todos os objetos num mundo
-		Mundo* mundo = lerObj(caminhoObj, listaCoords, nomeCor, rgb);
+		Mundo* mundo = lerObj(caminhoObj, listaCoords, cores);
 
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
@@ -87,7 +86,7 @@ public:
 	}
 
 	Mundo * lerObj(std::string caminho, std::map<int, Coordenada> listaCoords,
-			std::vector<std::string> *nomeCor, std::vector<Coordenada> *rgb) {
+			std::map<std::string, GdkRGBA> cores) {
 		Mundo * m = new Mundo();
 		std::string linha;
 		ifstream arquivo(caminho);
@@ -102,8 +101,8 @@ public:
 					nome = split(nome, " ").front();
 				} else if (!linha.find("usemtl")) {
 					preenchimento = true;
-					std::string aux = linha.erase(0, 7);
-					corObjeto = setCor(nomeCor, rgb, aux);
+					std::string cor = linha.erase(0, 7);
+					corObjeto = cores[cor];
 				} else if (!linha.find("p") || !linha.find("l")) {
 					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
 							listaCoords);
@@ -133,19 +132,8 @@ public:
 		return m;
 	}
 
-	GdkRGBA setCor(std::vector<std::string> *nomeCor,
-			std::vector<Coordenada> *rgb, std::string aux) {
-		GdkRGBA corObjeto;
-		Coordenada coordRgb = rgb->at(
-				find(nomeCor->begin(), nomeCor->end(), aux) - nomeCor->begin());
-		corObjeto.red = coordRgb._x;
-		corObjeto.green = coordRgb._y;
-		corObjeto.blue = coordRgb._z;
-		return corObjeto;
-	}
-
-	void lerMtl(std::string caminho, std::vector<std::string> *newmtl,
-			std::vector<Coordenada> *kd) {
+	std::map<std::string, GdkRGBA> lerMtl(std::string caminho) {
+		std::map<std::string, GdkRGBA> cores;
 		std::string linha;
 		ifstream arquivo(caminho);
 		if (arquivo.is_open()) {
@@ -153,16 +141,18 @@ public:
 			while (getline(arquivo, linha)) {
 				if (!linha.find("newmtl")) {
 					nome = linha.erase(0, 7);
-					newmtl->push_back(nome);
 				} else if (!linha.find("Kd")) {
 					std::vector<std::string> valores = split(linha, " ");
-					Coordenada * rgb = new Coordenada(atoi(valores[1].c_str()),
-							atoi(valores[2].c_str()), atoi(valores[3].c_str()));
-					kd->push_back(*rgb);
+					GdkRGBA corObjeto;
+					corObjeto.red = atoi(valores[1].c_str());
+					corObjeto.green = atoi(valores[2].c_str());
+					corObjeto.blue = atoi(valores[3].c_str());
+					cores[nome] = corObjeto;
 				}
 			}
 			arquivo.close();
 		}
+		return cores;
 	}
 
 	std::vector<Coordenada> coordenadaObj(string linha,
