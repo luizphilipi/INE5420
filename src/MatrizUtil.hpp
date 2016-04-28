@@ -9,6 +9,38 @@ class MatrizUtil {
 
 public:
 
+
+	/* Matriz de Bezier
+		 * |-1   3 -3  1|
+		 * | 3  -6  3  0|
+		 * |-3   3  0  0|
+		 * | 1   0  0  0|
+		 */
+	static Matriz matrizBezier() {
+		Matriz bezier = Matriz(4,4);
+		bezier(0,0) = -1;
+		bezier(1,0) = 3;
+		bezier(2,0) = -3;
+		bezier(3,0) = 1;
+
+		bezier(0,1) = 3;
+		bezier(1,1) = -6;
+		bezier(2,1) = 3;
+		bezier(3,1) = 0;
+
+		bezier(0,2) = -3;
+		bezier(1,2) = 3;
+		bezier(2,2) = 0;
+		bezier(3,2) = 0;
+
+		bezier(0,3) = 1;
+		bezier(1,3) = 0;
+		bezier(2,3) = 0;
+		bezier(3,3) = 0;
+
+		return bezier;
+	}
+
 	/* Matriz de Translação
 	 * | 1	0	0 |
 	 * | 0	1	0 |

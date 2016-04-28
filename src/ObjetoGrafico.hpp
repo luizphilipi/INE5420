@@ -9,7 +9,7 @@
 #include "ListaEnc.hpp"
 
 enum tipoGeometria {
-	PONTO, LINHA, POLIGONO
+	PONTO, LINHA, POLIGONO, CURVA2D
 };
 
 class ObjetoGrafico {
