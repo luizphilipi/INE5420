@@ -126,6 +126,12 @@ public:
 
 					m->adicionaObj(obj);
 				}
+				else if (!linha.find("curv")) {
+				std::vector<Coordenada> coordenadas = coordenadaObj(linha,
+									listaCoords);
+				obj = new Curva2D("", coordenadas);
+				m->adicionaObj(obj);
+				}
 			}
 			arquivo.close();
 		}

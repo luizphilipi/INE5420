@@ -31,6 +31,9 @@
 #define BOTAO_PREENCHER "botaoPreencher"
 #define COR_PREENCHIMENTO "corPreenchimento"
 
+// popup de adicionar (CURVA2D)
+#define BOX_CURVA2D "boxCurva2D"
+
 // botões de movimentação
 #define MOVE_UP_BTN "btnUp"
 #define MOVE_DOWN_BTN "btnDown"

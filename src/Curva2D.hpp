@@ -2,40 +2,65 @@
 #define CURVA2D_HPP
 
 #include "ObjetoGrafico.hpp"
-#include "Matriz.cpp"
+#include "Linha.hpp"
 #include "MatrizUtil.hpp"
 
 class Curva2D: public ObjetoGrafico {
 public:
-	Curva2D(std::string nome, std::vector<Coordenada> pontos){
-		Matriz bezier = MatrizUtil::matrizBezier();
-
-		Matriz x = Matriz(1,4);
-		x(0,0) = pontos[0]._x;
-		x(0,1) = pontos[1]._x;
-		x(0,2) = pontos[2]._x;
-		x(0,3) = pontos[3]._x;
-		Matriz y = Matriz(1,4);
-		y(0,0) = pontos[0]._y;
-		y(0,1) = pontos[1]._y;
-		y(0,2) = pontos[2]._y;
-		y(0,3) = pontos[3]._y;
-
-		Matriz xb = x*bezier;
-		Matriz yb = y*bezier;
-
-		vector<Coordenada> result = {
-				Coordenada(xb(0,0), yb(0,0)),
-				Coordenada(xb(0,1), yb(0,1)),
-				Coordenada(xb(0,2), yb(0,2)),
-				Coordenada(xb(0,3), yb(0,3))
-		};
-
+	Curva2D(std::string nome, std::vector<Coordenada> pontosControle) :
+		ObjetoGrafico(nome, CURVA2D) {
+		blending(pontosControle);
 	}
 
+	void blending(std::vector<Coordenada> pontosControle){
+		if(pontosControle.size() % 3 != 1){
+			throw std::runtime_error("Curva não possui continuidade G(0).");
+		}
+		Matriz bezier = MatrizUtil::matrizBezier();
+		for(int i = 0; i < pontosControle.size()-1; i+=3){
+			Matriz x = Matriz(4,1);
+			x(0,0) = pontosControle[i]._x;
+			x(1,0) = pontosControle[i+1]._x;
+			x(2,0) = pontosControle[i+2]._x;
+			x(3,0) = pontosControle[i+3]._x;
+
+			Matriz y = Matriz(4,1);
+			y(0,0) = pontosControle[i]._y;
+			y(1,0) = pontosControle[i+1]._y;
+			y(2,0) = pontosControle[i+2]._y;
+			y(3,0) = pontosControle[i+3]._y;
+
+			int nroPassos = 10;
+			for(int i = 0; i<nroPassos+1; i++){
+				double t = (double)i/nroPassos;
+				Matriz T = MatrizUtil::matrizT(t);
+				//T*Mb*G
+				Matriz tbx = T*bezier*x;
+				Matriz tby = T*bezier*y;
+				coordenadasMundo.push_back(Coordenada(tbx(0,0), tby(0,0), 1));
+			}
+		}
+	}
 
 	std::vector<Coordenada> clip(int status) {
-		//TODO
+		if (status) {
+			vector<Coordenada> clip = std::vector<Coordenada>();
+			int qtdCoords = coordenadasTela.size();
+			vector<Coordenada> coord;
+			Linha * aux;
+			for(int i = 0; i < qtdCoords-1; i++){
+				aux = new Linha(coordenadasTela[i], coordenadasTela[i+1]);
+				coord = aux->cohenSutherland();
+				if(coord.size()){
+					clip.push_back(coord[0]);
+					if(i == qtdCoords-2){
+						clip.push_back(coord[1]);
+					}
+				}
+
+			}
+			return clip;
+		}
 		return coordenadasTela;
 	}
 };

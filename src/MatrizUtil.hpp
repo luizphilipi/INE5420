@@ -41,6 +41,19 @@ public:
 		return bezier;
 	}
 
+	/* Matriz T
+			 * |t^3   t^2   t    1|
+			 */
+	static Matriz matrizT(double t) {
+		Matriz T = Matriz(1,4);
+		T(0,0) = pow(t, 3);
+		T(0,1) = pow(t, 2);
+		T(0,2) = t;
+		T(0,3) = 1.0;
+
+		return T;
+	}
+
 	/* Matriz de Translação
 	 * | 1	0	0 |
 	 * | 0	1	0 |

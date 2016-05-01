@@ -11,6 +11,13 @@ public:
 		coordenadasMundo.push_back(coord2);
 	}
 
+	Linha(Coordenada coord1, Coordenada coord2) :
+		ObjetoGrafico("", LINHA) {
+		coordenadasTela.push_back(coord1);
+		coordenadasTela.push_back(coord2);
+		}
+
+
 	Coordenada getPonto1() {
 		return coordenadasMundo[0];
 	}
@@ -29,7 +36,7 @@ public:
 		}
 	}
 
-private:
+public:
 	// Representação em int dos códigos de C-S
 	int LEFT = 1, RIGHT = 2, BOTTOM = 4, TOP = 8;
 	// Tela vai de (-1,-1) até (1,1);
@@ -114,7 +121,7 @@ private:
 	std::vector<Coordenada> liangBarsky() {
 		Coordenada c1 = coordenadasTela[0];
 		Coordenada c2 = coordenadasTela[1];
-
+		std::cout<<"oi3"<<endl;
 		double dx = c2._x - c1._x;
 		double dy = c2._y - c1._y;
 

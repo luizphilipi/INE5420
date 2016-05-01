@@ -301,12 +301,48 @@ void TelaPrincipal::adicionarObjeto() {
 		mundo->adicionaPoligono(nomeObjeto, coordenadas, preenchimento, cor);
 	}
 		break;
-	}
+	case 3: {
+		std::vector<Coordenada> coordenadas;
+		GtkBox *boxCurva = GTK_BOX(
+				gtk_builder_get_object( builder, BOX_CURVA2D ));
+		GList* children = gtk_container_get_children(
+				GTK_CONTAINER(boxCurva));
+		GList *l;
+		int i = 0;
+		GtkSpinButton *input;
+		for (l = children; i < g_list_length(children); l = l->next, ++i) {
+			GtkBox *coordGrid = GTK_BOX(l->data);
 
+			GList* children2 = gtk_container_get_children(
+								GTK_CONTAINER(coordGrid));
+			GList * l2;
+			int i = 0;
+			GtkSpinButton *input;
+
+			int j = 0;
+			int x = 0;
+			int y = 0;
+			for (l2 = children2; j < g_list_length(children2);
+					l2 = l2->next, ++j) {
+				if (j == 1) {
+					GtkSpinButton *inputX = GTK_SPIN_BUTTON(l2->data);
+					x = gtk_spin_button_get_value(inputX);
+				} else if (j == 3) {
+					GtkSpinButton *inputY = GTK_SPIN_BUTTON(l2->data);
+					y = gtk_spin_button_get_value(inputY);
+				}
+			}
+			coordenadas.push_back(Coordenada(x, y));
+		}
+		mundo->adicionaCurva2D(nomeObjeto, coordenadas);
+	}
+		break;
+	}
 	adicionarObjetoNaLista(nomeObjeto);
 
 	atualizarTela();
 	fecharPopupAdicionar();
+
 }
 
 void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
@@ -345,7 +381,9 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 				cairo_set_source_rgb(cr, 0, 0, 0);
 			}
 
-			cairo_close_path(cr);
+			if(obj->getTipo() != CURVA2D){
+				cairo_close_path(cr);
+			}
 
 			cairo_stroke(cr);
 		}
@@ -556,12 +594,10 @@ std::vector<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 		y = 10 + (1 - (coord._y + 1) / 2) * Yvmax;
 		coordenadas.push_back(Coordenada(x, y));
 	}
-
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 	std::cout << "Mapeando objeto " << obj->getNome() << " com " << coordenadas.size() <<" pontos em: " << elapsed_secs
 			<< std::endl;
-
 	return coordenadas;
 }
 

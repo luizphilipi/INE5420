@@ -139,13 +139,15 @@ Matriz& Matriz::operator-=(const Matriz& matrizB) {
 
 // Left multiplication of this matrix and another
 Matriz Matriz::operator*(const Matriz& matrizB) {
-	Matriz result(linhas, colunas);
-
-	for (int i = 0; i < linhas; ++i) {
-		for (int j = 0; j < matrizB.get_colunas(); ++j) {
-			for (int k = 0; k < colunas; ++k) {
-				result(i, j) = result(i, j) + (this->mat[i][k] * matrizB(k, j));
+	Matriz result(linhas, matrizB.get_colunas());
+	double valor;
+	for (int linha = 0; linha < linhas; ++linha) {
+		for (int coluna = 0; coluna < matrizB.get_colunas(); ++coluna) {
+			valor = 0;
+			for (int k = 0; k < matrizB.get_linhas(); ++k) {
+				valor += (this->mat[linha][k] * matrizB(k, coluna));
 			}
+			result(linha, coluna) = valor;
 		}
 	}
 	return result;

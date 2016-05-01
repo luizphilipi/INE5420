@@ -10,6 +10,7 @@
 #include "ObjetoGrafico.hpp"
 #include "Poligono.hpp"
 #include "Ponto.hpp"
+#include "Curva2D.hpp"
 
 class Mundo {
 private:
@@ -48,6 +49,12 @@ public:
 		normalizar(poligono);
 		displayFile->adiciona(poligono);
 	}
+
+	void adicionaCurva2D(std::string nome, std::vector<Coordenada> coords) {
+			Curva2D *curva2D = new Curva2D(nome, coords);
+			normalizar(curva2D);
+			displayFile->adiciona(curva2D);
+		}
 
 	ListaEnc<ObjetoGrafico*>* getObjetos() {
 		return displayFile;

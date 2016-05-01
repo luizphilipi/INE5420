@@ -47,6 +47,14 @@ public:
 		return *this;
 	}
 
+	Coordenada operator*=(double escalar) {
+		this->_x *= escalar;
+		this->_y *= escalar;
+		this->_z *= escalar;
+
+		return *this;
+	}
+
 	Coordenada operator-=(const Coordenada& c2) {
 		this->_x -= c2._x;
 		this->_y -= c2._y;
