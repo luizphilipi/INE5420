@@ -305,8 +305,7 @@ void TelaPrincipal::adicionarObjeto() {
 		std::vector<Coordenada> coordenadas;
 		GtkBox *boxCurva = GTK_BOX(
 				gtk_builder_get_object( builder, BOX_CURVA2D ));
-		GList* children = gtk_container_get_children(
-				GTK_CONTAINER(boxCurva));
+		GList* children = gtk_container_get_children(GTK_CONTAINER(boxCurva));
 		GList *l;
 		int i = 0;
 		GtkSpinButton *input;
@@ -314,7 +313,7 @@ void TelaPrincipal::adicionarObjeto() {
 			GtkBox *coordGrid = GTK_BOX(l->data);
 
 			GList* children2 = gtk_container_get_children(
-								GTK_CONTAINER(coordGrid));
+					GTK_CONTAINER(coordGrid));
 			GList * l2;
 			int i = 0;
 			GtkSpinButton *input;
@@ -381,7 +380,7 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 				cairo_set_source_rgb(cr, 0, 0, 0);
 			}
 
-			if(obj->getTipo() != CURVA2D){
+			if (obj->getTipo() != CURVA2D) {
 				cairo_close_path(cr);
 			}
 
@@ -399,6 +398,13 @@ void TelaPrincipal::desenharTudo(cairo_t *cr) {
 	cairo_set_source_rgb(cr, 1, 1, 1);
 	cairo_paint(cr);
 
+	cairo_set_source_rgb(cr, 0, 0, 0);
+	cairo_set_line_width(cr, 1);
+
+	for (int i = 0; i < mundo->getObjetos()->getSize(); ++i) {
+		desenhar(cr, mundo->getObjetos()->recuperaDaPosicao(i));
+	}
+
 	// borda vermelha do canvas
 	cairo_set_source_rgb(cr, 1, 0, 0);
 	cairo_set_line_width(cr, 1);
@@ -415,13 +421,6 @@ void TelaPrincipal::desenharTudo(cairo_t *cr) {
 	cairo_line_to(cr, 10, 10);
 
 	cairo_stroke(cr);
-
-	cairo_set_source_rgb(cr, 0, 0, 0);
-	cairo_set_line_width(cr, 1);
-
-	for (int i = 0; i < mundo->getObjetos()->getSize(); ++i) {
-		desenhar(cr, mundo->getObjetos()->recuperaDaPosicao(i));
-	}
 }
 
 void TelaPrincipal::abrirPopupAdicionar() {
@@ -596,7 +595,8 @@ std::vector<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 	}
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-	std::cout << "Mapeando objeto " << obj->getNome() << " com " << coordenadas.size() <<" pontos em: " << elapsed_secs
+	std::cout << "Mapeando objeto " << obj->getNome() << " com "
+			<< coordenadas.size() << " pontos em: " << elapsed_secs
 			<< std::endl;
 	return coordenadas;
 }
