@@ -380,7 +380,7 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 				cairo_set_source_rgb(cr, 0, 0, 0);
 			}
 
-			if (obj->getTipo() != CURVA2D) {
+			if (obj->getTipo() != BEZIER && obj->getTipo() != BSPLINE) {
 				cairo_close_path(cr);
 			}
 
@@ -389,8 +389,11 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		/*
 		std::cout << "Desenhando objeto " << obj->getNome() << " em: "
 				<< elapsed_secs << std::endl;
+
+				*/
 	}
 }
 
@@ -595,9 +598,13 @@ std::vector<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 	}
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+
+	/*
 	std::cout << "Mapeando objeto " << obj->getNome() << " com "
 			<< coordenadas.size() << " pontos em: " << elapsed_secs
 			<< std::endl;
+
+			*/
 	return coordenadas;
 }
 
