@@ -1,14 +1,14 @@
-#ifndef CURVA2D_HPP
-#define CURVA2D_HPP
+#ifndef BEZIER_HPP
+#define BEZIER_HPP
 
 #include "ObjetoGrafico.hpp"
 #include "Linha.hpp"
 #include "MatrizUtil.hpp"
 
-class Curva2D: public ObjetoGrafico {
+class Bezier: public ObjetoGrafico {
 public:
-	Curva2D(std::string nome, std::vector<Coordenada> pontosControle) :
-			ObjetoGrafico(nome, CURVA2D) {
+	Bezier(std::string nome, std::vector<Coordenada> pontosControle) :
+			ObjetoGrafico(nome, BEZIER) {
 		blending(pontosControle);
 	}
 

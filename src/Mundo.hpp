@@ -5,12 +5,13 @@
 #include <iostream>
 #include <vector>
 
+#include "Bezier.hpp"
+#include "BSpline.hpp"
 #include "Canvas.hpp"
 #include "Linha.hpp"
 #include "ObjetoGrafico.hpp"
 #include "Poligono.hpp"
 #include "Ponto.hpp"
-#include "Curva2D.hpp"
 
 class Mundo {
 private:
@@ -51,7 +52,7 @@ public:
 	}
 
 	void adicionaCurva2D(std::string nome, std::vector<Coordenada> coords) {
-			Curva2D *curva2D = new Curva2D(nome, coords);
+			Bezier *curva2D = new Bezier(nome, coords);
 			normalizar(curva2D);
 			displayFile->adiciona(curva2D);
 		}
@@ -158,8 +159,8 @@ public:
 
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "Objeto " << obj->getNome() << " com " << obj->getListaCoordTela().size() << " pontos normalizado em: "
-				<< elapsed_secs << std::endl;
+		//std::cout << "Objeto " << obj->getNome() << " com " << obj->getListaCoordTela().size() << " pontos normalizado em: "
+		//		<< elapsed_secs << std::endl;
 	}
 };
 

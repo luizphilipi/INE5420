@@ -10,6 +10,68 @@ class MatrizUtil {
 public:
 
 
+	/* Matriz D
+	 * |  0    0    0  1|
+	 * |  d³   d²   d  0|
+	 * | 6d³   2d²  0  0|
+	 * | 6d³   0    0  0|
+	 */
+	static Matriz matrizD(double d) {
+		Matriz D = Matriz(4,4);
+		D(0,0) = 0;
+		D(1,0) = pow(d, 3);
+		D(2,0) = 6 * pow(d, 3);
+		D(3,0) = 6 * pow(d, 3);
+
+		D(0,1) = 0;
+		D(1,1) = pow(d, 2);
+		D(2,1) = 2 * pow(d, 2);
+		D(3,1) = 0;
+
+		D(0,2) = 0;
+		D(1,2) = d;
+		D(2,2) = 0;
+		D(3,2) = 0;
+
+		D(0,3) = 1;
+		D(1,3) = 0;
+		D(2,3) = 0;
+		D(3,3) = 0;
+
+		return D;
+	}
+
+	/* Matriz BSpline
+	 *       |-1   3 -3  1|   |-1/6   1/2  -1/2  1/6|
+	 * 1/6 * | 3  -6  3  0| = | 1/2  -1     1/2  0  |
+	 *       |-3   0  3  0|   |-1/2   0     1/2  0  |
+	 *       | 1   4  1  0|   | 1/6   2/3   1/6  0  |
+	 */
+	static Matriz matrizBSpline() {
+		Matriz bspline = Matriz(4,4);
+		bspline(0,0) = (double)-1/6;
+		bspline(1,0) = (double)1/2;
+		bspline(2,0) = (double)-1/2;
+		bspline(3,0) = (double)1/6;
+
+		bspline(0,1) = (double)1/2;
+		bspline(1,1) = (double)-1;
+		bspline(2,1) = (double)0;
+		bspline(3,1) = (double)2/3;
+
+		bspline(0,2) = (double)-1/2;
+		bspline(1,2) = (double)1/2;
+		bspline(2,2) = (double)1/2;
+		bspline(3,2) = (double)1/6;
+
+		bspline(0,3) = (double)1/6;
+		bspline(1,3) = (double)0;
+		bspline(2,3) = (double)0;
+		bspline(3,3) = (double)0;
+
+		return bspline;
+	}
+
 	/* Matriz de Bezier
 		 * |-1   3 -3  1|
 		 * | 3  -6  3  0|

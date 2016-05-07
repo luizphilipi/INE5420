@@ -8,8 +8,10 @@
 #include <vector>
 #include "ListaEnc.hpp"
 
+using namespace std;
+
 enum tipoGeometria {
-	PONTO, LINHA, POLIGONO, CURVA2D
+	PONTO, LINHA, POLIGONO, BEZIER, BSPLINE
 };
 
 class ObjetoGrafico {

@@ -79,8 +79,8 @@ public:
 
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "Lendo arquivo " << caminhoObj << " em: " << elapsed_secs
-				<< std::endl;
+		//std::cout << "Lendo arquivo " << caminhoObj << " em: " << elapsed_secs
+		//		<< std::endl;
 
 		return mundo;
 	}
@@ -129,7 +129,7 @@ public:
 				else if (!linha.find("curv")) {
 				std::vector<Coordenada> coordenadas = coordenadaObj(linha,
 									listaCoords);
-				obj = new Curva2D("", coordenadas);
+				obj = new BSpline("aff", coordenadas);
 				m->adicionaObj(obj);
 				}
 			}
