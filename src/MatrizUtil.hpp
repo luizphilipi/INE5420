@@ -18,25 +18,25 @@ public:
 	 */
 	static Matriz matrizD(double d) {
 		Matriz D = Matriz(4,4);
-		D(0,0) = 0;
-		D(1,0) = pow(d, 3);
-		D(2,0) = 6 * pow(d, 3);
-		D(3,0) = 6 * pow(d, 3);
+		D(0,0) = (double) 0;
+		D(1,0) = (double) pow(d, 3);
+		D(2,0) = (double) (6 * pow(d, 3));
+		D(3,0) = (double) (6 * pow(d, 3));
 
-		D(0,1) = 0;
-		D(1,1) = pow(d, 2);
-		D(2,1) = 2 * pow(d, 2);
-		D(3,1) = 0;
+		D(0,1) = (double) 0;
+		D(1,1) = (double) pow(d, 2);
+		D(2,1) = (double) (2 * pow(d, 2));
+		D(3,1) = (double) 0;
 
-		D(0,2) = 0;
-		D(1,2) = d;
-		D(2,2) = 0;
-		D(3,2) = 0;
+		D(0,2) = (double) 0;
+		D(1,2) = (double) d;
+		D(2,2) = (double) 0;
+		D(3,2) = (double) 0;
 
-		D(0,3) = 1;
-		D(1,3) = 0;
-		D(2,3) = 0;
-		D(3,3) = 0;
+		D(0,3) = (double) 1;
+		D(1,3) = (double) 0;
+		D(2,3) = (double) 0;
+		D(3,3) = (double) 0;
 
 		return D;
 	}

@@ -50,19 +50,20 @@ public:
 	void forwardDifferences(double n, Matriz forwDifx, Matriz forwDify){
 		//x = forwDifx(0,0), Dx = forwDifx(0,1), D²x = forwDifx(0,2), D³x = forwDifx(0,3)
 		coordenadasMundo.push_back(Coordenada(forwDifx(0, 0), forwDify(0, 0), 1));
-		std::cout << "--------------matrizes------------------\n\n"<<endl;
-
 		for(int i = 1; i < n; i++){
+			forwDifx(0,0) = forwDifx(0,0) + forwDifx(1,0);
+			forwDifx(1,0) = forwDifx(1,0) + forwDifx(2,0);
+			forwDifx(2,0) = forwDifx(2,0) + forwDifx(3,0);
+
+			forwDify(0,0) = forwDify(0,0) + forwDify(1,0);
+			forwDify(1,0) = forwDify(1,0) + forwDify(2,0);
+			forwDify(2,0) = forwDify(2,0) + forwDify(3,0);
+
+			std::cout << "-------------" <<endl;
+			std::cout << i <<endl;
 			std::cout << forwDifx <<endl;
 			std::cout << forwDify <<endl;
-
-			forwDifx(0,0) = (double)(forwDifx(0,0) + forwDifx(0,1));
-			forwDifx(0,1) = (double)(forwDifx(0,1) + forwDifx(0,2));
-			forwDifx(0,2) = (double)(forwDifx(0,2) + forwDifx(0,3));
-
-			forwDify(0,0) = forwDify(0,0) + forwDify(0,1);
-			forwDify(0,1) = forwDify(0,1) + forwDify(0,2);
-			forwDify(0,2) = forwDify(0,2) + forwDify(0,3);
+			std::cout << "-------------" <<endl;
 
 			coordenadasMundo.push_back(Coordenada(forwDifx(0, 0), forwDify(0, 0), 1));
 		}
@@ -70,7 +71,21 @@ public:
 
 	std::vector<Coordenada> clip(int status) {
 		if (status) {
-			//TODO
+			vector<Coordenada> clip = std::vector<Coordenada>();
+			int qtdCoords = coordenadasTela.size();
+			vector<Coordenada> coord;
+			Linha * aux;
+			for(int i = 0; i < qtdCoords-1; i++){
+				aux = new Linha(coordenadasTela[i], coordenadasTela[i+1]);
+				coord = aux->cohenSutherland();
+				if(coord.size()){
+					clip.push_back(coord[0]);
+					if(i == qtdCoords-2){
+						clip.push_back(coord[1]);
+					}
+				}
+			}
+			return clip;
 		}
 		return coordenadasTela;
 	}
