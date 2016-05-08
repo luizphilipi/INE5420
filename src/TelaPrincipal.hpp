@@ -53,16 +53,21 @@ public:
 
 	void adicionarCoordenadaPoligono();
 
+	void adicionarCoordenadaBSpline();
+
 	void abrirMundo();
 
 	void salvarMundo();
 
 	vector<Coordenada> mapearNoMundo(ObjetoGrafico* obj);
+
 private:
 	int radioRotacaoSelecionada();
 	int radioClippingSelecionado();
 	char* getObjetoSelecionado();
 	void adicionarObjetoNaLista(const char* nome);
+
+	vector<Coordenada> coordenadas;
 
 };
 

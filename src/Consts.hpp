@@ -26,8 +26,9 @@
 #define SPIN_LINHA_Y2 "spinLinhaY2"
 
 // popup de adicionar (POLIGONO)
-#define BOX_POLIGONO "boxPoligono"
 #define BOTAO_ADICIONAR_COORD_POLIGONO "botaoAdicionarCoordPoligono"
+#define SPIN_POLIGONO_X "spinPoligonoX"
+#define SPIN_POLIGONO_Y "spinPoligonoY"
 #define BOTAO_PREENCHER "botaoPreencher"
 #define COR_PREENCHIMENTO "corPreenchimento"
 
@@ -35,8 +36,9 @@
 #define BOX_BEZIER "boxBezier"
 
 // popup de adicionar (BSPLINE)
-#define BOX_BSPLINE "boxBSpline"
 #define BOTAO_ADICIONAR_COORD_BSPLINE "botaoAdicionarCoordBSpline"
+#define SPIN_BSPLINE_X "spinBSplineX"
+#define SPIN_BSPLINE_Y "spinBSplineY"
 
 
 // botões de movimentação

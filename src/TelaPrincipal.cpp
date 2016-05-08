@@ -73,7 +73,12 @@ void rotacao_mundo(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 void atualizar_tela(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->atualizarTela();
 }
+
+void adicionar_coord_bspline(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->adicionarCoordenadaBSpline();
 }
+}
+
 
 void TelaPrincipal::atualizarTela() {
 	GtkWidget *areaDesenho = GTK_WIDGET(
@@ -137,13 +142,20 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(G_OBJECT(botaoAdicionarObjeto), "clicked",
 			G_CALLBACK(adicionar_objeto), this);
 
-	/*
-	 *
-	 * 	GtkWidget *addCoordButton = GTK_WIDGET(
-	 * 				gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_POLIGONO));
-	 * 	g_signal_connect(G_OBJECT(addCoordButton), "clicked",
-	 * 				G_CALLBACK(adicionar_coordenada_poligono), this);
-	 */
+
+	//signals novas coordenadas
+	GtkWidget *addCoordButton = GTK_WIDGET(
+			gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_POLIGONO));
+	g_signal_connect(G_OBJECT(addCoordButton), "clicked",
+			G_CALLBACK(adicionar_coordenada_poligono), this);
+
+	GtkWidget *botaoAdicionarCoordBSpline = GTK_WIDGET(
+			gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_BSPLINE));
+	g_signal_connect(G_OBJECT(botaoAdicionarCoordBSpline), "clicked",
+		G_CALLBACK(adicionar_coord_bspline), this);
+
+
+
 	// FAZ COM QUE NÃO DELETE A POP-UP, SÓ ESCONDA
 	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET(
 			gtk_builder_get_object (builder, MODAL_ADICIONAR_COORDENADAS));
@@ -213,6 +225,7 @@ TelaPrincipal::~TelaPrincipal() {
 }
 
 void TelaPrincipal::adicionarObjeto() {
+
 	GtkWidget *drawingArea = GTK_WIDGET(
 			gtk_builder_get_object(builder, AREA_DESENHO));
 
@@ -257,39 +270,7 @@ void TelaPrincipal::adicionarObjeto() {
 	}
 		break;
 	case 2: {
-		//TODO generalizar, ia ser muito bom...
-		std::vector<Coordenada> coordenadas;
 
-		GtkBox *boxPoligono = GTK_BOX(
-				gtk_builder_get_object( builder, BOX_POLIGONO ));
-		GList* children = gtk_container_get_children(
-				GTK_CONTAINER(boxPoligono));
-		GList *l;
-		int i = 0;
-		GtkSpinButton *input;
-		for (l = children; i < g_list_length(children); l = l->next, ++i) {
-			GtkBox *coordGrid = GTK_BOX(l->data);
-
-			GList* children2 = gtk_container_get_children(
-					GTK_CONTAINER(coordGrid));
-			GList * l2;
-			int i = 0;
-			GtkSpinButton *input;
-			int j = 0;
-			int x = 0;
-			int y = 0;
-			for (l2 = children2; j < g_list_length(children2);
-					l2 = l2->next, ++j) {
-				if (j == 1) {
-					GtkSpinButton *inputX = GTK_SPIN_BUTTON(l2->data);
-					x = gtk_spin_button_get_value(inputX);
-				} else if (j == 3) {
-					GtkSpinButton *inputY = GTK_SPIN_BUTTON(l2->data);
-					y = gtk_spin_button_get_value(inputY);
-				}
-			}
-			coordenadas.push_back(Coordenada(x, y));
-		}
 		GtkToggleButton *botaoPreencher = GTK_TOGGLE_BUTTON(
 				gtk_builder_get_object(builder, BOTAO_PREENCHER));
 		GtkColorChooser *corPreenchimento = GTK_COLOR_CHOOSER(
@@ -299,10 +280,10 @@ void TelaPrincipal::adicionarObjeto() {
 		GdkRGBA cor;
 		gtk_color_chooser_get_rgba(corPreenchimento, &cor);
 		mundo->adicionaPoligono(nomeObjeto, coordenadas, preenchimento, cor);
+		coordenadas = vector<Coordenada>();
 	}
 		break;
 	case 3: {
-		std::vector<Coordenada> coordenadas;
 		GtkBox *boxBezier = GTK_BOX(
 				gtk_builder_get_object( builder, BOX_BEZIER ));
 		GList* children = gtk_container_get_children(GTK_CONTAINER(boxBezier));
@@ -334,42 +315,13 @@ void TelaPrincipal::adicionarObjeto() {
 			coordenadas.push_back(Coordenada(x, y));
 		}
 		mundo->adicionaBezier(nomeObjeto, coordenadas);
+		coordenadas = vector<Coordenada>();
 	}
 		break;
 
 	case 4: {
-		std::vector<Coordenada> coordenadas;
-		GtkBox *boxBSpline = GTK_BOX(
-				gtk_builder_get_object( builder, BOX_BSPLINE ));
-		GList* children = gtk_container_get_children(GTK_CONTAINER(boxBSpline));
-		GList *l;
-		int i = 0;
-		GtkSpinButton *input;
-		for (l = children; i < g_list_length(children); l = l->next, ++i) {
-			GtkBox *coordGrid = GTK_BOX(l->data);
-
-			GList* children2 = gtk_container_get_children(
-					GTK_CONTAINER(coordGrid));
-			GList * l2;
-			int i = 0;
-			GtkSpinButton *input;
-
-			int j = 0;
-			int x = 0;
-			int y = 0;
-			for (l2 = children2; j < g_list_length(children2);
-					l2 = l2->next, ++j) {
-				if (j == 1) {
-					GtkSpinButton *inputX = GTK_SPIN_BUTTON(l2->data);
-					x = gtk_spin_button_get_value(inputX);
-				} else if (j == 3) {
-					GtkSpinButton *inputY = GTK_SPIN_BUTTON(l2->data);
-					y = gtk_spin_button_get_value(inputY);
-				}
-			}
-			coordenadas.push_back(Coordenada(x, y));
-		}
 		mundo->adicionaBSpline(nomeObjeto, coordenadas);
+		coordenadas = vector<Coordenada>();
 	}
 		break;
 	}
@@ -705,31 +657,32 @@ int TelaPrincipal::radioClippingSelecionado() {
 	return -1;
 }
 
+
+void TelaPrincipal::adicionarCoordenadaBSpline(){
+	GtkSpinButton *spinBSplineX = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_BSPLINE_X ));
+	GtkSpinButton *spinBSplineY = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_BSPLINE_Y ));
+
+	double x = gtk_spin_button_get_value(spinBSplineX);
+	double y = gtk_spin_button_get_value(spinBSplineY);
+
+	coordenadas.push_back(Coordenada(x,y));
+	std::cout<<x<<endl;
+	std::cout<<y<<endl;
+}
+
 void TelaPrincipal::adicionarCoordenadaPoligono() {
-	GtkBox *boxPoligono = GTK_BOX(
-			gtk_builder_get_object(builder, BOX_POLIGONO));
+	GtkSpinButton *spinPoligonoX = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_POLIGONO_X ));
+	GtkSpinButton *spinPoligonoY = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_POLIGONO_Y ));
 
-	GtkBox *boxNovo = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
+	double x = gtk_spin_button_get_value(spinPoligonoX);
+	double y = gtk_spin_button_get_value(spinPoligonoY);
 
-	GtkWidget *labelX = gtk_label_new("X: ");
-	GtkWidget *labelY = gtk_label_new("Y: ");
+	coordenadas.push_back(Coordenada(x,y));
+	std::cout<<x<<endl;
+	std::cout<<y<<endl;
 
-	GtkAdjustment *adjustmentX = gtk_adjustment_new(0.0, -9999.0, 9999.0, 1.0,
-			10.0, 0.0);
-
-	GtkWidget *spinX = gtk_spin_button_new(adjustmentX, 1.0, 0);
-
-	GtkAdjustment *adjustmentY = gtk_adjustment_new(0.0, -9999.0, 9999.0, 1.0,
-			10.0, 0.0);
-
-	GtkWidget *spinY = gtk_spin_button_new(adjustmentY, 1.0, 0);
-
-	gtk_box_pack_end(boxNovo, labelX, false, true, 0);
-	gtk_box_pack_end(boxNovo, spinX, false, true, 0);
-	gtk_box_pack_end(boxNovo, labelY, false, true, 0);
-	gtk_box_pack_end(boxNovo, spinY, false, true, 0);
-
-	gtk_box_pack_end(boxPoligono, GTK_WIDGET(boxNovo), false, true, 0);
-
-	gtk_widget_queue_draw(GTK_WIDGET(boxPoligono));
 }
