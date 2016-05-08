@@ -16,7 +16,7 @@ public:
 	void blending(std::vector<Coordenada> pontosControle) {
 			Matriz bSpline = MatrizUtil::matrizBSpline();
 
-			double delta = 0.1;
+			double delta = 0.01;
 			Matriz D = MatrizUtil::matrizD(delta);
 
 			double n = 1/delta;

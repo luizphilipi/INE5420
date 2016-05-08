@@ -303,9 +303,9 @@ void TelaPrincipal::adicionarObjeto() {
 		break;
 	case 3: {
 		std::vector<Coordenada> coordenadas;
-		GtkBox *boxCurva = GTK_BOX(
-				gtk_builder_get_object( builder, BOX_CURVA2D ));
-		GList* children = gtk_container_get_children(GTK_CONTAINER(boxCurva));
+		GtkBox *boxBezier = GTK_BOX(
+				gtk_builder_get_object( builder, BOX_BEZIER ));
+		GList* children = gtk_container_get_children(GTK_CONTAINER(boxBezier));
 		GList *l;
 		int i = 0;
 		GtkSpinButton *input;
@@ -333,7 +333,43 @@ void TelaPrincipal::adicionarObjeto() {
 			}
 			coordenadas.push_back(Coordenada(x, y));
 		}
-		mundo->adicionaCurva2D(nomeObjeto, coordenadas);
+		mundo->adicionaBezier(nomeObjeto, coordenadas);
+	}
+		break;
+
+	case 4: {
+		std::vector<Coordenada> coordenadas;
+		GtkBox *boxBSpline = GTK_BOX(
+				gtk_builder_get_object( builder, BOX_BSPLINE ));
+		GList* children = gtk_container_get_children(GTK_CONTAINER(boxBSpline));
+		GList *l;
+		int i = 0;
+		GtkSpinButton *input;
+		for (l = children; i < g_list_length(children); l = l->next, ++i) {
+			GtkBox *coordGrid = GTK_BOX(l->data);
+
+			GList* children2 = gtk_container_get_children(
+					GTK_CONTAINER(coordGrid));
+			GList * l2;
+			int i = 0;
+			GtkSpinButton *input;
+
+			int j = 0;
+			int x = 0;
+			int y = 0;
+			for (l2 = children2; j < g_list_length(children2);
+					l2 = l2->next, ++j) {
+				if (j == 1) {
+					GtkSpinButton *inputX = GTK_SPIN_BUTTON(l2->data);
+					x = gtk_spin_button_get_value(inputX);
+				} else if (j == 3) {
+					GtkSpinButton *inputY = GTK_SPIN_BUTTON(l2->data);
+					y = gtk_spin_button_get_value(inputY);
+				}
+			}
+			coordenadas.push_back(Coordenada(x, y));
+		}
+		mundo->adicionaBSpline(nomeObjeto, coordenadas);
 	}
 		break;
 	}

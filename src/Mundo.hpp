@@ -51,11 +51,17 @@ public:
 		displayFile->adiciona(poligono);
 	}
 
-	void adicionaCurva2D(std::string nome, std::vector<Coordenada> coords) {
-			Bezier *curva2D = new Bezier(nome, coords);
-			normalizar(curva2D);
-			displayFile->adiciona(curva2D);
-		}
+	void adicionaBezier(std::string nome, std::vector<Coordenada> coords) {
+		Bezier *bezier = new Bezier(nome, coords);
+		normalizar(bezier);
+		displayFile->adiciona(bezier);
+	}
+
+	void adicionaBSpline(std::string nome, std::vector<Coordenada> coords) {
+		BSpline *bspline = new BSpline(nome, coords);
+		normalizar(bspline);
+		displayFile->adiciona(bspline);
+	}
 
 	ListaEnc<ObjetoGrafico*>* getObjetos() {
 		return displayFile;

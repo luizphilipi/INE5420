@@ -15,7 +15,7 @@
 #define BOTAO_ADICIONAR_OBJETO "botaoAdicionarObjeto"
 #define INPUT_NOME_OBJETO "inputNomeObjeto"
 
-// popup de adicionar (LINHA)
+// popup de adicionar (PONTO)
 #define SPIN_PONTO_X "spinPontoX"
 #define SPIN_PONTO_Y "spinPontoY"
 
@@ -31,8 +31,13 @@
 #define BOTAO_PREENCHER "botaoPreencher"
 #define COR_PREENCHIMENTO "corPreenchimento"
 
-// popup de adicionar (CURVA2D)
-#define BOX_CURVA2D "boxCurva2D"
+// popup de adicionar (BEZIER)
+#define BOX_BEZIER "boxBezier"
+
+// popup de adicionar (BSPLINE)
+#define BOX_BSPLINE "boxBSpline"
+#define BOTAO_ADICIONAR_COORD_BSPLINE "botaoAdicionarCoordBSpline"
+
 
 // botões de movimentação
 #define MOVE_UP_BTN "btnUp"

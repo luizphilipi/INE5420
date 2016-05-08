@@ -95,6 +95,7 @@ public:
 			std::string nome;
 			GdkRGBA corObjeto;
 			bool preenchimento = false;
+			bool bezier = false;
 			while (getline(arquivo, linha)) {
 				if (!linha.find("o")) {
 					nome = linha.erase(0, 2);
@@ -126,10 +127,19 @@ public:
 
 					m->adicionaObj(obj);
 				}
+				else if (!linha.find("cstype bezier")) {
+					bezier = true;
+				}
 				else if (!linha.find("curv")) {
-				std::vector<Coordenada> coordenadas = coordenadaObj(linha,
-									listaCoords);
-				obj = new BSpline("aff", coordenadas);
+					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
+														listaCoords);
+					if(bezier){
+						obj = new Bezier(nome, coordenadas);
+						bezier = false;
+					}
+					else{
+						obj = new BSpline(nome, coordenadas);
+					}
 				m->adicionaObj(obj);
 				}
 			}
