@@ -246,9 +246,13 @@ void TelaPrincipal::adicionarObjeto() {
 				gtk_builder_get_object( builder, SPIN_PONTO_X ));
 		GtkSpinButton *spinPontoY = GTK_SPIN_BUTTON(
 				gtk_builder_get_object( builder, SPIN_PONTO_Y ));
-		mundo->adicionaPonto(nomeObjeto,
-				Coordenada(gtk_spin_button_get_value(spinPontoX),
-						gtk_spin_button_get_value(spinPontoY)));
+		GtkSpinButton *spinPontoZ = GTK_SPIN_BUTTON(
+				gtk_builder_get_object( builder, SPIN_PONTO_Z ));
+		mundo->adicionaPonto(nomeObjeto, Coordenada(
+				gtk_spin_button_get_value(spinPontoX),
+				gtk_spin_button_get_value(spinPontoY),
+				gtk_spin_button_get_value(spinPontoZ))
+				);
 	}
 		break;
 	case 1: {
@@ -256,15 +260,23 @@ void TelaPrincipal::adicionarObjeto() {
 				gtk_builder_get_object( builder, SPIN_LINHA_X1 ));
 		GtkSpinButton *spinLinhaY1 = GTK_SPIN_BUTTON(
 				gtk_builder_get_object( builder, SPIN_LINHA_Y1 ));
-		Coordenada coord1 = Coordenada(gtk_spin_button_get_value(spinLinhaX1),
-				gtk_spin_button_get_value(spinLinhaY1));
+		GtkSpinButton *spinLinhaZ1 = GTK_SPIN_BUTTON(
+				gtk_builder_get_object( builder, SPIN_LINHA_Z1 ));
+		Coordenada coord1 = Coordenada(
+				gtk_spin_button_get_value(spinLinhaX1),
+				gtk_spin_button_get_value(spinLinhaY1),
+				gtk_spin_button_get_value(spinLinhaZ1));
 
 		GtkSpinButton *spinLinhaX2 = GTK_SPIN_BUTTON(
 				gtk_builder_get_object( builder, SPIN_LINHA_X2 ));
 		GtkSpinButton *spinLinhaY2 = GTK_SPIN_BUTTON(
 				gtk_builder_get_object( builder, SPIN_LINHA_Y2 ));
-		Coordenada coord2 = Coordenada(gtk_spin_button_get_value(spinLinhaX2),
-				gtk_spin_button_get_value(spinLinhaY2));
+		GtkSpinButton *spinLinhaZ2 = GTK_SPIN_BUTTON(
+				gtk_builder_get_object( builder, SPIN_LINHA_Z2 ));
+		Coordenada coord2 = Coordenada(
+				gtk_spin_button_get_value(spinLinhaX2),
+				gtk_spin_button_get_value(spinLinhaY2),
+				gtk_spin_button_get_value(spinLinhaZ2));
 
 		mundo->adicionaLinha(nomeObjeto, coord1, coord2);
 	}
@@ -302,17 +314,20 @@ void TelaPrincipal::adicionarObjeto() {
 			int j = 0;
 			int x = 0;
 			int y = 0;
-			for (l2 = children2; j < g_list_length(children2);
-					l2 = l2->next, ++j) {
+			int z = 0;
+			for (l2 = children2; j < g_list_length(children2); l2 = l2->next, ++j) {
 				if (j == 1) {
 					GtkSpinButton *inputX = GTK_SPIN_BUTTON(l2->data);
 					x = gtk_spin_button_get_value(inputX);
 				} else if (j == 3) {
 					GtkSpinButton *inputY = GTK_SPIN_BUTTON(l2->data);
 					y = gtk_spin_button_get_value(inputY);
+				} else if (j == 5) {
+					GtkSpinButton *inputZ = GTK_SPIN_BUTTON(l2->data);
+					z = gtk_spin_button_get_value(inputZ);
 				}
 			}
-			coordenadas.push_back(Coordenada(x, y));
+			coordenadas.push_back(Coordenada(x, y, z));
 		}
 		mundo->adicionaBezier(nomeObjeto, coordenadas);
 		coordenadas = vector<Coordenada>();
@@ -663,13 +678,15 @@ void TelaPrincipal::adicionarCoordenadaBSpline(){
 			gtk_builder_get_object( builder, SPIN_BSPLINE_X ));
 	GtkSpinButton *spinBSplineY = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_BSPLINE_Y ));
-
-	double x = gtk_spin_button_get_value(spinBSplineX);
-	double y = gtk_spin_button_get_value(spinBSplineY);
-
-	coordenadas.push_back(Coordenada(x,y));
-	std::cout<<x<<endl;
-	std::cout<<y<<endl;
+	GtkSpinButton *spinBSplineZ = GTK_SPIN_BUTTON(
+		gtk_builder_get_object( builder, SPIN_BSPLINE_Z ));
+	Coordenada bspline = Coordenada (
+			gtk_spin_button_get_value(spinBSplineX),
+			gtk_spin_button_get_value(spinBSplineY),
+			gtk_spin_button_get_value(spinBSplineZ)
+			);
+	coordenadas.push_back(bspline);
+	bspline.print();
 }
 
 void TelaPrincipal::adicionarCoordenadaPoligono() {
@@ -677,12 +694,13 @@ void TelaPrincipal::adicionarCoordenadaPoligono() {
 			gtk_builder_get_object( builder, SPIN_POLIGONO_X ));
 	GtkSpinButton *spinPoligonoY = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_POLIGONO_Y ));
-
-	double x = gtk_spin_button_get_value(spinPoligonoX);
-	double y = gtk_spin_button_get_value(spinPoligonoY);
-
-	coordenadas.push_back(Coordenada(x,y));
-	std::cout<<x<<endl;
-	std::cout<<y<<endl;
-
+	GtkSpinButton *spinPoligonoZ = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_POLIGONO_Z ));
+	Coordenada pol = Coordenada (
+			gtk_spin_button_get_value(spinPoligonoX),
+			gtk_spin_button_get_value(spinPoligonoY),
+			gtk_spin_button_get_value(spinPoligonoZ)
+			);
+	coordenadas.push_back(pol);
+	pol.print();
 }

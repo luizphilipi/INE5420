@@ -18,17 +18,22 @@
 // popup de adicionar (PONTO)
 #define SPIN_PONTO_X "spinPontoX"
 #define SPIN_PONTO_Y "spinPontoY"
+#define SPIN_PONTO_Z "spinPontoZ"
 
 // popup de adicionar (LINHA)
 #define SPIN_LINHA_X1 "spinLinhaX1"
 #define SPIN_LINHA_Y1 "spinLinhaY1"
 #define SPIN_LINHA_X2 "spinLinhaX2"
 #define SPIN_LINHA_Y2 "spinLinhaY2"
+#define SPIN_LINHA_Z1 "spinLinhaZ1"
+#define SPIN_LINHA_Z2 "spinLinhaZ2"
+
 
 // popup de adicionar (POLIGONO)
 #define BOTAO_ADICIONAR_COORD_POLIGONO "botaoAdicionarCoordPoligono"
 #define SPIN_POLIGONO_X "spinPoligonoX"
 #define SPIN_POLIGONO_Y "spinPoligonoY"
+#define SPIN_POLIGONO_Z "spinPoligonoZ"
 #define BOTAO_PREENCHER "botaoPreencher"
 #define COR_PREENCHIMENTO "corPreenchimento"
 
@@ -39,7 +44,7 @@
 #define BOTAO_ADICIONAR_COORD_BSPLINE "botaoAdicionarCoordBSpline"
 #define SPIN_BSPLINE_X "spinBSplineX"
 #define SPIN_BSPLINE_Y "spinBSplineY"
-
+#define SPIN_BSPLINE_Z "spinBSplineZ"
 
 // botões de movimentação
 #define MOVE_UP_BTN "btnUp"

@@ -48,7 +48,7 @@ public:
 		}
 
 	void forwardDifferences(double n, Matriz forwDifx, Matriz forwDify){
-		//x = forwDifx(0,0), Dx = forwDifx(0,1), D²x = forwDifx(0,2), D³x = forwDifx(0,3)
+		//x = forwDifx(0,0), Dx = forwDifx(1,0), D²x = forwDifx(2,0), D³x = forwDifx(3,0)
 		coordenadasMundo.push_back(Coordenada(forwDifx(0, 0), forwDify(0, 0), 1));
 		for(int i = 1; i < n; i++){
 			forwDifx(0,0) = forwDifx(0,0) + forwDifx(1,0);
@@ -59,31 +59,29 @@ public:
 			forwDify(1,0) = forwDify(1,0) + forwDify(2,0);
 			forwDify(2,0) = forwDify(2,0) + forwDify(3,0);
 
-			std::cout << "-------------" <<endl;
+			std::cout << "---ForwDiff---" <<endl;
 			std::cout << i <<endl;
 			std::cout << forwDifx <<endl;
 			std::cout << forwDify <<endl;
-			std::cout << "-------------" <<endl;
-
 			coordenadasMundo.push_back(Coordenada(forwDifx(0, 0), forwDify(0, 0), 1));
 		}
 	}
 
 	std::vector<Coordenada> clip(int status) {
 		if (status) {
-			vector<Coordenada> clip = std::vector<Coordenada>();
+			vector<Coordenada> clip;
 			int qtdCoords = coordenadasTela.size();
-			vector<Coordenada> coord;
 			Linha * aux;
-			for(int i = 0; i < qtdCoords-1; i++){
-				aux = new Linha(coordenadasTela[i], coordenadasTela[i+1]);
-				coord = aux->cohenSutherland();
-				if(coord.size()){
-					clip.push_back(coord[0]);
-					if(i == qtdCoords-2){
-						clip.push_back(coord[1]);
-					}
+			for (int i = 0; i < qtdCoords - 1; i++) {
+				Coordenada coord = coordenadasTela[i];
+				// Dentro da tela?
+				if (!(coord._x < -1 || coord._x > 1 || coord._y < -1 || coord._y > 1)) {
+					clip.push_back(coord);
+				} else if(!clip.empty()) {
+					aux = new Linha(clip.back(), coord);
+					clip.push_back(aux->clip(status)[1]);
 				}
+
 			}
 			return clip;
 		}
