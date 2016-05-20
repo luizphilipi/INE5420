@@ -12,6 +12,7 @@
 #include "ObjetoGrafico.hpp"
 #include "Poligono.hpp"
 #include "Ponto.hpp"
+#include "Objeto3D.hpp"
 
 class Mundo {
 private:

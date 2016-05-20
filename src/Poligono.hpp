@@ -17,8 +17,8 @@ public:
 
 	// baseado em https://rosettacode.org/wiki/Sutherland-Hodgman_polygon_clipping#Java
 	std::vector<Coordenada> clip(int status) {
-		std::cout << "Clippando objeto " << nome << " com "
-				<< coordenadasTela.size() << " pontos." << std::endl;
+//		std::cout << "Clippando objeto " << nome << " com "
+//				<< coordenadasTela.size() << " pontos." << std::endl;
 
 		if (status) {
 			clock_t begin = clock();
@@ -35,8 +35,8 @@ public:
 
 				std::vector<Coordenada> input(resultado);
 				resultado = std::vector<Coordenada>();
-				std::cout << "Tamanho do input: " << input.size() << std::endl;
-				std::cout << "Tamanho do resultado: " << len2 << std::endl;
+//				std::cout << "Tamanho do input: " << input.size() << std::endl;
+//				std::cout << "Tamanho do resultado: " << len2 << std::endl;
 
 				Coordenada A = tela[(i + len - 1) % len];
 				Coordenada B = tela[i];
@@ -59,8 +59,8 @@ public:
 
 			clock_t end = clock();
 			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-			std::cout << "Clip do poligono " << nome << " em: " << elapsed_secs
-					<< " com " << resultado.size() << " pontos" << std::endl;
+//			std::cout << "Clip do poligono " << nome << " em: " << elapsed_secs
+//					<< " com " << resultado.size() << " pontos" << std::endl;
 			return resultado;
 
 		}

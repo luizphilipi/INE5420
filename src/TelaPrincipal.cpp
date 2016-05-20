@@ -372,7 +372,6 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 			for (auto &coord : coords) {
 				cairo_line_to(cr, coord._x, coord._y);
 			}
-
 			if (obj->isPreenchido()) {
 				GdkRGBA cor = obj->getCor();
 
@@ -385,6 +384,15 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 
 			if (obj->getTipo() != BEZIER && obj->getTipo() != BSPLINE) {
 				cairo_close_path(cr);
+			}
+
+			if(obj->getTipo() == OBJETO3D){
+				for(int i = 0; i<coords.size(); i+=3){
+					cairo_move_to(cr, coords[i]._x, coords[i]._y);
+					cairo_line_to(cr, coords[i]._x, coords[i]._y);
+					cairo_line_to(cr, coords[i+1]._x, coords[i+1]._y);
+					cairo_line_to(cr, coords[i+2]._x, coords[i+2]._y);
+				}
 			}
 
 			cairo_stroke(cr);

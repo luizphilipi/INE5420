@@ -96,6 +96,8 @@ public:
 			GdkRGBA corObjeto;
 			bool preenchimento = false;
 			bool bezier = false;
+			bool obj3D = false;
+			std::vector<Coordenada> coords3D;
 			while (getline(arquivo, linha)) {
 				if (!linha.find("o")) {
 					nome = linha.erase(0, 2);
@@ -104,7 +106,7 @@ public:
 					preenchimento = true;
 					std::string cor = linha.erase(0, 7);
 					corObjeto = cores[cor];
-				} else if (!linha.find("p") || !linha.find("l") || !linha.find("f")) {
+				} else if (!linha.find("p") || !linha.find("l")) {
 					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
 							listaCoords);
 					switch (coordenadas.size()) {
@@ -126,6 +128,19 @@ public:
 					}
 
 					m->adicionaObj(obj);
+				} else if (!linha.find("f")) {
+					obj3D = true;
+					std::vector<Coordenada> coordenadas = coordenadaObj3D(linha,
+						listaCoords);
+					//são exatamente 3 coords p/ cada face
+					coords3D.push_back(coordenadas[0]);
+					coords3D.push_back(coordenadas[1]);
+					coords3D.push_back(coordenadas[2]);
+
+//					cout<<linha<<endl;
+//					coordenadas[0].print();
+//					coordenadas[1].print();
+//					coordenadas[2].print();
 				}
 				else if (!linha.find("cstype bezier")) {
 					bezier = true;
@@ -144,6 +159,11 @@ public:
 				}
 			}
 			arquivo.close();
+			if(obj3D){
+				obj = new Objeto3D(caminho, coords3D);
+				m->adicionaObj(obj);
+				cout<<coords3D.size()<<endl;
+			}
 		}
 		return m;
 	}
@@ -183,6 +203,23 @@ public:
 		return coordenadas;
 	}
 
+	std::vector<Coordenada> coordenadaObj3D(string linha,
+				std::map<int, Coordenada> listaCoords) {
+		std::vector<Coordenada> coordenadas;
+		std::vector<std::string> pontos = split(linha, " ");
+		cout<<linha<<endl;
+
+		for (int i = 1; i < pontos.size(); i++) {
+			std::vector<std::string> aux = split(pontos[i].c_str(), "/");
+			int posicao = atoi(aux[0].c_str());
+			coordenadas.push_back(listaCoords[posicao]);
+
+			coordenadas[i].print();
+		}
+		return coordenadas;
+	}
+
+
 	std::string buscaMtl(std::string caminho) {
 		std::string mtl = "";
 
@@ -212,8 +249,9 @@ public:
 					double x = atof(coordenadas[1].c_str());
 					double y = atof(coordenadas[2].c_str());
 					double z = atof(coordenadas[3].c_str());
-					std::cout << x << ", " << y << std::endl;
+//					std::cout << x << ", " << y << std::endl;
 					coords[posicao] = Coordenada(x, y, z);
+					coords[posicao].print();
 				}
 				posicao++;
 			}
