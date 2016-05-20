@@ -135,8 +135,7 @@ public:
 	 * 						 |Dx Dy	1|
 	 */
 	void transladar(Coordenada vetorDeslocamento) {
-		Matriz matrizTransformacao = MatrizUtil::matrizTranslacao(3, 3,
-				vetorDeslocamento);
+		Matriz matrizTransformacao = MatrizUtil::matrizTranslacao2D(vetorDeslocamento);
 		aplicarTransformacao(matrizTransformacao);
 	}
 
@@ -147,8 +146,7 @@ public:
 	 * 							|-Cx -Cy 1|	  |0	0	1|   |Cx	Cy	1|
 	 */
 	void escalonar(Coordenada fator) {
-		Matriz matrizEscalonamento = MatrizUtil::matrizEscalonamento(3, 3,
-				fator);
+		Matriz matrizEscalonamento = MatrizUtil::matrizEscalonamento2D(fator);
 		aplicarTransformacao(matrizEscalonamento, this->centro());
 	}
 
@@ -158,12 +156,12 @@ public:
 	 * 							|-Dx -Dy 1|		|0		0		1|	|Dx	Dy	1|
 	 */
 	void rotacionar(double anguloEmGraus) {
-		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, anguloEmGraus);
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao2D(anguloEmGraus);
 		aplicarTransformacao(matrizRotacao, this->centro());
 	}
 
 	void rotacionar(Coordenada emTornoDe, double anguloEmGraus) {
-		Matriz matrizRotacao = MatrizUtil::matrizRotacao(3, 3, anguloEmGraus);
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao2D(anguloEmGraus);
 		aplicarTransformacao(matrizRotacao, emTornoDe);
 	}
 
@@ -201,9 +199,8 @@ private:
 	}
 
 	void aplicarTransformacao(Matriz matrizTransformacao, Coordenada posicao) {
-		Matriz resultado = MatrizUtil::matrizTranslacao(3, 3,
-				posicao.negativa()) * matrizTransformacao
-				* MatrizUtil::matrizTranslacao(3, 3, posicao);
+		Matriz resultado = MatrizUtil::matrizTranslacao2D(posicao.negativa()) * matrizTransformacao
+				* MatrizUtil::matrizTranslacao2D(posicao);
 		aplicarTransformacao(resultado);
 	}
 

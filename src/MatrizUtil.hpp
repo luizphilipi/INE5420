@@ -103,9 +103,8 @@ public:
 		return bezier;
 	}
 
-	/* Matriz T
-			 * |t^3   t^2   t    1|
-			 */
+	// Matriz T
+	// |t^3   t^2   t    1|
 	static Matriz matrizT(double t) {
 		Matriz T = Matriz(1,4);
 		T(0,0) = pow(t, 3);
@@ -116,41 +115,41 @@ public:
 		return T;
 	}
 
-	/* Matriz de Translação
-	 * | 1	0	0 |
-	 * | 0	1	0 |
-	 * | Dx	Dy	1 |
-	 */
-	static Matriz matrizTranslacao(int m, int n, Coordenada deslocamento) {
-		Matriz matrizTransformacao = matrizIdentidade(m, n);
+
+	//-------------------------------------------------------------
+	//---------------- Operações básicas em 2D --------------------
+	//-------------------------------------------------------------
+
+	// Matriz de Translação 2D
+	// | 1   0  0 |
+	// | 0   1  0 |
+	// | Dx  Dy 1 |
+	static Matriz matrizTranslacao2D(Coordenada deslocamento) {
+		Matriz matrizTransformacao = matrizIdentidade(3, 3);
 
 		matrizTransformacao(2, 0) = deslocamento.getX();
 		matrizTransformacao(2, 1) = deslocamento.getY();
 
 		return matrizTransformacao;
 	}
-
-	/* Matriz de Escalonamento
-	 * | Sx	0	0 |
-	 * | 0	Sy	0 |
-	 * | 0	0	1 |
-	 */
-	static Matriz matrizEscalonamento(int m, int n, Coordenada fator) {
-		Matriz matrizEscalonamento = matrizIdentidade(m, n);
+	// Matriz de Escalonamento 2D
+	// | Sx  0   0 |
+	// | 0   Sy  0 |
+	// | 0   0   1 |
+	static Matriz matrizEscalonamento2D(Coordenada fator) {
+		Matriz matrizEscalonamento = matrizIdentidade(3, 3);
 
 		matrizEscalonamento(0, 0) = fator.getX();
 		matrizEscalonamento(1, 1) = fator.getY();
 
 		return matrizEscalonamento;
 	}
-
-	/* Matriz de Rotacao
-	 * | cos(Θ)	-sin(Θ)	0 |
-	 * | sin(Θ)	 cos(Θ)	0 |
-	 * | 0		 0		1 |
-	 */
-	static Matriz matrizRotacao(int m, int n, double anguloGraus) {
-		Matriz matrizRotacao = matrizIdentidade(m, n);
+	// Matriz de Rotacao 2D
+	// | cos(Θ)  -sin(Θ)   0 |
+	// | sin(Θ)  cos(Θ)    0 |
+	// |   0       0       1 |
+	static Matriz matrizRotacao2D(double anguloGraus) {
+		Matriz matrizRotacao = matrizIdentidade(3, 3);
 		double radianos = grausParaRadianos(anguloGraus);
 
 		matrizRotacao(0, 0) = cos(radianos);
@@ -161,16 +160,77 @@ public:
 		return matrizRotacao;
 	}
 
-	static Matriz teste(int m, int n, double valor) {
-		Matriz matrizRotacao = matrizIdentidade(m, n);
+	//-------------------------------------------------------------
+	//---------------- Operações básicas em 3D --------------------
+	//-------------------------------------------------------------
 
-		matrizRotacao(0, 0) = cos(valor);
-		matrizRotacao(0, 1) = sin(valor);
-		matrizRotacao(1, 0) = -sin(valor);
-		matrizRotacao(1, 1) = cos(valor);
-
-		return matrizRotacao;
+	// Matriz de Translação 3D
+	// | 1	 0   0   0 |
+	// | 0	 1   0   0 |
+	// | 0	 0   1   0 |
+	// | Tx	 Ty  Tz  1 |
+	static Matriz matrizTranslacao3D(Coordenada deslocamento) {
+		Matriz translacao3d = matrizIdentidade(4, 4);
+		translacao3d(3, 0) = deslocamento.getX();
+		translacao3d(3, 1) = deslocamento.getY();
+		translacao3d(3, 2) = deslocamento.getZ();
+		return translacao3d;
 	}
+	// Matriz de Escalonamento 3D
+	// | Sx  0   0   0 |
+	// | 0   Sy  0   0 |
+	// | 0   0   Sz  0 |
+	// | 0   0   0   1 |
+	static Matriz matrizEscalonamento3D(Coordenada fator) {
+		Matriz escalonamento3d = matrizIdentidade(4, 4);
+		escalonamento3d(0, 0) = fator.getX();
+		escalonamento3d(1, 1) = fator.getY();
+		escalonamento3d(2, 2) = fator.getZ();
+		return escalonamento3d;
+	}
+	//  -------- Rotação EIXO X -------
+	// | 1     0       0     0 |
+	// | 0   cos(Θ)  sen(Θ)  0 |
+	// | 0  -sen(Θ)  cos(Θ)  0 |
+	// | 0     0       0     1 |
+	static Matriz matrizRotacao3DX(double anguloGraus) {
+		Matriz rotacao3dx = matrizIdentidade(4, 4);
+		double anguloRadianos = grausParaRadianos(anguloGraus);
+		rotacao3dx(1, 1) = cos(anguloRadianos);
+		rotacao3dx(1, 2) = sin(anguloRadianos);
+		rotacao3dx(2, 1) = -sin(anguloRadianos);
+		rotacao3dx(2, 2) = cos(anguloRadianos);
+		return rotacao3dx;
+	}
+	//  -------- Rotação EIXO Y -------
+	// | cos(Θ)  0   -sen(Θ)   0 |
+	// |   0     1      0      0 |
+	// | sen(Θ)  0    cos(Θ)   0 |
+	// |   0     0       0     1 |
+	static Matriz matrizRotacao3DY(double anguloGraus) {
+		Matriz rotacao3dy = matrizIdentidade(4, 4);
+		double anguloRadianos = grausParaRadianos(anguloGraus);
+		rotacao3dy(0, 0) = cos(anguloRadianos);
+		rotacao3dy(0, 2) = -sin(anguloRadianos);
+		rotacao3dy(2, 0) = sin(anguloRadianos);
+		rotacao3dy(2, 2) = cos(anguloRadianos);
+		return rotacao3dy;
+	}
+	//  -------- Rotação EIXO Z -------
+	// |  cos(Θ)  sen(Θ)  0  0 |
+	// | -sen(Θ)  cos(Θ)  0  0 |
+	// |    0       0     1  0 |
+	// |    0       0     0  1 |
+	static Matriz matrizRotacao3DZ(double anguloGraus) {
+		Matriz rotacao3dy = matrizIdentidade(4, 4);
+		double anguloRadianos = grausParaRadianos(anguloGraus);
+		rotacao3dy(0, 0) = cos(anguloRadianos);
+		rotacao3dy(0, 1) = sin(anguloRadianos);
+		rotacao3dy(1, 0) = -sin(anguloRadianos);
+		rotacao3dy(1, 1) = cos(anguloRadianos);
+		return rotacao3dy;
+	}
+
 
 	static double grausParaRadianos(double anguloGraus) {
 		return anguloGraus * PI / 180;
