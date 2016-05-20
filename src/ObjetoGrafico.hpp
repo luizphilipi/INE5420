@@ -135,7 +135,7 @@ public:
 	 * 						 |Dx Dy	1|
 	 */
 	void transladar(Coordenada vetorDeslocamento) {
-		Matriz matrizTransformacao = MatrizUtil::matrizTranslacao2D(vetorDeslocamento);
+		Matriz matrizTransformacao = MatrizUtil::matrizTranslacao3D(vetorDeslocamento);
 		aplicarTransformacao(matrizTransformacao);
 	}
 
@@ -146,7 +146,7 @@ public:
 	 * 							|-Cx -Cy 1|	  |0	0	1|   |Cx	Cy	1|
 	 */
 	void escalonar(Coordenada fator) {
-		Matriz matrizEscalonamento = MatrizUtil::matrizEscalonamento2D(fator);
+		Matriz matrizEscalonamento = MatrizUtil::matrizEscalonamento3D(fator);
 		aplicarTransformacao(matrizEscalonamento, this->centro());
 	}
 
@@ -155,13 +155,35 @@ public:
 	 * [x'' y'' 1] = [x y 1] *	|0	 1	 0| *	|sin(Θ)	 cos(Θ)	0| *|0	1	0|
 	 * 							|-Dx -Dy 1|		|0		0		1|	|Dx	Dy	1|
 	 */
-	void rotacionar(double anguloEmGraus) {
-		Matriz matrizRotacao = MatrizUtil::matrizRotacao2D(anguloEmGraus);
+	void rotacionar(double anguloEmGraus, int index) {
+		Matriz matrizRotacao = Matriz(4,4);
+		switch(index){
+		case 0:
+			matrizRotacao = MatrizUtil::matrizRotacao3DX(anguloEmGraus);
+			break;
+		case 1:
+			matrizRotacao = MatrizUtil::matrizRotacao3DY(anguloEmGraus);
+			break;
+		case 2:
+			matrizRotacao = MatrizUtil::matrizRotacao3DZ(anguloEmGraus);
+			break;
+		}
 		aplicarTransformacao(matrizRotacao, this->centro());
 	}
 
-	void rotacionar(Coordenada emTornoDe, double anguloEmGraus) {
-		Matriz matrizRotacao = MatrizUtil::matrizRotacao2D(anguloEmGraus);
+	void rotacionar(Coordenada emTornoDe, double anguloEmGraus, int index) {
+		Matriz matrizRotacao = Matriz(4,4);
+		switch(index){
+		case 0:
+			matrizRotacao = MatrizUtil::matrizRotacao3DX(anguloEmGraus);
+			break;
+		case 1:
+			matrizRotacao = MatrizUtil::matrizRotacao3DY(anguloEmGraus);
+			break;
+		case 2:
+			matrizRotacao = MatrizUtil::matrizRotacao3DZ(anguloEmGraus);
+			break;
+		}
 		aplicarTransformacao(matrizRotacao, emTornoDe);
 	}
 
@@ -199,8 +221,8 @@ private:
 	}
 
 	void aplicarTransformacao(Matriz matrizTransformacao, Coordenada posicao) {
-		Matriz resultado = MatrizUtil::matrizTranslacao2D(posicao.negativa()) * matrizTransformacao
-				* MatrizUtil::matrizTranslacao2D(posicao);
+		Matriz resultado = MatrizUtil::matrizTranslacao3D(posicao.negativa()) * matrizTransformacao
+				* MatrizUtil::matrizTranslacao3D(posicao);
 		aplicarTransformacao(resultado);
 	}
 

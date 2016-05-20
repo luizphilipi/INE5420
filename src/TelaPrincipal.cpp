@@ -556,13 +556,18 @@ void TelaPrincipal::aplicarRotacao() {
 			gtk_builder_get_object( builder, SPIN_ANGULO_ROTACAO ));
 	double angulo = gtk_spin_button_get_value(spinAngulo);
 
+	GtkComboBox *comboBoxRotacao = GTK_COMBO_BOX(
+				gtk_builder_get_object( builder, COMBO_BOX_ROTACAO ));
+	int index = gtk_combo_box_get_active(comboBoxRotacao);
+
 	if (getObjetoSelecionado() != NULL) {
 		switch (this->radioRotacaoSelecionada()) {
-		case 1:
-			mundo->rotacionar(getObjetoSelecionado(), angulo);
+		case 1: {
+			mundo->rotacionar(getObjetoSelecionado(), angulo, index);
+		}
 			break;
 		case 2:
-			mundo->rotacionar(getObjetoSelecionado(), angulo, Coordenada(0, 0));
+			mundo->rotacionar(getObjetoSelecionado(), angulo, Coordenada(0, 0), index);
 			break;
 		case 3:
 			GtkSpinButton *spinX = GTK_SPIN_BUTTON(
@@ -571,7 +576,7 @@ void TelaPrincipal::aplicarRotacao() {
 					gtk_builder_get_object( builder, SPIN_ROTACAO_Y ));
 			mundo->rotacionar(getObjetoSelecionado(), angulo,
 					Coordenada(gtk_spin_button_get_value(spinX),
-							gtk_spin_button_get_value(spinY)));
+							gtk_spin_button_get_value(spinY)), index);
 			break;
 		}
 

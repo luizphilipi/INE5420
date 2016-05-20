@@ -75,6 +75,7 @@
 
 // rotação
 #define SPIN_ANGULO_ROTACAO "spinAnguloRotacao"
+#define COMBO_BOX_ROTACAO "comboBoxRotacao"
 #define RADIO_ROTACAO_CENTRO_OBJETO "radioRotacaoCentroObjeto"
 #define RADIO_ROTACAO_ORIGEM "radioRotacaoOrigem"
 #define RADIO_ROTACAO_PONTO "radioRotacaoPonto"

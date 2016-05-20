@@ -128,22 +128,23 @@ public:
 		}
 	}
 
-	void rotacionar(std::string nome, double angulo) {
+
+	void rotacionar(std::string nome, double angulo, int index) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
 			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
 				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
-				obj->rotacionar(angulo);
+				obj->rotacionar(angulo,index);
 				normalizar(obj);
 				break;
 			}
 		}
 	}
 
-	void rotacionar(std::string nome, double angulo, Coordenada coord) {
+	void rotacionar(std::string nome, double angulo, Coordenada coord, int index) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
 			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
 				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
-				obj->rotacionar(coord, angulo);
+				obj->rotacionar(coord, angulo, index);
 				normalizar(obj);
 				break;
 			}

@@ -104,7 +104,7 @@ public:
 					preenchimento = true;
 					std::string cor = linha.erase(0, 7);
 					corObjeto = cores[cor];
-				} else if (!linha.find("p") || !linha.find("l")) {
+				} else if (!linha.find("p") || !linha.find("l") || !linha.find("f")) {
 					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
 							listaCoords);
 					switch (coordenadas.size()) {

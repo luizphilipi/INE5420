@@ -25,14 +25,15 @@ Matriz::Matriz(const Matriz& matrizB) {
 
 Matriz::Matriz(Coordenada coord) {
 	mat.resize(1);
-	mat[0].resize(3);
+	mat[0].resize(4);
 
 	mat[0][0] = coord.getX();
 	mat[0][1] = coord.getY();
 	mat[0][2] = coord.getZ();
+	mat[0][3] = 1;
 
 	linhas = 1;
-	colunas = 3;
+	colunas = 4;
 }
 
 Matriz::Matriz(Coordenada *coord) {

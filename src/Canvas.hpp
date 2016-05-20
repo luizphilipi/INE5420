@@ -33,7 +33,7 @@ public:
 	}
 
 	void rotacionar(double angulo) {
-		Matriz matrizRotacao = MatrizUtil::matrizRotacao2D(angulo);
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao3DY(angulo);
 		Matriz matrizVUP = Matriz(vupVector);
 		Matriz result = matrizVUP * matrizRotacao;
 
@@ -68,10 +68,10 @@ public:
 		}
 
 		// move pro centro
-		Matriz matrizTranslacaoNeg = MatrizUtil::matrizTranslacao2D(_centro.negativa());
+		Matriz matrizTranslacaoNeg = MatrizUtil::matrizTranslacao3D(_centro.negativa());
 		// rotaciona novamente pra vertical
-		Matriz matrizRotacao = MatrizUtil::matrizRotacao2D(angulo);
-		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao2D(_centro);
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao3DY(angulo);
+		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao3D(_centro);
 
 		return  matrizTranslacaoNeg *  matrizRotacao ;
 	}
