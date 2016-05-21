@@ -10,6 +10,9 @@
 #include <algorithm>
 #include <map>
 
+
+
+
 class DescritorObj {
 public:
 	DescritorObj() {
@@ -69,11 +72,11 @@ public:
 		std::map<int, Coordenada> listaCoords = leCoordenadas(caminhoObj);
 
 		//percorre o arquivo.obj e busca arquivo de descrição de material .mtl
-		std::string caminhoMtl = buscaMtl(caminhoObj);
+//		std::string caminhoMtl = buscaMtl(caminhoObj);
 		std::map<std::string, GdkRGBA> cores;
-		if (caminhoMtl != "") {
-			cores = lerMtl(caminhoMtl);
-		}
+////		if (caminhoMtl != "") {
+////			cores = lerMtl(caminhoMtl);
+////		}
 		//le o arquivo .obj e cria todos os objetos num mundo
 		Mundo* mundo = lerObj(caminhoObj, listaCoords, cores);
 
@@ -102,11 +105,13 @@ public:
 				if (!linha.find("o")) {
 					nome = linha.erase(0, 2);
 					nome = split(nome, " ").front();
-				} else if (!linha.find("usemtl")) {
-					preenchimento = true;
-					std::string cor = linha.erase(0, 7);
-					corObjeto = cores[cor];
-				} else if (!linha.find("p") || !linha.find("l")) {
+				}
+//				else if (!linha.find("usemtl")) {
+//					preenchimento = true;
+//					std::string cor = linha.erase(0, 7);
+//					corObjeto = cores[cor];
+//				}
+				else if (!linha.find("p") || !linha.find("l")) {
 					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
 							listaCoords);
 					switch (coordenadas.size()) {
@@ -136,11 +141,6 @@ public:
 					coords3D.push_back(coordenadas[0]);
 					coords3D.push_back(coordenadas[1]);
 					coords3D.push_back(coordenadas[2]);
-
-//					cout<<linha<<endl;
-//					coordenadas[0].print();
-//					coordenadas[1].print();
-//					coordenadas[2].print();
 				}
 				else if (!linha.find("cstype bezier")) {
 					bezier = true;
@@ -162,7 +162,6 @@ public:
 			if(obj3D){
 				obj = new Objeto3D(caminho, coords3D);
 				m->adicionaObj(obj);
-				cout<<coords3D.size()<<endl;
 			}
 		}
 		return m;
@@ -207,18 +206,14 @@ public:
 				std::map<int, Coordenada> listaCoords) {
 		std::vector<Coordenada> coordenadas;
 		std::vector<std::string> pontos = split(linha, " ");
-		cout<<linha<<endl;
-
 		for (int i = 1; i < pontos.size(); i++) {
 			std::vector<std::string> aux = split(pontos[i].c_str(), "/");
-			int posicao = atoi(aux[0].c_str());
+			int posicao = atoi(aux[1].c_str());
 			coordenadas.push_back(listaCoords[posicao]);
-
 			coordenadas[i].print();
 		}
 		return coordenadas;
 	}
-
 
 	std::string buscaMtl(std::string caminho) {
 		std::string mtl = "";
@@ -238,18 +233,18 @@ public:
 	}
 
 	std::map<int, Coordenada> leCoordenadas(std::string caminho) {
+		setlocale (LC_ALL,"C");
 		std::map<int, Coordenada> coords;
 		std::string linha;
 		int posicao = 1;
 		ifstream arquivo(caminho);
 		if (arquivo.is_open()) {
 			while (getline(arquivo, linha)) {
-				if (linha.at(0) == 'v') {
+				if (!linha.find("v ")) {
 					std::vector<std::string> coordenadas = split(linha, " ");
 					double x = atof(coordenadas[1].c_str());
 					double y = atof(coordenadas[2].c_str());
 					double z = atof(coordenadas[3].c_str());
-//					std::cout << x << ", " << y << std::endl;
 					coords[posicao] = Coordenada(x, y, z);
 					coords[posicao].print();
 				}

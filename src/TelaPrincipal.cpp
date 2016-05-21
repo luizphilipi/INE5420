@@ -360,12 +360,13 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 	if (coords.size() > 0) {
 		clock_t begin = clock();
 
-		if (coords.size() == 1) {
+		if (obj->getTipo() == PONTO) {
 			cairo_move_to(cr, coords[0]._x, coords[0]._y);
 			cairo_arc(cr, coords[0]._x, coords[0]._y, 1.0, 0.0, 2.0 * 3.14);
 			cairo_fill_preserve(cr);
 			cairo_stroke(cr);
-		} else {
+		} else if(obj->getTipo() == LINHA || obj->getTipo() == POLIGONO
+				|| obj->getTipo() == BEZIER || obj->getTipo() == BSPLINE) {
 			cairo_move_to(cr, coords[0]._x, coords[0]._y);
 			cairo_line_to(cr, coords[0]._x, coords[0]._y);
 
@@ -374,10 +375,8 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 			}
 			if (obj->isPreenchido()) {
 				GdkRGBA cor = obj->getCor();
-
 				cairo_set_source_rgb(cr, cor.red, cor.green, cor.blue);
 				cairo_fill(cr);
-
 			} else {
 				cairo_set_source_rgb(cr, 0, 0, 0);
 			}
@@ -385,17 +384,16 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 			if (obj->getTipo() != BEZIER && obj->getTipo() != BSPLINE) {
 				cairo_close_path(cr);
 			}
-
-			if(obj->getTipo() == OBJETO3D){
-				for(int i = 0; i<coords.size(); i+=3){
-					cairo_move_to(cr, coords[i]._x, coords[i]._y);
-					cairo_line_to(cr, coords[i]._x, coords[i]._y);
-					cairo_line_to(cr, coords[i+1]._x, coords[i+1]._y);
-					cairo_line_to(cr, coords[i+2]._x, coords[i+2]._y);
-				}
-			}
-
 			cairo_stroke(cr);
+		}
+		if(obj->getTipo() == OBJETO3D){
+			for(int i = 0; i<coords.size(); i+=3){
+				cairo_move_to(cr, coords[i]._x, coords[i]._y);
+				cairo_line_to(cr, coords[i]._x, coords[i]._y);
+				cairo_line_to(cr, coords[i+1]._x, coords[i+1]._y);
+				cairo_line_to(cr, coords[i+2]._x, coords[i+2]._y);
+				cairo_stroke(cr);
+			}
 		}
 
 		clock_t end = clock();
