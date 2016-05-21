@@ -536,10 +536,13 @@ void TelaPrincipal::aplicarTranslacao() {
 			gtk_builder_get_object( builder, SPIN_TRANSLACAO_X ));
 	GtkSpinButton *spinY = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_TRANSLACAO_Y ));
+	GtkSpinButton *spinZ = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_TRANSLACAO_Z ));
 
 	mundo->transladar(getObjetoSelecionado(),
 			Coordenada(gtk_spin_button_get_value(spinX),
-					gtk_spin_button_get_value(spinY)));
+					gtk_spin_button_get_value(spinY),
+					gtk_spin_button_get_value(spinZ)));
 
 	atualizarTela();
 }
@@ -549,10 +552,13 @@ void TelaPrincipal::aplicarEscalonamento() {
 			gtk_builder_get_object( builder, SPIN_ESCALONAMENTO_X ));
 	GtkSpinButton *spinY = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_ESCALONAMENTO_Y ));
+	GtkSpinButton *spinZ = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_ESCALONAMENTO_Z ));
 
 	mundo->escalonar(getObjetoSelecionado(),
 			Coordenada(gtk_spin_button_get_value(spinX),
-					gtk_spin_button_get_value(spinY)));
+					gtk_spin_button_get_value(spinY),
+					gtk_spin_button_get_value(spinZ)));
 
 	atualizarTela();
 }

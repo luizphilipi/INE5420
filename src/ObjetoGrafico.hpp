@@ -127,8 +127,6 @@ public:
 		y = y / tamanho;
 		z = z / tamanho;
 
-		Coordenada(x, y, z).print();
-
 		return Coordenada(x, y, z);
 //		}
 //		return *centroObj;
