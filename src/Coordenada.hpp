@@ -73,7 +73,7 @@ public:
 	}
 
 	double produtoEscalar(Coordenada other) {
-		return (_x * other._x) + (_y * other._y);
+		return (_x * other._x) + (_y * other._y) + (_z * other._z);
 	}
 
 	double angleWith(Coordenada other) {
