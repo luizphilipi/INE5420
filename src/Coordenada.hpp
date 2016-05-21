@@ -9,18 +9,19 @@ public:
 	double _x;
 	double _y;
 	double _z;
+	double _w;
 
 	Coordenada() :
-			_x(0), _y(0), _z(0) {
+			_x(0), _y(0), _z(0), _w(0) {
 
 	}
 
 	Coordenada(double x, double y) :
-			_x(x), _y(y), _z(1) {
+			_x(x), _y(y), _z(1), _w(1) {
 	}
 
 	Coordenada(double x, double y, double z) :
-			_x(x), _y(y), _z(z) {
+			_x(x), _y(y), _z(z), _w(1) {
 	}
 
 	double getX() const {
@@ -35,8 +36,12 @@ public:
 		return _z;
 	}
 
+	double getW() const {
+		return _w;
+	}
+
 	Coordenada negativa() {
-		return Coordenada(-this->_x, -this->_y);
+		return Coordenada(-this->_x, -this->_y, -this->_z);
 	}
 
 	Coordenada operator+=(const Coordenada& c2) {
@@ -64,7 +69,7 @@ public:
 	}
 
 	double tamanho() {
-		return sqrt(pow(_x, 2) + pow(_y, 2));
+		return sqrt(pow(_x, 2) + pow(_y, 2) + pow(_z, 2));
 	}
 
 	double produtoEscalar(Coordenada other) {

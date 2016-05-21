@@ -66,11 +66,13 @@
 // translação
 #define SPIN_TRANSLACAO_X "spinTranslacaoX"
 #define SPIN_TRANSLACAO_Y "spinTranslacaoY"
+#define SPIN_TRANSLACAO_Z "spinTranslacaoZ"
 #define BOTAO_APLICAR_TRANSLACAO "btnAplicarTranslacao"
 
 // escalonamento
 #define SPIN_ESCALONAMENTO_X "spinEscalonamentoX"
 #define SPIN_ESCALONAMENTO_Y "spinEscalonamentoY"
+#define SPIN_ESCALONAMENTO_Z "spinEscalonamentoZ"
 #define BOTAO_APLICAR_ESCALONAMENTO "btnAplicarEscalonamento"
 
 // rotação
