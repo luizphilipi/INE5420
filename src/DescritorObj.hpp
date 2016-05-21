@@ -208,7 +208,10 @@ public:
 		std::vector<std::string> pontos = split(linha, " ");
 		for (int i = 1; i < pontos.size(); i++) {
 			std::vector<std::string> aux = split(pontos[i].c_str(), "/");
-			int posicao = atoi(aux[1].c_str());
+			int posicao = atoi(aux[0].c_str());
+			if(aux.size()>2){
+				posicao = atoi(aux[1].c_str());
+			}
 			coordenadas.push_back(listaCoords[posicao]);
 			coordenadas[i].print();
 		}
