@@ -114,17 +114,22 @@ public:
 //		if (!centroObj) {
 		int x = 0;
 		int y = 0;
+		int z = 0;
 
 		for (auto &coordenada : coordenadasMundo) {
 			x += coordenada._x;
 			y += coordenada._y;
+			z += coordenada._z;
 		}
 
 		int tamanho = coordenadasMundo.size();
 		x = x / tamanho;
 		y = y / tamanho;
+		z = z / tamanho;
 
-		return Coordenada(x, y);
+		Coordenada(x, y, z).print();
+
+		return Coordenada(x, y, z);
 //		}
 //		return *centroObj;
 	}

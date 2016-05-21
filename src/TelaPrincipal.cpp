@@ -603,6 +603,7 @@ std::vector<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 	int x, y;
 
 	std::vector<Coordenada> coordenadas;
+	std::cout << obj->getTipo() << std::endl;
 	std::vector<Coordenada> clipped = obj->clip(radioClippingSelecionado());
 
 	for (auto &coord : clipped) {

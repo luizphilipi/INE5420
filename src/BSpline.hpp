@@ -59,10 +59,10 @@ public:
 			forwDify(1,0) = forwDify(1,0) + forwDify(2,0);
 			forwDify(2,0) = forwDify(2,0) + forwDify(3,0);
 
-			std::cout << "---ForwDiff---" <<endl;
-			std::cout << i <<endl;
-			std::cout << forwDifx <<endl;
-			std::cout << forwDify <<endl;
+//			std::cout << "---ForwDiff---" <<endl;
+//			std::cout << i <<endl;
+//			std::cout << forwDifx <<endl;
+//			std::cout << forwDify <<endl;
 			coordenadasMundo.push_back(Coordenada(forwDifx(0, 0), forwDify(0, 0), 1));
 		}
 	}

@@ -36,7 +36,7 @@ public:
 	}
 
 	Coordenada negativa() {
-		return Coordenada(-this->_x, -this->_y);
+		return Coordenada(-this->_x, -this->_y, -this->_z);
 	}
 
 	Coordenada operator+=(const Coordenada& c2) {

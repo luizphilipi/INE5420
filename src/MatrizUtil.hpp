@@ -9,7 +9,6 @@ class MatrizUtil {
 
 public:
 
-
 	/* Matriz D
 	 * |  0    0    0  1|
 	 * |  d³   d²   d  0|
@@ -17,26 +16,26 @@ public:
 	 * | 6d³   0    0  0|
 	 */
 	static Matriz matrizD(double d) {
-		Matriz D = Matriz(4,4);
-		D(0,0) = (double) 0;
-		D(1,0) = (double) pow(d, 3);
-		D(2,0) = (double) (6 * pow(d, 3));
-		D(3,0) = (double) (6 * pow(d, 3));
+		Matriz D = Matriz(4, 4);
+		D(0, 0) = (double) 0;
+		D(1, 0) = (double) pow(d, 3);
+		D(2, 0) = (double) (6 * pow(d, 3));
+		D(3, 0) = (double) (6 * pow(d, 3));
 
-		D(0,1) = (double) 0;
-		D(1,1) = (double) pow(d, 2);
-		D(2,1) = (double) (2 * pow(d, 2));
-		D(3,1) = (double) 0;
+		D(0, 1) = (double) 0;
+		D(1, 1) = (double) pow(d, 2);
+		D(2, 1) = (double) (2 * pow(d, 2));
+		D(3, 1) = (double) 0;
 
-		D(0,2) = (double) 0;
-		D(1,2) = (double) d;
-		D(2,2) = (double) 0;
-		D(3,2) = (double) 0;
+		D(0, 2) = (double) 0;
+		D(1, 2) = (double) d;
+		D(2, 2) = (double) 0;
+		D(3, 2) = (double) 0;
 
-		D(0,3) = (double) 1;
-		D(1,3) = (double) 0;
-		D(2,3) = (double) 0;
-		D(3,3) = (double) 0;
+		D(0, 3) = (double) 1;
+		D(1, 3) = (double) 0;
+		D(2, 3) = (double) 0;
+		D(3, 3) = (double) 0;
 
 		return D;
 	}
@@ -48,57 +47,57 @@ public:
 	 *       | 1   4  1  0|   | 1/6   2/3   1/6  0  |
 	 */
 	static Matriz matrizBSpline() {
-		Matriz bspline = Matriz(4,4);
-		bspline(0,0) = (double)-1/6;
-		bspline(1,0) = (double)1/2;
-		bspline(2,0) = (double)-1/2;
-		bspline(3,0) = (double)1/6;
+		Matriz bspline = Matriz(4, 4);
+		bspline(0, 0) = (double) -1 / 6;
+		bspline(1, 0) = (double) 1 / 2;
+		bspline(2, 0) = (double) -1 / 2;
+		bspline(3, 0) = (double) 1 / 6;
 
-		bspline(0,1) = (double)1/2;
-		bspline(1,1) = (double)-1;
-		bspline(2,1) = (double)0;
-		bspline(3,1) = (double)2/3;
+		bspline(0, 1) = (double) 1 / 2;
+		bspline(1, 1) = (double) -1;
+		bspline(2, 1) = (double) 0;
+		bspline(3, 1) = (double) 2 / 3;
 
-		bspline(0,2) = (double)-1/2;
-		bspline(1,2) = (double)1/2;
-		bspline(2,2) = (double)1/2;
-		bspline(3,2) = (double)1/6;
+		bspline(0, 2) = (double) -1 / 2;
+		bspline(1, 2) = (double) 1 / 2;
+		bspline(2, 2) = (double) 1 / 2;
+		bspline(3, 2) = (double) 1 / 6;
 
-		bspline(0,3) = (double)1/6;
-		bspline(1,3) = (double)0;
-		bspline(2,3) = (double)0;
-		bspline(3,3) = (double)0;
+		bspline(0, 3) = (double) 1 / 6;
+		bspline(1, 3) = (double) 0;
+		bspline(2, 3) = (double) 0;
+		bspline(3, 3) = (double) 0;
 
 		return bspline;
 	}
 
 	/* Matriz de Bezier
-		 * |-1   3 -3  1|
-		 * | 3  -6  3  0|
-		 * |-3   3  0  0|
-		 * | 1   0  0  0|
-		 */
+	 * |-1   3 -3  1|
+	 * | 3  -6  3  0|
+	 * |-3   3  0  0|
+	 * | 1   0  0  0|
+	 */
 	static Matriz matrizBezier() {
-		Matriz bezier = Matriz(4,4);
-		bezier(0,0) = -1;
-		bezier(1,0) = 3;
-		bezier(2,0) = -3;
-		bezier(3,0) = 1;
+		Matriz bezier = Matriz(4, 4);
+		bezier(0, 0) = -1;
+		bezier(1, 0) = 3;
+		bezier(2, 0) = -3;
+		bezier(3, 0) = 1;
 
-		bezier(0,1) = 3;
-		bezier(1,1) = -6;
-		bezier(2,1) = 3;
-		bezier(3,1) = 0;
+		bezier(0, 1) = 3;
+		bezier(1, 1) = -6;
+		bezier(2, 1) = 3;
+		bezier(3, 1) = 0;
 
-		bezier(0,2) = -3;
-		bezier(1,2) = 3;
-		bezier(2,2) = 0;
-		bezier(3,2) = 0;
+		bezier(0, 2) = -3;
+		bezier(1, 2) = 3;
+		bezier(2, 2) = 0;
+		bezier(3, 2) = 0;
 
-		bezier(0,3) = 1;
-		bezier(1,3) = 0;
-		bezier(2,3) = 0;
-		bezier(3,3) = 0;
+		bezier(0, 3) = 1;
+		bezier(1, 3) = 0;
+		bezier(2, 3) = 0;
+		bezier(3, 3) = 0;
 
 		return bezier;
 	}
@@ -106,15 +105,14 @@ public:
 	// Matriz T
 	// |t^3   t^2   t    1|
 	static Matriz matrizT(double t) {
-		Matriz T = Matriz(1,4);
-		T(0,0) = pow(t, 3);
-		T(0,1) = pow(t, 2);
-		T(0,2) = t;
-		T(0,3) = 1.0;
+		Matriz T = Matriz(1, 4);
+		T(0, 0) = pow(t, 3);
+		T(0, 1) = pow(t, 2);
+		T(0, 2) = t;
+		T(0, 3) = 1.0;
 
 		return T;
 	}
-
 
 	//-------------------------------------------------------------
 	//---------------- Operações básicas em 2D --------------------
@@ -188,6 +186,7 @@ public:
 		escalonamento3d(2, 2) = fator.getZ();
 		return escalonamento3d;
 	}
+
 	//  -------- Rotação EIXO X -------
 	// | 1     0       0     0 |
 	// | 0   cos(Θ)  sen(Θ)  0 |
@@ -202,6 +201,7 @@ public:
 		rotacao3dx(2, 2) = cos(anguloRadianos);
 		return rotacao3dx;
 	}
+
 	//  -------- Rotação EIXO Y -------
 	// | cos(Θ)  0   -sen(Θ)   0 |
 	// |   0     1      0      0 |
@@ -230,7 +230,6 @@ public:
 		rotacao3dy(1, 1) = cos(anguloRadianos);
 		return rotacao3dy;
 	}
-
 
 	static double grausParaRadianos(double anguloGraus) {
 		return anguloGraus * PI / 180;

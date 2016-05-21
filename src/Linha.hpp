@@ -69,9 +69,6 @@ public:
 		int outcode1 = getcode(c1);
 		int outcode2 = getcode(c2);
 
-		std::cout << outcode1 << std::endl;
-		std::cout << outcode2 << std::endl;
-
 		bool aceita = false;
 
 		//decides if line is to be drawn
@@ -121,7 +118,7 @@ public:
 	std::vector<Coordenada> liangBarsky() {
 		Coordenada c1 = coordenadasTela[0];
 		Coordenada c2 = coordenadasTela[1];
-		std::cout<<"oi3"<<endl;
+
 		double dx = c2._x - c1._x;
 		double dy = c2._y - c1._y;
 

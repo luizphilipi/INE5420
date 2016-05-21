@@ -10,9 +10,6 @@
 #include <algorithm>
 #include <map>
 
-
-
-
 class DescritorObj {
 public:
 	DescritorObj() {
@@ -136,30 +133,27 @@ public:
 				} else if (!linha.find("f")) {
 					obj3D = true;
 					std::vector<Coordenada> coordenadas = coordenadaObj3D(linha,
-						listaCoords);
+							listaCoords);
 					//são exatamente 3 coords p/ cada face
 					coords3D.push_back(coordenadas[0]);
 					coords3D.push_back(coordenadas[1]);
 					coords3D.push_back(coordenadas[2]);
-				}
-				else if (!linha.find("cstype bezier")) {
+				} else if (!linha.find("cstype bezier")) {
 					bezier = true;
-				}
-				else if (!linha.find("curv")) {
+				} else if (!linha.find("curv")) {
 					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
-														listaCoords);
-					if(bezier){
+							listaCoords);
+					if (bezier) {
 						obj = new Bezier(nome, coordenadas);
 						bezier = false;
-					}
-					else{
+					} else {
 						obj = new BSpline(nome, coordenadas);
 					}
-				m->adicionaObj(obj);
+					m->adicionaObj(obj);
 				}
 			}
 			arquivo.close();
-			if(obj3D){
+			if (obj3D) {
 				obj = new Objeto3D(caminho, coords3D);
 				m->adicionaObj(obj);
 			}
@@ -203,13 +197,13 @@ public:
 	}
 
 	std::vector<Coordenada> coordenadaObj3D(string linha,
-				std::map<int, Coordenada> listaCoords) {
+			std::map<int, Coordenada> listaCoords) {
 		std::vector<Coordenada> coordenadas;
 		std::vector<std::string> pontos = split(linha, " ");
 		for (int i = 1; i < pontos.size(); i++) {
 			std::vector<std::string> aux = split(pontos[i].c_str(), "/");
 			int posicao = atoi(aux[0].c_str());
-			if(aux.size()>2){
+			if (aux.size() > 2) {
 				posicao = atoi(aux[1].c_str());
 			}
 			coordenadas.push_back(listaCoords[posicao]);
@@ -236,7 +230,7 @@ public:
 	}
 
 	std::map<int, Coordenada> leCoordenadas(std::string caminho) {
-		setlocale (LC_ALL,"C");
+		setlocale(LC_ALL, "C");
 		std::map<int, Coordenada> coords;
 		std::string linha;
 		int posicao = 1;
