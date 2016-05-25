@@ -64,6 +64,12 @@ public:
 		displayFile->adiciona(bspline);
 	}
 
+	void adicionaObj3D(std::string nome, std::vector<Coordenada> coords) {
+		Objeto3D *obj3d = new Objeto3D(nome, coords);
+		normalizar(obj3d);
+		displayFile->adiciona(obj3d);
+	}
+
 	ListaEnc<ObjetoGrafico*>* getObjetos() {
 		return displayFile;
 	}

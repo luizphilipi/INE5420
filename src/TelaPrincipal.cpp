@@ -77,6 +77,11 @@ void atualizar_tela(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 void adicionar_coord_bspline(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->adicionarCoordenadaBSpline();
 }
+
+void adicionar_linha_obj3d(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->adicionarCoordenadaObjeto3D();
+}
+
 }
 
 
@@ -154,7 +159,10 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(G_OBJECT(botaoAdicionarCoordBSpline), "clicked",
 		G_CALLBACK(adicionar_coord_bspline), this);
 
-
+	GtkWidget *botaoAdicionarLinhaObj3D = GTK_WIDGET(
+				gtk_builder_get_object(builder, BOTAO_ADICIONAR_LINHA_OBJ3D));
+		g_signal_connect(G_OBJECT(botaoAdicionarLinhaObj3D), "clicked",
+			G_CALLBACK(adicionar_linha_obj3d), this);
 
 	// FAZ COM QUE NÃO DELETE A POP-UP, SÓ ESCONDA
 	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET(
@@ -334,11 +342,12 @@ void TelaPrincipal::adicionarObjeto() {
 	}
 		break;
 
-	case 4: {
+	case 4:
 		mundo->adicionaBSpline(nomeObjeto, coordenadas);
 		coordenadas = vector<Coordenada>();
-	}
 		break;
+	case 5:
+		mundo->adicionaObj3D(nomeObjeto, coordenadas);
 	}
 	adicionarObjetoNaLista(nomeObjeto);
 
@@ -355,53 +364,63 @@ void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
 	gtk_list_store_set(listStoreObjetos, &iter, 0, nomeObjeto, -1);
 }
 
+void TelaPrincipal::desenharPonto(cairo_t *cr, Coordenada coord){
+	cairo_move_to(cr, coord._x, coord._y);
+	cairo_arc(cr, coord._x, coord._y, 1.0, 0.0, 2.0 * 3.14);
+	cairo_fill_preserve(cr);
+}
+
+void TelaPrincipal::desenharLinha(cairo_t *cr, Coordenada coord1, Coordenada coord2){
+	cairo_line_to(cr, coord1._x, coord1._y);
+	cairo_line_to(cr, coord2._x, coord2._y);
+}
+
+//void TelaPrincipal::desenharQuadrado(cairo_t *cr, Coordenada coord1, Coordenada coord2,
+//		Coordenada coord3, Coordenada coord4){
+//	cairo_move_to(cr, coord1._x, coord1._y);
+//	cairo_line_to(cr, coord1._x, coord1._y);
+//	cairo_line_to(cr, coord2._x, coord2._y);
+//	cairo_line_to(cr, coord3._x, coord3._y);
+//	cairo_line_to(cr, coord4._x, coord4._y);
+//	cairo_close_path(cr);
+//	double blue = ((double)rand() / (double)(RAND_MAX));
+//	cairo_set_source_rgb(cr, 0, 0, blue);
+//	cairo_fill(cr);
+//	cairo_stroke(cr);
+//}
+
 void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 	vector<Coordenada> coords = mapearNoMundo(obj);
 	if (coords.size() > 0) {
 		clock_t begin = clock();
-
-		if (obj->getTipo() == PONTO) {
-			cairo_move_to(cr, coords[0]._x, coords[0]._y);
-			cairo_arc(cr, coords[0]._x, coords[0]._y, 1.0, 0.0, 2.0 * 3.14);
-			cairo_fill_preserve(cr);
-			cairo_stroke(cr);
-		} else if(obj->getTipo() == LINHA || obj->getTipo() == POLIGONO
-				|| obj->getTipo() == BEZIER || obj->getTipo() == BSPLINE) {
-			cairo_move_to(cr, coords[0]._x, coords[0]._y);
-			cairo_line_to(cr, coords[0]._x, coords[0]._y);
-
-			for (auto &coord : coords) {
-				cairo_line_to(cr, coord._x, coord._y);
-			}
-			if (obj->isPreenchido()) {
-				GdkRGBA cor = obj->getCor();
-				cairo_set_source_rgb(cr, cor.red, cor.green, cor.blue);
-				cairo_fill(cr);
-			} else {
-				cairo_set_source_rgb(cr, 0, 0, 0);
-			}
-
-			if (obj->getTipo() != BEZIER && obj->getTipo() != BSPLINE) {
+		cairo_set_source_rgb(cr, 0, 0, 0);
+		switch (obj->getTipo()){
+			case PONTO:
+				desenharPonto(cr, coords[0]);
+				break;
+			case POLIGONO:
+				cairo_move_to(cr, coords[0]._x, coords[0]._y);
+				for(int i = 0; i<coords.size()-1; i++){
+					desenharLinha(cr, coords[i], coords[i+1]);
+				}
+				if (obj->isPreenchido()) {
+					GdkRGBA cor = obj->getCor();
+					cairo_set_source_rgb(cr, (double)cor.red, (double)cor.green, (double)cor.blue);
+					cairo_fill(cr);
+				}
 				cairo_close_path(cr);
-			}
-			cairo_stroke(cr);
+				break;
+			case LINHA: case BEZIER: case BSPLINE: case OBJETO3D:
+				for(int i = 0; i<coords.size()-1; i++){
+					desenharLinha(cr, coords[i], coords[i+1]);
+				}
 		}
-		if(obj->getTipo() == OBJETO3D){
-			for(int i = 0; i<coords.size(); i+=3){
-				cairo_move_to(cr, coords[i]._x, coords[i]._y);
-				cairo_line_to(cr, coords[i]._x, coords[i]._y);
-				cairo_line_to(cr, coords[i+1]._x, coords[i+1]._y);
-				cairo_line_to(cr, coords[i+2]._x, coords[i+2]._y);
-				cairo_stroke(cr);
-			}
-		}
-
+		cairo_stroke(cr);
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 		/*
 		std::cout << "Desenhando objeto " << obj->getNome() << " em: "
 				<< elapsed_secs << std::endl;
-
 				*/
 	}
 }
@@ -721,4 +740,20 @@ void TelaPrincipal::adicionarCoordenadaPoligono() {
 			);
 	coordenadas.push_back(pol);
 	pol.print();
+}
+
+void TelaPrincipal::adicionarCoordenadaObjeto3D() {
+	GtkSpinButton *spin3DX1 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_X1 ));
+	GtkSpinButton *spin3DY1 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_Y1 ));
+	GtkSpinButton *spin3DZ1 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_Z1 ));
+	Coordenada c1 = Coordenada (
+			gtk_spin_button_get_value(spin3DX1),
+			gtk_spin_button_get_value(spin3DY1),
+			gtk_spin_button_get_value(spin3DZ1)
+			);
+	c1.print();
+	coordenadas.push_back(c1);
 }

@@ -23,6 +23,10 @@ public:
 
 	void adicionarObjeto();
 
+	void desenharPonto(cairo_t *cr, Coordenada coords);
+
+	void desenharLinha(cairo_t *cr, Coordenada coord1, Coordenada coord2);
+
 	void desenhar(cairo_t *cr, ObjetoGrafico *obj);
 
 	void desenharTudo(cairo_t *cr);
@@ -54,6 +58,8 @@ public:
 	void adicionarCoordenadaPoligono();
 
 	void adicionarCoordenadaBSpline();
+
+	void adicionarCoordenadaObjeto3D();
 
 	void abrirMundo();
 
