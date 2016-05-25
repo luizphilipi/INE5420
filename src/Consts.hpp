@@ -51,6 +51,9 @@
 #define SPIN_3D_X1 "spin3DX1"
 #define SPIN_3D_Y1 "spin3DY1"
 #define SPIN_3D_Z1 "spin3DZ1"
+#define SPIN_3D_X2 "spin3DX2"
+#define SPIN_3D_Y2 "spin3DY2"
+#define SPIN_3D_Z2 "spin3DZ2"
 
 // botões de movimentação
 #define MOVE_UP_BTN "btnUp"

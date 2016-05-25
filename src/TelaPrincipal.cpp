@@ -410,8 +410,13 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 				}
 				cairo_close_path(cr);
 				break;
-			case LINHA: case BEZIER: case BSPLINE: case OBJETO3D:
+			case LINHA: case BEZIER: case BSPLINE:
 				for(int i = 0; i<coords.size()-1; i++){
+					desenharLinha(cr, coords[i], coords[i+1]);
+				}
+				break;
+			case OBJETO3D:
+				for(int i = 0; i<coords.size()-1; i+=2){
 					desenharLinha(cr, coords[i], coords[i+1]);
 				}
 		}
@@ -755,5 +760,18 @@ void TelaPrincipal::adicionarCoordenadaObjeto3D() {
 			gtk_spin_button_get_value(spin3DZ1)
 			);
 	c1.print();
+	GtkSpinButton *spin3DX2 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_X2));
+	GtkSpinButton *spin3DY2 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_Y2 ));
+	GtkSpinButton *spin3DZ2 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_Z2 ));
+	Coordenada c2 = Coordenada (
+			gtk_spin_button_get_value(spin3DX2),
+			gtk_spin_button_get_value(spin3DY2),
+			gtk_spin_button_get_value(spin3DZ2)
+			);
+	c2.print();
 	coordenadas.push_back(c1);
+	coordenadas.push_back(c2);
 }
