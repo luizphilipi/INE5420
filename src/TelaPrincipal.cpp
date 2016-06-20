@@ -480,29 +480,29 @@ void TelaPrincipal::moverCima() {
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->moverCima(gtk_spin_button_get_value(inputPasso));
 
-	vector<Coordenada> c;
-	c.push_back(Coordenada(-100, 300, 100));
-	c.push_back(Coordenada(0, 300, 100));
-	c.push_back(Coordenada(100, 300, 100));
-	c.push_back(Coordenada(200, 300, 100));
-
-	c.push_back(Coordenada(-100, 300, 200));
-	c.push_back(Coordenada(0, -200, 200));
-	c.push_back(Coordenada(100, -200, 200));
-	c.push_back(Coordenada(200, 300, 200));
-
-	c.push_back(Coordenada(-100, 300, 300));
-	c.push_back(Coordenada(0, -200, 300));
-	c.push_back(Coordenada(100, -200, 300));
-	c.push_back(Coordenada(200, 300, 300));
-
-	c.push_back(Coordenada(-100, 300, 400));
-	c.push_back(Coordenada(0, 300, 400));
-	c.push_back(Coordenada(100, 300, 400));
-	c.push_back(Coordenada(200, 300, 400));
-
-	mundo->adicionaSuperficieBezier("teste", c);
-	adicionarObjetoNaLista("teste");
+//	vector<Coordenada> c;
+//	c.push_back(Coordenada(-100, 300, 100));
+//	c.push_back(Coordenada(0, 300, 100));
+//	c.push_back(Coordenada(100, 300, 100));
+//	c.push_back(Coordenada(200, 300, 100));
+//
+//	c.push_back(Coordenada(-100, 300, 200));
+//	c.push_back(Coordenada(0, -200, 200));
+//	c.push_back(Coordenada(100, -200, 200));
+//	c.push_back(Coordenada(200, 300, 200));
+//
+//	c.push_back(Coordenada(-100, 300, 300));
+//	c.push_back(Coordenada(0, -200, 300));
+//	c.push_back(Coordenada(100, -200, 300));
+//	c.push_back(Coordenada(200, 300, 300));
+//
+//	c.push_back(Coordenada(-100, 300, 400));
+//	c.push_back(Coordenada(0, 300, 400));
+//	c.push_back(Coordenada(100, 300, 400));
+//	c.push_back(Coordenada(200, 300, 400));
+//
+//	mundo->adicionaSuperficieBezier("teste", c);
+//	adicionarObjetoNaLista("teste");
 
 	atualizarTela();
 }
