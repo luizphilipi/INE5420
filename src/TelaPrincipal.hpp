@@ -27,6 +27,8 @@ public:
 
 	void desenharLinha(cairo_t *cr, Coordenada coord1, Coordenada coord2);
 
+	void desenharLinhaPoligono(cairo_t *cr, Coordenada coord1, Coordenada coord2);
+
 	void desenhar(cairo_t *cr, ObjetoGrafico *obj);
 
 	void desenharTudo(cairo_t *cr);

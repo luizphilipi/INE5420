@@ -129,42 +129,13 @@ public:
 	}
 
 	void UpdateForwardDiffMatrices() {
-		DDx(0, 0) = DDx(0, 0) + DDx(1, 0);
-		DDx(0, 1) = DDx(0, 1) + DDx(1, 1);
-		DDx(0, 2) = DDx(0, 2) + DDx(1, 2);
-		DDx(0, 3) = DDx(0, 3) + DDx(1, 3);
-		DDy(0, 0) = DDy(0, 0) + DDy(1, 0);
-		DDy(0, 1) = DDy(0, 1) + DDy(1, 1);
-		DDy(0, 2) = DDy(0, 2) + DDy(1, 2);
-		DDy(0, 3) = DDy(0, 3) + DDy(1, 3);
-		DDz(0, 0) = DDz(0, 0) + DDz(1, 0);
-		DDz(0, 1) = DDz(0, 1) + DDz(1, 1);
-		DDz(0, 2) = DDz(0, 2) + DDz(1, 2);
-		DDz(0, 3) = DDz(0, 3) + DDz(1, 3);
-		DDx(1, 0) = DDx(1, 0) + DDx(2, 0);
-		DDx(1, 1) = DDx(1, 1) + DDx(2, 1);
-		DDx(1, 2) = DDx(1, 2) + DDx(2, 2);
-		DDx(1, 3) = DDx(1, 3) + DDx(2, 3);
-		DDy(1, 0) = DDy(1, 0) + DDy(2, 0);
-		DDy(1, 1) = DDy(1, 1) + DDy(2, 1);
-		DDy(1, 2) = DDy(1, 2) + DDy(2, 2);
-		DDy(1, 3) = DDy(1, 3) + DDy(2, 3);
-		DDz(1, 0) = DDz(1, 0) + DDz(2, 0);
-		DDz(1, 1) = DDz(1, 1) + DDz(2, 1);
-		DDz(1, 2) = DDz(1, 2) + DDz(2, 2);
-		DDz(1, 3) = DDz(1, 3) + DDz(2, 3);
-		DDx(2, 0) = DDx(2, 0) + DDx(3, 0);
-		DDx(2, 1) = DDx(2, 1) + DDx(3, 1);
-		DDx(2, 2) = DDx(2, 2) + DDx(3, 2);
-		DDx(2, 3) = DDx(2, 3) + DDx(3, 3);
-		DDy(2, 0) = DDy(2, 0) + DDy(3, 0);
-		DDy(2, 1) = DDy(2, 1) + DDy(3, 1);
-		DDy(2, 2) = DDy(2, 2) + DDy(3, 2);
-		DDy(2, 3) = DDy(2, 3) + DDy(3, 3);
-		DDz(2, 0) = DDz(2, 0) + DDz(3, 0);
-		DDz(2, 1) = DDz(2, 1) + DDz(3, 1);
-		DDz(2, 2) = DDz(2, 2) + DDz(3, 2);
-		DDz(2, 3) = DDz(2, 3) + DDz(3, 3);
+		for(int i=0; i<3;i++){
+			for(int j=0;j<4; j++){
+				DDx(i, j) = DDx(i, j) + DDx(i+1, j);
+				DDy(i, j) = DDy(i, j) + DDy(i+1, j);
+				DDz(i, j) = DDz(i, j) + DDz(i+1, j);
+			}
+		}
 	}
 
 	void regeneratePath(int ns, int nt) {

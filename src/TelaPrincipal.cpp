@@ -368,11 +368,19 @@ void TelaPrincipal::desenharPonto(cairo_t *cr, Coordenada coord) {
 	cairo_fill_preserve(cr);
 }
 
-void TelaPrincipal::desenharLinha(cairo_t *cr, Coordenada coord1,
+void TelaPrincipal::desenharLinhaPoligono(cairo_t *cr, Coordenada coord1,
 		Coordenada coord2) {
 	cairo_line_to(cr, coord1._x, coord1._y);
 	cairo_line_to(cr, coord2._x, coord2._y);
 }
+
+void TelaPrincipal::desenharLinha(cairo_t *cr, Coordenada coord1,
+		Coordenada coord2) {
+	cairo_move_to(cr, coord1._x, coord1._y);
+	cairo_line_to(cr, coord1._x, coord1._y);
+	cairo_line_to(cr, coord2._x, coord2._y);
+}
+
 
 //void TelaPrincipal::desenharQuadrado(cairo_t *cr, Coordenada coord1, Coordenada coord2,
 //		Coordenada coord3, Coordenada coord4){
@@ -400,7 +408,7 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 		case POLIGONO:
 			cairo_move_to(cr, coords[0]._x, coords[0]._y);
 			for (int i = 0; i < coords.size() - 1; i++) {
-				desenharLinha(cr, coords[i], coords[i + 1]);
+				desenharLinhaPoligono(cr, coords[i], coords[i + 1]);
 			}
 			if (obj->isPreenchido()) {
 				GdkRGBA cor = obj->getCor();
@@ -413,10 +421,22 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 		case LINHA:
 		case BEZIER:
 		case BSPLINE:
-		case SUPERFICIE_BEZIER:
 			for (int i = 0; i < coords.size() - 1; i++) {
 				desenharLinha(cr, coords[i], coords[i + 1]);
 			}
+			break;
+		case SUPERFICIE_BEZIER:
+			//2*(nt*ns) = coords.size() -- contando que nt = ns então 2(x^2) = coords.size()
+			//sqrt(coords.size/2) = nt = ns
+		{
+			int x = (int) (sqrt(coords.size()/2));
+			for (int i = 0; i < coords.size(); i++) {
+				if(i%x==x-1 && i>0){
+					i++;
+				}
+				desenharLinha(cr, coords[i], coords[i + 1]);
+			}
+		}
 			break;
 		case OBJETO3D:
 			for (int i = 0; i < coords.size() - 1; i += 2) {
@@ -480,29 +500,6 @@ void TelaPrincipal::moverCima() {
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->moverCima(gtk_spin_button_get_value(inputPasso));
 
-//	vector<Coordenada> c;
-//	c.push_back(Coordenada(-100, 300, 100));
-//	c.push_back(Coordenada(0, 300, 100));
-//	c.push_back(Coordenada(100, 300, 100));
-//	c.push_back(Coordenada(200, 300, 100));
-//
-//	c.push_back(Coordenada(-100, 300, 200));
-//	c.push_back(Coordenada(0, -200, 200));
-//	c.push_back(Coordenada(100, -200, 200));
-//	c.push_back(Coordenada(200, 300, 200));
-//
-//	c.push_back(Coordenada(-100, 300, 300));
-//	c.push_back(Coordenada(0, -200, 300));
-//	c.push_back(Coordenada(100, -200, 300));
-//	c.push_back(Coordenada(200, 300, 300));
-//
-//	c.push_back(Coordenada(-100, 300, 400));
-//	c.push_back(Coordenada(0, 300, 400));
-//	c.push_back(Coordenada(100, 300, 400));
-//	c.push_back(Coordenada(200, 300, 400));
-//
-//	mundo->adicionaSuperficieBezier("teste", c);
-//	adicionarObjetoNaLista("teste");
 
 	atualizarTela();
 }
@@ -567,6 +564,31 @@ void TelaPrincipal::zoomOut() {
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->zoomOut(gtk_spin_button_get_value(inputPasso));
+
+	vector<Coordenada> c;
+		c.push_back(Coordenada(-100, 300, 100));
+		c.push_back(Coordenada(0, 300, 100));
+		c.push_back(Coordenada(100, 300, 100));
+		c.push_back(Coordenada(200, 300, 100));
+
+		c.push_back(Coordenada(-100, 300, 200));
+		c.push_back(Coordenada(0, -200, 200));
+		c.push_back(Coordenada(100, -200, 200));
+		c.push_back(Coordenada(200, 300, 200));
+
+		c.push_back(Coordenada(-100, 300, 300));
+		c.push_back(Coordenada(0, -200, 300));
+		c.push_back(Coordenada(100, -200, 300));
+		c.push_back(Coordenada(200, 300, 300));
+
+		c.push_back(Coordenada(-100, 300, 400));
+		c.push_back(Coordenada(0, 300, 400));
+		c.push_back(Coordenada(100, 300, 400));
+		c.push_back(Coordenada(200, 300, 400));
+
+		mundo->adicionaSuperficieBezier("teste", c);
+		adicionarObjetoNaLista("teste");
+
 	atualizarTela();
 }
 
