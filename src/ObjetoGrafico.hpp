@@ -11,7 +11,7 @@
 using namespace std;
 
 enum tipoGeometria {
-	PONTO, LINHA, POLIGONO, BEZIER, BSPLINE, OBJETO3D
+	PONTO, LINHA, POLIGONO, BEZIER, BSPLINE, OBJETO3D, SUPERFICIE_BEZIER
 };
 
 class ObjetoGrafico {

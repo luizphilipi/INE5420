@@ -78,12 +78,11 @@ void adicionar_coord_bspline(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->adicionarCoordenadaBSpline();
 }
 
-void adicionar_linha_obj3d(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
-	telaPrincipal->adicionarCoordenadaObjeto3D();
+void adicionar_superficie_bezier(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->adicionarCoordenadaSuperficieBezier();
 }
 
 }
-
 
 void TelaPrincipal::atualizarTela() {
 	GtkWidget *areaDesenho = GTK_WIDGET(
@@ -147,7 +146,6 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(G_OBJECT(botaoAdicionarObjeto), "clicked",
 			G_CALLBACK(adicionar_objeto), this);
 
-
 	//signals novas coordenadas
 	GtkWidget *addCoordButton = GTK_WIDGET(
 			gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_POLIGONO));
@@ -157,12 +155,12 @@ TelaPrincipal::TelaPrincipal() {
 	GtkWidget *botaoAdicionarCoordBSpline = GTK_WIDGET(
 			gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_BSPLINE));
 	g_signal_connect(G_OBJECT(botaoAdicionarCoordBSpline), "clicked",
-		G_CALLBACK(adicionar_coord_bspline), this);
+			G_CALLBACK(adicionar_coord_bspline), this);
 
-	GtkWidget *botaoAdicionarLinhaObj3D = GTK_WIDGET(
-				gtk_builder_get_object(builder, BOTAO_ADICIONAR_LINHA_OBJ3D));
-		g_signal_connect(G_OBJECT(botaoAdicionarLinhaObj3D), "clicked",
-			G_CALLBACK(adicionar_linha_obj3d), this);
+	GtkWidget *botaoAdicionarBSurface = GTK_WIDGET(
+			gtk_builder_get_object(builder, BOTAO_ADD_BEZIER_SURFACE));
+	g_signal_connect(G_OBJECT(botaoAdicionarBSurface), "clicked",
+			G_CALLBACK(adicionar_superficie_bezier), this);
 
 	// FAZ COM QUE NÃO DELETE A POP-UP, SÓ ESCONDA
 	GtkWidget *modalAdicionarCoordenadas = GTK_WIDGET(
@@ -256,11 +254,10 @@ void TelaPrincipal::adicionarObjeto() {
 				gtk_builder_get_object( builder, SPIN_PONTO_Y ));
 		GtkSpinButton *spinPontoZ = GTK_SPIN_BUTTON(
 				gtk_builder_get_object( builder, SPIN_PONTO_Z ));
-		mundo->adicionaPonto(nomeObjeto, Coordenada(
-				gtk_spin_button_get_value(spinPontoX),
-				gtk_spin_button_get_value(spinPontoY),
-				gtk_spin_button_get_value(spinPontoZ))
-				);
+		mundo->adicionaPonto(nomeObjeto,
+				Coordenada(gtk_spin_button_get_value(spinPontoX),
+						gtk_spin_button_get_value(spinPontoY),
+						gtk_spin_button_get_value(spinPontoZ)));
 	}
 		break;
 	case 1: {
@@ -270,8 +267,7 @@ void TelaPrincipal::adicionarObjeto() {
 				gtk_builder_get_object( builder, SPIN_LINHA_Y1 ));
 		GtkSpinButton *spinLinhaZ1 = GTK_SPIN_BUTTON(
 				gtk_builder_get_object( builder, SPIN_LINHA_Z1 ));
-		Coordenada coord1 = Coordenada(
-				gtk_spin_button_get_value(spinLinhaX1),
+		Coordenada coord1 = Coordenada(gtk_spin_button_get_value(spinLinhaX1),
 				gtk_spin_button_get_value(spinLinhaY1),
 				gtk_spin_button_get_value(spinLinhaZ1));
 
@@ -281,8 +277,7 @@ void TelaPrincipal::adicionarObjeto() {
 				gtk_builder_get_object( builder, SPIN_LINHA_Y2 ));
 		GtkSpinButton *spinLinhaZ2 = GTK_SPIN_BUTTON(
 				gtk_builder_get_object( builder, SPIN_LINHA_Z2 ));
-		Coordenada coord2 = Coordenada(
-				gtk_spin_button_get_value(spinLinhaX2),
+		Coordenada coord2 = Coordenada(gtk_spin_button_get_value(spinLinhaX2),
 				gtk_spin_button_get_value(spinLinhaY2),
 				gtk_spin_button_get_value(spinLinhaZ2));
 
@@ -323,7 +318,8 @@ void TelaPrincipal::adicionarObjeto() {
 			int x = 0;
 			int y = 0;
 			int z = 0;
-			for (l2 = children2; j < g_list_length(children2); l2 = l2->next, ++j) {
+			for (l2 = children2; j < g_list_length(children2);
+					l2 = l2->next, ++j) {
 				if (j == 1) {
 					GtkSpinButton *inputX = GTK_SPIN_BUTTON(l2->data);
 					x = gtk_spin_button_get_value(inputX);
@@ -347,7 +343,9 @@ void TelaPrincipal::adicionarObjeto() {
 		coordenadas = vector<Coordenada>();
 		break;
 	case 5:
-		mundo->adicionaObj3D(nomeObjeto, coordenadas);
+		mundo->adicionaSuperficieBezier(nomeObjeto, coordenadas);
+		coordenadas = vector<Coordenada>();
+		break;
 	}
 	adicionarObjetoNaLista(nomeObjeto);
 
@@ -364,13 +362,14 @@ void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
 	gtk_list_store_set(listStoreObjetos, &iter, 0, nomeObjeto, -1);
 }
 
-void TelaPrincipal::desenharPonto(cairo_t *cr, Coordenada coord){
+void TelaPrincipal::desenharPonto(cairo_t *cr, Coordenada coord) {
 	cairo_move_to(cr, coord._x, coord._y);
 	cairo_arc(cr, coord._x, coord._y, 1.0, 0.0, 2.0 * 3.14);
 	cairo_fill_preserve(cr);
 }
 
-void TelaPrincipal::desenharLinha(cairo_t *cr, Coordenada coord1, Coordenada coord2){
+void TelaPrincipal::desenharLinha(cairo_t *cr, Coordenada coord1,
+		Coordenada coord2) {
 	cairo_line_to(cr, coord1._x, coord1._y);
 	cairo_line_to(cr, coord2._x, coord2._y);
 }
@@ -394,39 +393,44 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 	if (coords.size() > 0) {
 		clock_t begin = clock();
 		cairo_set_source_rgb(cr, 0, 0, 0);
-		switch (obj->getTipo()){
-			case PONTO:
-				desenharPonto(cr, coords[0]);
-				break;
-			case POLIGONO:
-				cairo_move_to(cr, coords[0]._x, coords[0]._y);
-				for(int i = 0; i<coords.size()-1; i++){
-					desenharLinha(cr, coords[i], coords[i+1]);
-				}
-				if (obj->isPreenchido()) {
-					GdkRGBA cor = obj->getCor();
-					cairo_set_source_rgb(cr, (double)cor.red, (double)cor.green, (double)cor.blue);
-					cairo_fill(cr);
-				}
-				cairo_close_path(cr);
-				break;
-			case LINHA: case BEZIER: case BSPLINE:
-				for(int i = 0; i<coords.size()-1; i++){
-					desenharLinha(cr, coords[i], coords[i+1]);
-				}
-				break;
-			case OBJETO3D:
-				for(int i = 0; i<coords.size()-1; i+=2){
-					desenharLinha(cr, coords[i], coords[i+1]);
-				}
+		switch (obj->getTipo()) {
+		case PONTO:
+			desenharPonto(cr, coords[0]);
+			break;
+		case POLIGONO:
+			cairo_move_to(cr, coords[0]._x, coords[0]._y);
+			for (int i = 0; i < coords.size() - 1; i++) {
+				desenharLinha(cr, coords[i], coords[i + 1]);
+			}
+			if (obj->isPreenchido()) {
+				GdkRGBA cor = obj->getCor();
+				cairo_set_source_rgb(cr, (double) cor.red, (double) cor.green,
+						(double) cor.blue);
+				cairo_fill(cr);
+			}
+			cairo_close_path(cr);
+			break;
+		case LINHA:
+		case BEZIER:
+		case BSPLINE:
+		case SUPERFICIE_BEZIER:
+			for (int i = 0; i < coords.size() - 1; i++) {
+				desenharLinha(cr, coords[i], coords[i + 1]);
+			}
+			break;
+		case OBJETO3D:
+			for (int i = 0; i < coords.size() - 1; i += 2) {
+				desenharLinha(cr, coords[i], coords[i + 1]);
+			}
+			break;
 		}
 		cairo_stroke(cr);
 		clock_t end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 		/*
-		std::cout << "Desenhando objeto " << obj->getNome() << " em: "
-				<< elapsed_secs << std::endl;
-				*/
+		 std::cout << "Desenhando objeto " << obj->getNome() << " em: "
+		 << elapsed_secs << std::endl;
+		 */
 	}
 }
 
@@ -472,17 +476,35 @@ void TelaPrincipal::fecharPopupAdicionar() {
 }
 
 void TelaPrincipal::moverCima() {
-	clock_t begin = clock();
-
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->moverCima(gtk_spin_button_get_value(inputPasso));
 
-	atualizarTela();
+	vector<Coordenada> c;
+	c.push_back(Coordenada(-100, 300, 100));
+	c.push_back(Coordenada(0, 300, 100));
+	c.push_back(Coordenada(100, 300, 100));
+	c.push_back(Coordenada(200, 300, 100));
 
-	clock_t end = clock();
-	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-	std::cout << "Movendo mundo para cima em: " << elapsed_secs << std::endl;
+	c.push_back(Coordenada(-100, 300, 200));
+	c.push_back(Coordenada(0, -200, 200));
+	c.push_back(Coordenada(100, -200, 200));
+	c.push_back(Coordenada(200, 300, 200));
+
+	c.push_back(Coordenada(-100, 300, 300));
+	c.push_back(Coordenada(0, -200, 300));
+	c.push_back(Coordenada(100, -200, 300));
+	c.push_back(Coordenada(200, 300, 300));
+
+	c.push_back(Coordenada(-100, 300, 400));
+	c.push_back(Coordenada(0, 300, 400));
+	c.push_back(Coordenada(100, 300, 400));
+	c.push_back(Coordenada(200, 300, 400));
+
+	mundo->adicionaSuperficieBezier("teste", c);
+	adicionarObjetoNaLista("teste");
+
+	atualizarTela();
 }
 
 void TelaPrincipal::moverBaixo() {
@@ -593,7 +615,7 @@ void TelaPrincipal::aplicarRotacao() {
 	double angulo = gtk_spin_button_get_value(spinAngulo);
 
 	GtkComboBox *comboBoxRotacao = GTK_COMBO_BOX(
-				gtk_builder_get_object( builder, COMBO_BOX_ROTACAO ));
+			gtk_builder_get_object( builder, COMBO_BOX_ROTACAO ));
 	int index = gtk_combo_box_get_active(comboBoxRotacao);
 
 	if (getObjetoSelecionado() != NULL) {
@@ -603,7 +625,8 @@ void TelaPrincipal::aplicarRotacao() {
 		}
 			break;
 		case 2:
-			mundo->rotacionar(getObjetoSelecionado(), angulo, Coordenada(0, 0), index);
+			mundo->rotacionar(getObjetoSelecionado(), angulo, Coordenada(0, 0),
+					index);
 			break;
 		case 3:
 			GtkSpinButton *spinX = GTK_SPIN_BUTTON(
@@ -633,7 +656,6 @@ std::vector<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 	int x, y;
 
 	std::vector<Coordenada> coordenadas;
-	std::cout << obj->getTipo() << std::endl;
 	std::vector<Coordenada> clipped = obj->clip(radioClippingSelecionado());
 
 	for (auto &coord : clipped) {
@@ -645,11 +667,11 @@ std::vector<Coordenada> TelaPrincipal::mapearNoMundo(ObjetoGrafico *obj) {
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
 	/*
-	std::cout << "Mapeando objeto " << obj->getNome() << " com "
-			<< coordenadas.size() << " pontos em: " << elapsed_secs
-			<< std::endl;
+	 std::cout << "Mapeando objeto " << obj->getNome() << " com "
+	 << coordenadas.size() << " pontos em: " << elapsed_secs
+	 << std::endl;
 
-			*/
+	 */
 	return coordenadas;
 }
 
@@ -714,19 +736,16 @@ int TelaPrincipal::radioClippingSelecionado() {
 	return -1;
 }
 
-
-void TelaPrincipal::adicionarCoordenadaBSpline(){
+void TelaPrincipal::adicionarCoordenadaBSpline() {
 	GtkSpinButton *spinBSplineX = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_BSPLINE_X ));
 	GtkSpinButton *spinBSplineY = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_BSPLINE_Y ));
 	GtkSpinButton *spinBSplineZ = GTK_SPIN_BUTTON(
-		gtk_builder_get_object( builder, SPIN_BSPLINE_Z ));
-	Coordenada bspline = Coordenada (
-			gtk_spin_button_get_value(spinBSplineX),
+			gtk_builder_get_object( builder, SPIN_BSPLINE_Z ));
+	Coordenada bspline = Coordenada(gtk_spin_button_get_value(spinBSplineX),
 			gtk_spin_button_get_value(spinBSplineY),
-			gtk_spin_button_get_value(spinBSplineZ)
-			);
+			gtk_spin_button_get_value(spinBSplineZ));
 	coordenadas.push_back(bspline);
 	bspline.print();
 }
@@ -738,40 +757,23 @@ void TelaPrincipal::adicionarCoordenadaPoligono() {
 			gtk_builder_get_object( builder, SPIN_POLIGONO_Y ));
 	GtkSpinButton *spinPoligonoZ = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_POLIGONO_Z ));
-	Coordenada pol = Coordenada (
-			gtk_spin_button_get_value(spinPoligonoX),
+	Coordenada pol = Coordenada(gtk_spin_button_get_value(spinPoligonoX),
 			gtk_spin_button_get_value(spinPoligonoY),
-			gtk_spin_button_get_value(spinPoligonoZ)
-			);
+			gtk_spin_button_get_value(spinPoligonoZ));
 	coordenadas.push_back(pol);
 	pol.print();
 }
 
-void TelaPrincipal::adicionarCoordenadaObjeto3D() {
+void TelaPrincipal::adicionarCoordenadaSuperficieBezier() {
 	GtkSpinButton *spin3DX1 = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_3D_X1 ));
 	GtkSpinButton *spin3DY1 = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_3D_Y1 ));
 	GtkSpinButton *spin3DZ1 = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_3D_Z1 ));
-	Coordenada c1 = Coordenada (
-			gtk_spin_button_get_value(spin3DX1),
+	Coordenada c1 = Coordenada(gtk_spin_button_get_value(spin3DX1),
 			gtk_spin_button_get_value(spin3DY1),
-			gtk_spin_button_get_value(spin3DZ1)
-			);
-	c1.print();
-	GtkSpinButton *spin3DX2 = GTK_SPIN_BUTTON(
-			gtk_builder_get_object( builder, SPIN_3D_X2));
-	GtkSpinButton *spin3DY2 = GTK_SPIN_BUTTON(
-			gtk_builder_get_object( builder, SPIN_3D_Y2 ));
-	GtkSpinButton *spin3DZ2 = GTK_SPIN_BUTTON(
-			gtk_builder_get_object( builder, SPIN_3D_Z2 ));
-	Coordenada c2 = Coordenada (
-			gtk_spin_button_get_value(spin3DX2),
-			gtk_spin_button_get_value(spin3DY2),
-			gtk_spin_button_get_value(spin3DZ2)
-			);
-	c2.print();
+			gtk_spin_button_get_value(spin3DZ1));
+
 	coordenadas.push_back(c1);
-	coordenadas.push_back(c2);
 }

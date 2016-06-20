@@ -13,6 +13,7 @@
 #include "Poligono.hpp"
 #include "Ponto.hpp"
 #include "Objeto3D.hpp"
+#include "SuperficieBezier.hpp"
 
 class Mundo {
 private:
@@ -68,6 +69,13 @@ public:
 		Objeto3D *obj3d = new Objeto3D(nome, coords);
 		normalizar(obj3d);
 		displayFile->adiciona(obj3d);
+	}
+
+	void adicionaSuperficieBezier(std::string nome,
+			std::vector<Coordenada> coords) {
+		SuperficieBezier *sup = new SuperficieBezier(nome, coords);
+		normalizar(sup);
+		displayFile->adiciona(sup);
 	}
 
 	ListaEnc<ObjetoGrafico*>* getObjetos() {
@@ -135,19 +143,19 @@ public:
 		}
 	}
 
-
 	void rotacionar(std::string nome, double angulo, int index) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
 			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
 				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);
-				obj->rotacionar(angulo,index);
+				obj->rotacionar(angulo, index);
 				normalizar(obj);
 				break;
 			}
 		}
 	}
 
-	void rotacionar(std::string nome, double angulo, Coordenada coord, int index) {
+	void rotacionar(std::string nome, double angulo, Coordenada coord,
+			int index) {
 		for (int i = 0; i < displayFile->getSize(); i++) {
 			if (nome == displayFile->recuperaDaPosicao(i)->getNome()) {
 				ObjetoGrafico *obj = displayFile->recuperaDaPosicao(i);

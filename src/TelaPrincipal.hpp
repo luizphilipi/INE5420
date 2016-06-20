@@ -59,7 +59,7 @@ public:
 
 	void adicionarCoordenadaBSpline();
 
-	void adicionarCoordenadaObjeto3D();
+	void adicionarCoordenadaSuperficieBezier();
 
 	void abrirMundo();
 
