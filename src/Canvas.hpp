@@ -7,7 +7,7 @@
 class Canvas {
 public:
 	Canvas(double largura, double altura) :
-			largura(largura), altura(altura), _centro(0, 0), vupVector(0, 1) {
+			largura(largura), altura(altura), _centro(0, 0), vupVector(0, 1, 0) {
 	}
 
 	void move(Coordenada passo) {
@@ -15,6 +15,7 @@ public:
 		double yFactor = altura * passo.getY() / 100.0;
 
 		_centro += Coordenada(xFactor, yFactor);
+
 	}
 
 	void zoom(double passo) {
@@ -33,12 +34,13 @@ public:
 	}
 
 	void rotacionar(double angulo) {
-		Matriz matrizRotacao = MatrizUtil::matrizRotacao3DY(angulo);
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao3DZ(angulo);
 		Matriz matrizVUP = Matriz(vupVector);
 		Matriz result = matrizVUP * matrizRotacao;
 
 		vupVector._x = result(0, 0);
 		vupVector._y = result(0, 1);
+
 	}
 
 	Coordenada centro() {
@@ -58,7 +60,8 @@ public:
 	}
 
 	Matriz matrizTransformacaoCanvas() {
-		double radianos = vupVector.angleWith(Coordenada(0, 1));
+		double radianos = vupVector.angleWith(Coordenada(0, 1, 0));
+
 
 		double angulo = radianos / PI * 180.0;
 
@@ -70,10 +73,10 @@ public:
 		// move pro centro
 		Matriz matrizTranslacaoNeg = MatrizUtil::matrizTranslacao3D(_centro.negativa());
 		// rotaciona novamente pra vertical
-		Matriz matrizRotacao = MatrizUtil::matrizRotacao3DY(angulo);
+		Matriz matrizRotacao = MatrizUtil::matrizRotacao3DZ(angulo);
 		Matriz matrizTranslacao = MatrizUtil::matrizTranslacao3D(_centro);
 
-		return  matrizTranslacaoNeg *  matrizRotacao ;
+		return  matrizTranslacaoNeg *  matrizRotacao * matrizTranslacao;
 	}
 
 private:
