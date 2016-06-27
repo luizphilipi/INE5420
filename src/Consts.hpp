@@ -9,6 +9,11 @@
 #define SALVAR_MUNDO "botaoSalvarMundo"
 #define CAMINHO_ARQUIVO "caminhoArquivo"
 
+#define EXEMPLO_CUBO "ExemploCubo"
+#define EXEMPLO_ESPIRAL "ExemploEspiral"
+#define EXEMPLO_TEDDY "ExemploTeddy"
+#define EXEMPLO_SUPERFICIE "ExemploSuperficie"
+
 // popup de adicionar
 #define MODAL_ADICIONAR_COORDENADAS "addObjectWindow"
 #define ABAS_MODAL_ADICIONAR "abasModalAdicionar"

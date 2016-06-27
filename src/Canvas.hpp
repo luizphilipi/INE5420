@@ -7,7 +7,7 @@
 class Canvas {
 public:
 	Canvas(double largura, double altura) :
-			largura(largura), altura(altura), _centro(0, 0), vupVector(0, 1, 0) {
+			largura(largura), altura(altura), _centro(0, 0, 0), vupVector(0, 1, 0) {
 	}
 
 	void move(Coordenada passo) {

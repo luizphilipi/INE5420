@@ -69,11 +69,11 @@ public:
 		std::map<int, Coordenada> listaCoords = leCoordenadas(caminhoObj);
 
 		//percorre o arquivo.obj e busca arquivo de descrição de material .mtl
-//		std::string caminhoMtl = buscaMtl(caminhoObj);
+		std::string caminhoMtl = buscaMtl(caminhoObj);
 		std::map<std::string, GdkRGBA> cores;
-////		if (caminhoMtl != "") {
-////			cores = lerMtl(caminhoMtl);
-////		}
+		if (caminhoMtl != "") {
+			cores = lerMtl(caminhoMtl);
+		}
 		//le o arquivo .obj e cria todos os objetos num mundo
 		Mundo* mundo = lerObj(caminhoObj, listaCoords, cores);
 
@@ -103,11 +103,11 @@ public:
 					nome = linha.erase(0, 2);
 					nome = split(nome, " ").front();
 				}
-//				else if (!linha.find("usemtl")) {
-//					preenchimento = true;
-//					std::string cor = linha.erase(0, 7);
-//					corObjeto = cores[cor];
-//				}
+				else if (!linha.find("usemtl")) {
+					preenchimento = true;
+					std::string cor = linha.erase(0, 7);
+					corObjeto = cores[cor];
+				}
 				else if (!linha.find("p") || !linha.find("l")) {
 					std::vector<Coordenada> coordenadas = coordenadaObj(linha,
 							listaCoords);

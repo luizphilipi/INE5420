@@ -65,6 +65,13 @@ public:
 
 	void adicionarCoordenadaSuperficieBezier();
 
+	//exemplos
+	void exemploCubo();
+	void exemploEspiral();
+	void exemploTeddy();
+	void exemploSuperficie();
+
+
 	void abrirMundo();
 
 	void salvarMundo();
@@ -76,6 +83,7 @@ private:
 	int radioClippingSelecionado();
 	char* getObjetoSelecionado();
 	void adicionarObjetoNaLista(const char* nome);
+	void limparLista();
 
 	vector<Coordenada> coordenadas;
 

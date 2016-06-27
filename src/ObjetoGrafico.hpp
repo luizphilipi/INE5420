@@ -86,6 +86,11 @@ public:
 		return cor;
 	}
 
+	void setCor(GdkRGBA cor) {
+		this->cor = cor;
+	}
+
+
 	int getQuantidadeCoords() {
 		return coordenadasMundo.size();
 	}

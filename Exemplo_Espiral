@@ -1,5 +1,5 @@
-o poligono2
-usemtl preto
+o Exemplo_Espiral
+usemtl vermelho
 v 496.302 151.926 0.0 1.0
 v 500.177 199.746 0.0 1.0
 v 499.732 200.968 0.0 1.0

@@ -14,7 +14,7 @@ public:
 
 	void blending(std::vector<Coordenada> pontosControle) {
 		if (pontosControle.size() % 3 != 1) {
-			throw std::runtime_error("Curva não possui continuidade G(0).");
+			//throw std::runtime_error("Curva não possui continuidade G(0).");
 		}
 		Matriz bezier = MatrizUtil::matrizBezier();
 		for (int i = 0; i < pontosControle.size() - 1; i += 3) {

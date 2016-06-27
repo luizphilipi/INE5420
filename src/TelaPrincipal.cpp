@@ -86,6 +86,19 @@ void adicionar_superficie_bezier(GtkWidget *widget, TelaPrincipal *telaPrincipal
 	telaPrincipal->adicionarCoordenadaSuperficieBezier();
 }
 
+void exemplo_cubo(GtkWidget *widget, TelaPrincipal *telaPrincipal){
+	telaPrincipal->exemploCubo();
+}
+void exemplo_espiral(GtkWidget *widget, TelaPrincipal *telaPrincipal){
+	telaPrincipal->exemploEspiral();
+}
+void exemplo_teddy(GtkWidget *widget, TelaPrincipal *telaPrincipal){
+	telaPrincipal->exemploTeddy();
+}
+void exemplo_superficie(GtkWidget *widget, TelaPrincipal *telaPrincipal){
+	telaPrincipal->exemploSuperficie();
+}
+
 }
 
 void TelaPrincipal::atualizarTela() {
@@ -231,6 +244,33 @@ TelaPrincipal::TelaPrincipal() {
 	//para de rodar ao clicar no X
 	g_signal_connect(telaPrincipal, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
+//	//limpar tudo
+//	GtkWidget *radioDesativarClipping = GTK_WIDGET(
+//			gtk_builder_get_object(builder, RADIO_DESATIVAR_CLIPPING));
+//	g_signal_connect(G_OBJECT(radioDesativarClipping), "toggled",
+//			G_CALLBACK(atualizar_tela), this);
+
+	//exemplos prontos
+	GtkWidget *ExemploCubo = GTK_WIDGET(
+			gtk_builder_get_object(builder, EXEMPLO_CUBO));
+	g_signal_connect(G_OBJECT(ExemploCubo), "clicked",
+			G_CALLBACK(exemplo_cubo), this);
+
+	GtkWidget *ExemploEspiral = GTK_WIDGET(
+			gtk_builder_get_object(builder, EXEMPLO_ESPIRAL));
+	g_signal_connect(G_OBJECT(ExemploEspiral), "clicked",
+			G_CALLBACK(exemplo_espiral), this);
+
+	GtkWidget *ExemploTeddy = GTK_WIDGET(
+			gtk_builder_get_object(builder, EXEMPLO_TEDDY));
+	g_signal_connect(G_OBJECT(ExemploTeddy), "clicked",
+			G_CALLBACK(exemplo_teddy), this);
+
+	GtkWidget *ExemploSuperficie = GTK_WIDGET(
+			gtk_builder_get_object(builder, EXEMPLO_SUPERFICIE));
+	g_signal_connect(G_OBJECT(ExemploSuperficie), "clicked",
+			G_CALLBACK(exemplo_superficie), this);
+
 	gtk_widget_show_all(telaPrincipal);
 	gtk_main();
 }
@@ -373,6 +413,12 @@ void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
 	GtkTreeIter iter;
 	gtk_list_store_append(listStoreObjetos, &iter);
 	gtk_list_store_set(listStoreObjetos, &iter, 0, nomeObjeto, -1);
+}
+
+void TelaPrincipal::limparLista() {
+	GtkListStore *listStoreObjetos = GTK_LIST_STORE(
+			gtk_builder_get_object( builder, LIST_STORE_OBJETOS ));
+	gtk_list_store_clear(listStoreObjetos);
 }
 
 void TelaPrincipal::desenharPonto(cairo_t *cr, Coordenada coord) {
@@ -577,31 +623,6 @@ void TelaPrincipal::zoomOut() {
 	GtkSpinButton *inputPasso = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, INPUT_PASSO ));
 	mundo->zoomOut(gtk_spin_button_get_value(inputPasso));
-
-	vector<Coordenada> c;
-		c.push_back(Coordenada(-100, 300, 100));
-		c.push_back(Coordenada(0, 300, 100));
-		c.push_back(Coordenada(100, 300, 100));
-		c.push_back(Coordenada(200, 300, 100));
-
-		c.push_back(Coordenada(-100, 300, 200));
-		c.push_back(Coordenada(0, -200, 200));
-		c.push_back(Coordenada(100, -200, 200));
-		c.push_back(Coordenada(200, 300, 200));
-
-		c.push_back(Coordenada(-100, 300, 300));
-		c.push_back(Coordenada(0, -200, 300));
-		c.push_back(Coordenada(100, -200, 300));
-		c.push_back(Coordenada(200, 300, 300));
-
-		c.push_back(Coordenada(-100, 300, 400));
-		c.push_back(Coordenada(0, 300, 400));
-		c.push_back(Coordenada(100, 300, 400));
-		c.push_back(Coordenada(200, 300, 400));
-
-		mundo->adicionaSuperficieBezier("teste", c);
-		adicionarObjetoNaLista("teste");
-
 	atualizarTela();
 }
 
@@ -841,4 +862,90 @@ void TelaPrincipal::adicionarCoordenadaSuperficieBezier() {
 			gtk_spin_button_get_value(spinSPZ));
 
 	coordenadas.push_back(c1);
+}
+
+
+void TelaPrincipal::exemploCubo(){
+vector<Coordenada> c;
+//    (0, 50, 0) *-------* (50, 50, 0)
+//              /|      /|
+// (0, 50, 50) *-------* | (50, 50, 50)
+//             | |     | |
+//   (0, 0, 0) | *-----|-* (50, 0, 0)
+//             |/      |/
+//  (0, 0, 50) *-------* (50, 0, 50)
+
+//	Face da frente
+	c.push_back(Coordenada(0, 50, 50));
+	c.push_back(Coordenada(50, 50, 50));
+	c.push_back(Coordenada(50, 50, 50));
+	c.push_back(Coordenada(50, 0, 50));
+	c.push_back(Coordenada(50, 0, 50));
+	c.push_back(Coordenada(0, 0, 50));
+	c.push_back(Coordenada(0, 0, 50));
+	c.push_back(Coordenada(0, 50, 50));
+//	Face de trás
+	c.push_back(Coordenada(0, 0, 0));
+	c.push_back(Coordenada(50, 0, 0));
+	c.push_back(Coordenada(50, 0, 0));
+	c.push_back(Coordenada(50, 50, 0));
+	c.push_back(Coordenada(50, 50, 0));
+	c.push_back(Coordenada(0, 50, 0));
+	c.push_back(Coordenada(0, 50, 0));
+	c.push_back(Coordenada(0, 0, 0));
+//	lado direito
+	c.push_back(Coordenada(50, 50, 0));
+	c.push_back(Coordenada(50, 50, 50));
+	c.push_back(Coordenada(50, 0, 0));
+	c.push_back(Coordenada(50, 0, 50));
+//	lado esquerdo
+	c.push_back(Coordenada(0, 50, 0));
+	c.push_back(Coordenada(0, 50, 50));
+	c.push_back(Coordenada(0, 0, 0));
+	c.push_back(Coordenada(0, 0, 50));
+
+	mundo->adicionaObj3D("Cubo_Exemplo", c);
+	adicionarObjetoNaLista("Cubo_Exemplo");
+	atualizarTela();
+
+}
+void TelaPrincipal::exemploEspiral(){
+	DescritorObj * dobj = new DescritorObj();
+	mundo = dobj->ler("Exemplo_Espiral");
+	adicionarObjetoNaLista("Exemplo_Espiral");
+	atualizarTela();
+}
+void TelaPrincipal::exemploTeddy(){
+	DescritorObj * dobj = new DescritorObj();
+	mundo = dobj->ler("Exemplo_Teddy");
+	mundo->escalonar("Exemplo_Teddy", Coordenada(10,10,10));
+	adicionarObjetoNaLista("Exemplo_Teddy");
+	atualizarTela();
+}
+void TelaPrincipal::exemploSuperficie(){
+	vector<Coordenada> c;
+	c.push_back(Coordenada(-100, 300, 100));
+	c.push_back(Coordenada(0, 300, 100));
+	c.push_back(Coordenada(100, 300, 100));
+	c.push_back(Coordenada(200, 300, 100));
+
+	c.push_back(Coordenada(-100, 300, 200));
+	c.push_back(Coordenada(0, -200, 200));
+	c.push_back(Coordenada(100, -200, 200));
+	c.push_back(Coordenada(200, 300, 200));
+
+	c.push_back(Coordenada(-100, 300, 300));
+	c.push_back(Coordenada(0, -200, 300));
+	c.push_back(Coordenada(100, -200, 300));
+	c.push_back(Coordenada(200, 300, 300));
+
+	c.push_back(Coordenada(-100, 300, 400));
+	c.push_back(Coordenada(0, 300, 400));
+	c.push_back(Coordenada(100, 300, 400));
+	c.push_back(Coordenada(200, 300, 400));
+
+	mundo->adicionaSuperficieBezier("Superficie_Exemplo", c);
+
+	adicionarObjetoNaLista("Superficie_Exemplo");
+	atualizarTela();
 }
