@@ -4,6 +4,7 @@
 #define LIST_STORE_OBJETOS "listStoreObjetos"
 #define AREA_DESENHO "drawingArea"
 #define INPUT_PASSO "spinPasso"
+#define LIMPAR "limpar"
 
 #define ABRIR_MUNDO "botaoAbrirMundo"
 #define SALVAR_MUNDO "botaoSalvarMundo"

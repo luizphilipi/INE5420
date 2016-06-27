@@ -2389,14 +2389,14 @@ Ponto de controle:</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="margin_bottom">5</property>
-                            <property name="left_padding">12</property>
+                            <property name="left_padding">3</property>
                             <child>
                               <object class="GtkBox" id="box35">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkButton" id="button1">
-                                    <property name="label" translatable="yes">button</property>
+                                  <object class="GtkButton" id="ExemploCubo">
+                                    <property name="label" translatable="yes">Cubo</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
@@ -2408,8 +2408,8 @@ Ponto de controle:</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="button2">
-                                    <property name="label" translatable="yes">button</property>
+                                  <object class="GtkButton" id="ExemploEspiral">
+                                    <property name="label" translatable="yes">Espiral</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
@@ -2421,8 +2421,8 @@ Ponto de controle:</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="button3">
-                                    <property name="label" translatable="yes">button</property>
+                                  <object class="GtkButton" id="ExemploTeddy">
+                                    <property name="label" translatable="yes">Teddy</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
@@ -2434,8 +2434,8 @@ Ponto de controle:</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="button4">
-                                    <property name="label" translatable="yes">button</property>
+                                  <object class="GtkButton" id="ExemploSuperficie">
+                                    <property name="label" translatable="yes">Superfície</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>

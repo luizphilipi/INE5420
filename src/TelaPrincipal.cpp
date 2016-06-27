@@ -99,6 +99,10 @@ void exemplo_superficie(GtkWidget *widget, TelaPrincipal *telaPrincipal){
 	telaPrincipal->exemploSuperficie();
 }
 
+void limpar_tudo(GtkWidget *widget, TelaPrincipal *telaPrincipal){
+	telaPrincipal->limpar();
+}
+
 }
 
 void TelaPrincipal::atualizarTela() {
@@ -245,10 +249,10 @@ TelaPrincipal::TelaPrincipal() {
 	g_signal_connect(telaPrincipal, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
 //	//limpar tudo
-//	GtkWidget *radioDesativarClipping = GTK_WIDGET(
-//			gtk_builder_get_object(builder, RADIO_DESATIVAR_CLIPPING));
-//	g_signal_connect(G_OBJECT(radioDesativarClipping), "toggled",
-//			G_CALLBACK(atualizar_tela), this);
+	GtkWidget *limpar = GTK_WIDGET(
+			gtk_builder_get_object(builder, LIMPAR));
+	g_signal_connect(G_OBJECT(limpar), "clicked",
+			G_CALLBACK(limpar_tudo), this);
 
 	//exemplos prontos
 	GtkWidget *ExemploCubo = GTK_WIDGET(
@@ -413,6 +417,12 @@ void TelaPrincipal::adicionarObjetoNaLista(const char* nomeObjeto) {
 	GtkTreeIter iter;
 	gtk_list_store_append(listStoreObjetos, &iter);
 	gtk_list_store_set(listStoreObjetos, &iter, 0, nomeObjeto, -1);
+}
+
+void TelaPrincipal::limpar() {
+	mundo = new Mundo();
+	atualizarTela();
+	limparLista();
 }
 
 void TelaPrincipal::limparLista() {

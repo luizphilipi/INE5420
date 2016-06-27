@@ -73,9 +73,9 @@ public:
 
 
 	void abrirMundo();
-
 	void salvarMundo();
 
+	void limpar();
 	vector<Coordenada> mapearNoMundo(ObjetoGrafico* obj);
 
 private:
@@ -84,6 +84,7 @@ private:
 	char* getObjetoSelecionado();
 	void adicionarObjetoNaLista(const char* nome);
 	void limparLista();
+
 
 	vector<Coordenada> coordenadas;
 
