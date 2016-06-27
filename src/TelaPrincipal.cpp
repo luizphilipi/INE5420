@@ -78,6 +78,10 @@ void adicionar_coord_bspline(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->adicionarCoordenadaBSpline();
 }
 
+void adicionar_linha_obj3d(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
+	telaPrincipal->adicionarCoordenadaObjeto3D();
+}
+
 void adicionar_superficie_bezier(GtkWidget *widget, TelaPrincipal *telaPrincipal) {
 	telaPrincipal->adicionarCoordenadaSuperficieBezier();
 }
@@ -156,6 +160,11 @@ TelaPrincipal::TelaPrincipal() {
 			gtk_builder_get_object(builder, BOTAO_ADICIONAR_COORD_BSPLINE));
 	g_signal_connect(G_OBJECT(botaoAdicionarCoordBSpline), "clicked",
 			G_CALLBACK(adicionar_coord_bspline), this);
+
+	GtkWidget *botaoAdicionarLinhaObj3D = GTK_WIDGET(
+				gtk_builder_get_object(builder, BOTAO_ADICIONAR_LINHA_OBJ3D));
+		g_signal_connect(G_OBJECT(botaoAdicionarLinhaObj3D), "clicked",
+				G_CALLBACK(adicionar_linha_obj3d), this);
 
 	GtkWidget *botaoAdicionarBSurface = GTK_WIDGET(
 			gtk_builder_get_object(builder, BOTAO_ADD_BEZIER_SURFACE));
@@ -343,6 +352,10 @@ void TelaPrincipal::adicionarObjeto() {
 		coordenadas = vector<Coordenada>();
 		break;
 	case 5:
+		mundo->adicionaObj3D(nomeObjeto, coordenadas);
+		coordenadas = vector<Coordenada>();
+		break;
+	case 6:
 		mundo->adicionaSuperficieBezier(nomeObjeto, coordenadas);
 		coordenadas = vector<Coordenada>();
 		break;
@@ -786,7 +799,7 @@ void TelaPrincipal::adicionarCoordenadaPoligono() {
 	pol.print();
 }
 
-void TelaPrincipal::adicionarCoordenadaSuperficieBezier() {
+void TelaPrincipal::adicionarCoordenadaObjeto3D() {
 	GtkSpinButton *spin3DX1 = GTK_SPIN_BUTTON(
 			gtk_builder_get_object( builder, SPIN_3D_X1 ));
 	GtkSpinButton *spin3DY1 = GTK_SPIN_BUTTON(
@@ -796,6 +809,36 @@ void TelaPrincipal::adicionarCoordenadaSuperficieBezier() {
 	Coordenada c1 = Coordenada(gtk_spin_button_get_value(spin3DX1),
 			gtk_spin_button_get_value(spin3DY1),
 			gtk_spin_button_get_value(spin3DZ1));
+
+	GtkSpinButton *spin3DX2 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_X2 ));
+	GtkSpinButton *spin3DY2 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_Y2 ));
+	GtkSpinButton *spin3DZ2 = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_3D_Z2 ));
+	Coordenada c2 = Coordenada(
+			gtk_spin_button_get_value(spin3DX2),
+			gtk_spin_button_get_value(spin3DY2),
+			gtk_spin_button_get_value(spin3DZ2));
+
+	coordenadas.push_back(c1);
+	coordenadas.push_back(c2);
+
+	c1.print();
+	c2.print();
+}
+
+void TelaPrincipal::adicionarCoordenadaSuperficieBezier() {
+	GtkSpinButton *spinSPX = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_SP_X ));
+	GtkSpinButton *spinSPY = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_SP_Y ));
+	GtkSpinButton *spinSPZ = GTK_SPIN_BUTTON(
+			gtk_builder_get_object( builder, SPIN_SP_Z ));
+	Coordenada c1 = Coordenada(
+			gtk_spin_button_get_value(spinSPX),
+			gtk_spin_button_get_value(spinSPY),
+			gtk_spin_button_get_value(spinSPZ));
 
 	coordenadas.push_back(c1);
 }
