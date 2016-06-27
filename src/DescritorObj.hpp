@@ -207,7 +207,7 @@ public:
 				posicao = atoi(aux[1].c_str());
 			}
 			coordenadas.push_back(listaCoords[posicao]);
-			coordenadas[i].print();
+//			coordenadas[i].print();
 		}
 		return coordenadas;
 	}
@@ -243,7 +243,7 @@ public:
 					double y = atof(coordenadas[2].c_str());
 					double z = atof(coordenadas[3].c_str());
 					coords[posicao] = Coordenada(x, y, z);
-					coords[posicao].print();
+//					coords[posicao].print();
 				}
 				posicao++;
 			}
