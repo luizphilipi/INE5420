@@ -509,7 +509,7 @@ void TelaPrincipal::desenhar(cairo_t *cr, ObjetoGrafico* obj) {
 			break;
 		case OBJETO3D:
 			for (int i = 0; i < coords.size() - 1; i += 2) {
-				desenharLinha(cr, coords[i], coords[i + 1]);
+				desenharLinhaPoligono(cr, coords[i], coords[i + 1]);
 			}
 			break;
 		}
@@ -876,7 +876,8 @@ void TelaPrincipal::adicionarCoordenadaSuperficieBezier() {
 
 
 void TelaPrincipal::exemploCubo(){
-vector<Coordenada> c;
+	limpar();
+	vector<Coordenada> c;
 //    (0, 50, 0) *-------* (50, 50, 0)
 //              /|      /|
 // (0, 50, 50) *-------* | (50, 50, 50)
@@ -884,48 +885,51 @@ vector<Coordenada> c;
 //   (0, 0, 0) | *-----|-* (50, 0, 0)
 //             |/      |/
 //  (0, 0, 50) *-------* (50, 0, 50)
+	c.push_back(Coordenada(0, 50, 50));
+	c.push_back(Coordenada(50, 50, 50));
+	c.push_back(Coordenada(50, 0, 50));
+	c.push_back(Coordenada(0, 0, 50));
+	c.push_back(Coordenada(0, 50, 50));
 
-//	Face da frente
 	c.push_back(Coordenada(0, 50, 50));
-	c.push_back(Coordenada(50, 50, 50));
-	c.push_back(Coordenada(50, 50, 50));
-	c.push_back(Coordenada(50, 0, 50));
-	c.push_back(Coordenada(50, 0, 50));
-	c.push_back(Coordenada(0, 0, 50));
-	c.push_back(Coordenada(0, 0, 50));
-	c.push_back(Coordenada(0, 50, 50));
-//	Face de trás
-	c.push_back(Coordenada(0, 0, 0));
-	c.push_back(Coordenada(50, 0, 0));
-	c.push_back(Coordenada(50, 0, 0));
-	c.push_back(Coordenada(50, 50, 0));
-	c.push_back(Coordenada(50, 50, 0));
 	c.push_back(Coordenada(0, 50, 0));
-	c.push_back(Coordenada(0, 50, 0));
-	c.push_back(Coordenada(0, 0, 0));
-//	lado direito
 	c.push_back(Coordenada(50, 50, 0));
 	c.push_back(Coordenada(50, 50, 50));
-	c.push_back(Coordenada(50, 0, 0));
-	c.push_back(Coordenada(50, 0, 50));
-//	lado esquerdo
-	c.push_back(Coordenada(0, 50, 0));
 	c.push_back(Coordenada(0, 50, 50));
-	c.push_back(Coordenada(0, 0, 0));
-	c.push_back(Coordenada(0, 0, 50));
+	c.push_back(Coordenada(0, 50, 0));
 
+	c.push_back(Coordenada(0, 50, 0));
+	c.push_back(Coordenada(0, 0, 0));
+	c.push_back(Coordenada(50, 0, 0));
+	c.push_back(Coordenada(50, 50, 0));
+	c.push_back(Coordenada(0, 50, 0));
+	c.push_back(Coordenada(0, 0, 0));
+
+	c.push_back(Coordenada(0, 0, 0));
+	c.push_back(Coordenada(50, 0, 0));
+	c.push_back(Coordenada(50, 0, 50));
+	c.push_back(Coordenada(0, 0, 50));
+	c.push_back(Coordenada(0, 0, 0));
+
+	c.push_back(Coordenada(0, 0, 50));
+	c.push_back(Coordenada(0, 50, 50));
 	mundo->adicionaObj3D("Cubo_Exemplo", c);
+	mundo->escalonar("Cubo_Exemplo", Coordenada(8,8,8));
+	mundo->rotacionar("Cubo_Exemplo", -30, 1);
+	mundo->rotacionar("Cubo_Exemplo", -30, 0);
 	adicionarObjetoNaLista("Cubo_Exemplo");
 	atualizarTela();
 
 }
 void TelaPrincipal::exemploEspiral(){
+	limpar();
 	DescritorObj * dobj = new DescritorObj();
 	mundo = dobj->ler("Exemplo_Espiral");
 	adicionarObjetoNaLista("Exemplo_Espiral");
 	atualizarTela();
 }
 void TelaPrincipal::exemploTeddy(){
+	limpar();
 	DescritorObj * dobj = new DescritorObj();
 	mundo = dobj->ler("Exemplo_Teddy");
 	mundo->escalonar("Exemplo_Teddy", Coordenada(10,10,10));
@@ -933,6 +937,7 @@ void TelaPrincipal::exemploTeddy(){
 	atualizarTela();
 }
 void TelaPrincipal::exemploSuperficie(){
+	limpar();
 	vector<Coordenada> c;
 	c.push_back(Coordenada(-100, 300, 100));
 	c.push_back(Coordenada(0, 300, 100));
@@ -955,7 +960,9 @@ void TelaPrincipal::exemploSuperficie(){
 	c.push_back(Coordenada(200, 300, 400));
 
 	mundo->adicionaSuperficieBezier("Superficie_Exemplo", c);
-
+	mundo->rotacionar("Superficie_Exemplo", 30, 0);
+	mundo->rotacionar("Superficie_Exemplo", 30, 1);
+	mundo->transladar("Superficie_Exemplo", Coordenada(-100, -200, 0));
 	adicionarObjetoNaLista("Superficie_Exemplo");
 	atualizarTela();
 }
