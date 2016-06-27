@@ -2448,7 +2448,7 @@ Ponto de controle:</property>
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="ExemploSuperficie">
-                                    <property name="label" translatable="yes">Superfície</property>
+                                    <property name="label" translatable="yes">Sup.Bic.</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
@@ -2457,6 +2457,19 @@ Ponto de controle:</property>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
                                     <property name="position">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="ExemploEmot">
+                                    <property name="label" translatable="yes">:)</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">4</property>
                                   </packing>
                                 </child>
                               </object>

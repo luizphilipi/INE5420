@@ -70,6 +70,7 @@ public:
 	void exemploEspiral();
 	void exemploTeddy();
 	void exemploSuperficie();
+	void exemploEmot();
 
 
 	void abrirMundo();

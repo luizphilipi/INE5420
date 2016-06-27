@@ -13,6 +13,7 @@
 #define EXEMPLO_CUBO "ExemploCubo"
 #define EXEMPLO_ESPIRAL "ExemploEspiral"
 #define EXEMPLO_TEDDY "ExemploTeddy"
+#define EXEMPLO_EMOT "ExemploEmot"
 #define EXEMPLO_SUPERFICIE "ExemploSuperficie"
 
 // popup de adicionar

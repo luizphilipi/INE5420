@@ -95,6 +95,10 @@ void exemplo_espiral(GtkWidget *widget, TelaPrincipal *telaPrincipal){
 void exemplo_teddy(GtkWidget *widget, TelaPrincipal *telaPrincipal){
 	telaPrincipal->exemploTeddy();
 }
+void exemplo_emot(GtkWidget *widget, TelaPrincipal *telaPrincipal){
+	telaPrincipal->exemploEmot();
+}
+
 void exemplo_superficie(GtkWidget *widget, TelaPrincipal *telaPrincipal){
 	telaPrincipal->exemploSuperficie();
 }
@@ -269,6 +273,11 @@ TelaPrincipal::TelaPrincipal() {
 			gtk_builder_get_object(builder, EXEMPLO_TEDDY));
 	g_signal_connect(G_OBJECT(ExemploTeddy), "clicked",
 			G_CALLBACK(exemplo_teddy), this);
+
+	GtkWidget *ExemploEmot = GTK_WIDGET(
+			gtk_builder_get_object(builder, EXEMPLO_EMOT));
+	g_signal_connect(G_OBJECT(ExemploEmot), "clicked",
+			G_CALLBACK(exemplo_emot), this);
 
 	GtkWidget *ExemploSuperficie = GTK_WIDGET(
 			gtk_builder_get_object(builder, EXEMPLO_SUPERFICIE));
@@ -934,6 +943,54 @@ void TelaPrincipal::exemploTeddy(){
 	mundo = dobj->ler("Exemplo_Teddy");
 	mundo->escalonar("Exemplo_Teddy", Coordenada(10,10,10));
 	adicionarObjetoNaLista("Exemplo_Teddy");
+	atualizarTela();
+}
+
+void TelaPrincipal::exemploEmot(){
+	limpar();
+	vector<Coordenada> c;
+	c.push_back(Coordenada(-100, -100, 1));
+	c.push_back(Coordenada(-100, 100, 1));
+	c.push_back(Coordenada(0, 110, 1));
+	c.push_back(Coordenada(100, 100, 1));
+	c.push_back(Coordenada(100, -100, 1));
+	c.push_back(Coordenada(0, -110, 1));
+	c.push_back(Coordenada(-100, -100, 1));
+	c.push_back(Coordenada(-100, 100, 1));
+	c.push_back(Coordenada(0, 110, 1));
+	c.push_back(Coordenada(100, 100, 1));
+	mundo->adicionaBSpline("cabeca", c);
+	adicionarObjetoNaLista("cabeca");
+
+	c.clear();
+	c.push_back(Coordenada(30, 60, 1));
+	c.push_back(Coordenada(40, 60, 1));
+	c.push_back(Coordenada(40, 50, 1));
+	c.push_back(Coordenada(30, 50, 1));
+	c.push_back(Coordenada(30, 60, 1));
+	c.push_back(Coordenada(40, 60, 1));
+	c.push_back(Coordenada(40, 50, 1));
+	mundo->adicionaBSpline("olho_direito", c);
+	adicionarObjetoNaLista("olho_direito");
+
+	c.clear();
+	c.push_back(Coordenada(-30, 60, 1));
+	c.push_back(Coordenada(-40, 60, 1));
+	c.push_back(Coordenada(-40, 50, 1));
+	c.push_back(Coordenada(-30, 50, 1));
+	c.push_back(Coordenada(-30, 60, 1));
+	c.push_back(Coordenada(-40, 60, 1));
+	c.push_back(Coordenada(-40, 50, 1));
+	mundo->adicionaBSpline("olho_esquerdo", c);
+	adicionarObjetoNaLista("olho_esquerdo");
+
+	c.clear();
+	c.push_back(Coordenada(-80, -30, 1));
+	c.push_back(Coordenada(-40, -80, 1));
+	c.push_back(Coordenada(40, -80, 1));
+	c.push_back(Coordenada(80, -30, 1));
+	mundo->adicionaBSpline("boca", c);
+	adicionarObjetoNaLista("boca");
 	atualizarTela();
 }
 void TelaPrincipal::exemploSuperficie(){
