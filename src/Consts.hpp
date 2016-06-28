@@ -15,6 +15,7 @@
 #define EXEMPLO_TEDDY "ExemploTeddy"
 #define EXEMPLO_EMOT "ExemploEmot"
 #define EXEMPLO_SUPERFICIE "ExemploSuperficie"
+#define EXEMPLO_SUPERFICIE2 "ExemploSuperficie2"
 
 // popup de adicionar
 #define MODAL_ADICIONAR_COORDENADAS "addObjectWindow"

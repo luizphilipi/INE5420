@@ -100,8 +100,13 @@ void exemplo_emot(GtkWidget *widget, TelaPrincipal *telaPrincipal){
 }
 
 void exemplo_superficie(GtkWidget *widget, TelaPrincipal *telaPrincipal){
-	telaPrincipal->exemploSuperficie();
+	telaPrincipal->exemploSuperficie1();
 }
+
+void exemplo_superficie2(GtkWidget *widget, TelaPrincipal *telaPrincipal){
+	telaPrincipal->exemploSuperficie2();
+}
+
 
 void limpar_tudo(GtkWidget *widget, TelaPrincipal *telaPrincipal){
 	telaPrincipal->limpar();
@@ -283,6 +288,11 @@ TelaPrincipal::TelaPrincipal() {
 			gtk_builder_get_object(builder, EXEMPLO_SUPERFICIE));
 	g_signal_connect(G_OBJECT(ExemploSuperficie), "clicked",
 			G_CALLBACK(exemplo_superficie), this);
+
+	GtkWidget *ExemploSuperficie2 = GTK_WIDGET(
+			gtk_builder_get_object(builder, EXEMPLO_SUPERFICIE2));
+	g_signal_connect(G_OBJECT(ExemploSuperficie2), "clicked",
+			G_CALLBACK(exemplo_superficie2), this);
 
 	gtk_widget_show_all(telaPrincipal);
 	gtk_main();
@@ -993,7 +1003,7 @@ void TelaPrincipal::exemploEmot(){
 	adicionarObjetoNaLista("boca");
 	atualizarTela();
 }
-void TelaPrincipal::exemploSuperficie(){
+void TelaPrincipal::exemploSuperficie1(){
 	limpar();
 	vector<Coordenada> c;
 	c.push_back(Coordenada(-100, 300, 100));
@@ -1016,10 +1026,50 @@ void TelaPrincipal::exemploSuperficie(){
 	c.push_back(Coordenada(100, 300, 400));
 	c.push_back(Coordenada(200, 300, 400));
 
-	mundo->adicionaSuperficieBezier("Superficie_Exemplo", c);
-	mundo->rotacionar("Superficie_Exemplo", 30, 0);
-	mundo->rotacionar("Superficie_Exemplo", 30, 1);
-	mundo->transladar("Superficie_Exemplo", Coordenada(-100, -200, 0));
-	adicionarObjetoNaLista("Superficie_Exemplo");
+	mundo->adicionaSuperficieBezier("Montanha_Exemplo", c);
+	mundo->rotacionar("Montanha_Exemplo", -30, 0);
+	mundo->rotacionar("Montanha_Exemplo", 180, 2);
+	mundo->rotacionar("Montanha_Exemplo", -30, 1);
+	mundo->transladar("Montanha_Exemplo", Coordenada(-100, -200, 0));
+	adicionarObjetoNaLista("Montanha_Exemplo");
 	atualizarTela();
 }
+
+void TelaPrincipal::exemploSuperficie2(){
+	limpar();
+	vector<Coordenada> c;
+	c.push_back(Coordenada(0, 50, 50));
+	c.push_back(Coordenada(50, 50, 50));
+	c.push_back(Coordenada(50, 50, 50));
+	c.push_back(Coordenada(50, 0, 50));
+
+	c.push_back(Coordenada(50, 0, 50));
+	c.push_back(Coordenada(0, 0, 50));
+	c.push_back(Coordenada(0, 0, 50));
+	c.push_back(Coordenada(0, 50, 50));
+
+	c.push_back(Coordenada(0, 0, 0));
+	c.push_back(Coordenada(50, 0, 0));
+	c.push_back(Coordenada(50, 0, 0));
+	c.push_back(Coordenada(50, 50, 0));
+
+	c.push_back(Coordenada(50, 50, 0));
+	c.push_back(Coordenada(0, 50, 0));
+	c.push_back(Coordenada(0, 50, 0));
+	c.push_back(Coordenada(0, 0, 0));
+
+	c.push_back(Coordenada(50, 50, 0));
+	c.push_back(Coordenada(50, 50, 50));
+	c.push_back(Coordenada(50, 0, 0));
+	c.push_back(Coordenada(50, 0, 50));
+	c.push_back(Coordenada(0, 50, 0));
+
+	mundo->adicionaSuperficieBezier("Bala_Exemplo", c);
+	mundo->rotacionar("Bala_Exemplo", 30, 0);
+	mundo->rotacionar("Bala_Exemplo", 30, 1);
+	mundo->escalonar("Bala_Exemplo", Coordenada(6,6,6));
+	adicionarObjetoNaLista("Bala_Exemplo");
+	atualizarTela();
+}
+
+

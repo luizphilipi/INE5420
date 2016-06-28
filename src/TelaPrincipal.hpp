@@ -69,7 +69,8 @@ public:
 	void exemploCubo();
 	void exemploEspiral();
 	void exemploTeddy();
-	void exemploSuperficie();
+	void exemploSuperficie1();
+	void exemploSuperficie2();
 	void exemploEmot();
 
 
